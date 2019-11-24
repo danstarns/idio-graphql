@@ -1,0 +1,10 @@
+type User {
+    name: String
+    age: Int
+    posts: [Post]
+}
+
+extend type Query {
+    user: User
+}
+

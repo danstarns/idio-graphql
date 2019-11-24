@@ -1,0 +1,18 @@
+type User {
+    name: String
+    age: Int
+    posts: [Post]
+}
+
+extend type Query {
+    user: User
+}
+
+extend type Mutation {
+    user: User
+}
+
+extend type Subscription {
+    user: User
+}
+

@@ -1,0 +1,17 @@
+type User {
+    name: String
+    age: Int
+    resolvedField: String
+}
+
+extend type Query {
+    user: User
+}
+
+extend type Mutation {
+    createUser(name: String age: Int): User
+}
+
+extend type Subscription {
+    userCreation: User
+}

@@ -1,0 +1,30 @@
+{
+    "root": true,
+    "extends": [
+        "airbnb-base",
+        "prettier"
+    ],
+    "plugins": [
+        "prettier",
+        "import"
+    ],
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "tabWidth": 4,
+                "arrowParens": "always",
+                "singleQuote": false
+            }
+        ],
+        "no-console": 0,
+        "no-param-reassign": 0,
+        "no-underscore-dangle": 0,
+        "prefer-destructuring": 0
+    },
+    "env": {
+        "node": true,
+        "es6": true,
+        "mocha": true
+    }
+}

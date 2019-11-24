@@ -1,0 +1,9 @@
+{
+    "watch": [
+        "src/*",
+        "example/*",
+        "index.js",
+        "config.js"
+    ],
+    "ext": "js,json,gql"
+}
