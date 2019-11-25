@@ -22,9 +22,7 @@
     "prettier-eslint": "^9.0.1"
   },
   "dependencies": {
-    "apollo-server": "^2.9.12",
     "caller": "^1.0.1",
-    "cross-env": "^6.0.3",
-    "graphql": "^14.5.8"
+    "cross-env": "^6.0.3"
   }
 }
