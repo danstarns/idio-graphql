@@ -22,7 +22,7 @@ describe("combineNodes", () => {
         }
     });
 
-    it("should return typeDefs and resolvers & convert first node from extend type Queyr to type Query", async () => {
+    it("should return typeDefs and resolvers & convert first node from extend type Query to type Query", async () => {
         const UserNode = new GraphQLNode({
             name: "User",
             typeDefs: "./dummy-data/User.gql",
@@ -68,9 +68,35 @@ describe("combineNodes", () => {
         expect(typeDefs)
             .to.be.a("string")
             .to.contain("type Query");
+
         expect(typeDefs)
             .to.be.a("string")
             .to.contain("extend type Query");
+    });
+
+    it("should return resolvers and typedefs even if gql file dont contain extend or type root", async () => {
+        const UserNode = new GraphQLNode({
+            name: "User",
+            typeDefs: "./dummy-data/User-empty.gql",
+            resolvers: {
+                Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+            }
+        });
+
+        const { resolvers, typeDefs } = await combineNodes([UserNode]);
+
+        expect(resolvers).to.be.a("object");
+
+        expect(resolvers)
+            .to.have.property("Query")
+            .to.be.a("object");
+
+        expect(resolvers.Query)
+            .to.have.property("user")
+            .to.be.a("function");
+
+        expect(typeDefs).to.be.a("string");
+        expect(typeDefs).to.be.a("string");
     });
 
     it("should return typeDefs and resolvers & convert first node from extend type Mutation to type Mutation", async () => {

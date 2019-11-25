@@ -83,33 +83,22 @@ function reduceNodes(result, currentValue, index) {
         );
     }
 
-    if (index === 0) {
-        const [
-            extendTypeQuery,
-            extendTypeMutation,
-            extendTypeSubscription
-        ] = typeDefsExtendsRootTypes(currentValue.typeDefs);
+    const [
+        extendTypeQuery,
+        extendTypeMutation,
+        extendTypeSubscription
+    ] = typeDefsExtendsRootTypes(currentValue.typeDefs);
 
-        if (extendTypeQuery) {
-            currentValue.typeDefs = currentValue.typeDefs.replace(
-                ExtendQueryRegex,
-                "\ntype Query"
-            );
-        }
+    if (extendTypeQuery) {
+        result.haveSeenExtendTypeQuery = true;
+    }
 
-        if (extendTypeMutation) {
-            currentValue.typeDefs = currentValue.typeDefs.replace(
-                ExtendMutationRegex,
-                "\ntype Mutation"
-            );
-        }
+    if (extendTypeMutation) {
+        result.haveSeenExtendTypeMutation = true;
+    }
 
-        if (extendTypeSubscription) {
-            currentValue.typeDefs = currentValue.typeDefs.replace(
-                ExtendSubscriptionRegex,
-                "\ntype Subscription"
-            );
-        }
+    if (extendTypeSubscription) {
+        result.haveSeenExtendTypeSubscription = true;
     }
 
     result.typeDefs = `${result.typeDefs}\n${currentValue.typeDefs}`;
@@ -175,11 +164,20 @@ async function combineNodes(nodes) {
         );
     }
 
-    const { typeDefs, resolvers } = (
+    let {
+        haveSeenExtendTypeQuery,
+        haveSeenExtendTypeMutation,
+        haveSeenExtendTypeSubscription,
+        typeDefs,
+        resolvers
+    } = (
         await Promise.all(
             nodes.map((node) => loadNode(checkInstanceOfNode(node)))
         )
     ).reduce(reduceNodes, {
+        haveSeenExtendTypeQuery: false,
+        haveSeenExtendTypeMutation: false,
+        haveSeenExtendTypeSubscription: false,
         typeDefs: "",
         resolvers: {
             Query: {},
@@ -187,6 +185,18 @@ async function combineNodes(nodes) {
             Subscription: {}
         }
     });
+
+    if (haveSeenExtendTypeQuery) {
+        typeDefs += "\n type Query";
+    }
+
+    if (haveSeenExtendTypeMutation) {
+        typeDefs += "\n type Mutation";
+    }
+
+    if (haveSeenExtendTypeSubscription) {
+        typeDefs += "\n type Subscription";
+    }
 
     function deleteEmptyResolver(key) {
         if (!Object.keys(resolvers[key]).length) {
