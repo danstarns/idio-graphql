@@ -13,7 +13,11 @@
     "idiomatic",
     "API"
   ],
-  "author": "",
+  "engines": {
+    "node": ">=10.16"
+  },
+  "repository": "github:danstarns/idio-graphql",
+  "author": "Daniel Starns",
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.2.0",
