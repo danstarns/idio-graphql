@@ -1,12 +1,18 @@
 {
   "name": "idio-graphql",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Schema first solution to structuring your graphql API",
   "main": "index.js",
   "scripts": {
     "test": "cross-env ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive  --timeout 100000 \"test/**/*.test.js\""
   },
-  "keywords": [],
+  "keywords": [
+    "graphql",
+    "schema",
+    "gql",
+    "idiomatic",
+    "API"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
