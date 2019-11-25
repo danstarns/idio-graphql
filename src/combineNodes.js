@@ -175,9 +175,11 @@ async function combineNodes(nodes) {
         );
     }
 
-    const { typeDefs, resolvers } = (await Promise.all(
-        nodes.map((node) => loadNode(checkInstanceOfNode(node)))
-    )).reduce(reduceNodes, {
+    const { typeDefs, resolvers } = (
+        await Promise.all(
+            nodes.map((node) => loadNode(checkInstanceOfNode(node)))
+        )
+    ).reduce(reduceNodes, {
         typeDefs: "",
         resolvers: {
             Query: {},

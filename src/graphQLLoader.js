@@ -8,7 +8,7 @@ const {
  *
  * @param {string} filePath - filePath of graphqlfile.
  *
- *  @returns String
+ * @returns String
  */
 
 async function graphQLLoader(filePath) {
