@@ -2,6 +2,7 @@
 const { expect } = require("chai");
 const path = require("path");
 const { GraphQLNode } = require("../src/index.js");
+const IdioEnum = require("../src/IdioEnum");
 
 describe("GraphQLNode", () => {
     it("should throw name required", () => {
@@ -87,11 +88,60 @@ describe("GraphQLNode", () => {
         }
     });
 
+    it("should throw enums must be of type array", (done) => {
+        try {
+            const node = new GraphQLNode({
+                name: "User",
+                typeDefs: "./dummy-data/Post.gql",
+                resolvers: {
+                    Query: {}
+                },
+                enums: {}
+            });
+        } catch (error) {
+            expect(error.message).to.contain("enums must be of type array");
+
+            done();
+        }
+    });
+
+    it("should throw expected enum to be of type IdioEnum", (done) => {
+        try {
+            const node = new GraphQLNode({
+                name: "User",
+                typeDefs: "./dummy-data/Post.gql",
+                resolvers: {
+                    Query: {}
+                },
+                enums: [
+                    {
+                        name: "name",
+                        typeDefs: "./dummy-data/Pets-Enum.gql",
+                        resolver: () => true
+                    }
+                ]
+            });
+        } catch (error) {
+            expect(error.message).to.contain(
+                "expected enum to be instance of IdioEnum"
+            );
+
+            done();
+        }
+    });
+
     it("should return a instance of GraphQLNode", () => {
+        const petEnum = new IdioEnum({
+            name: "Pets",
+            typeDefs: "./dummy-data/Pets-Enum.gql",
+            resolver: () => true
+        });
+
         const node = new GraphQLNode({
             name: "User",
             typeDefs: "./dummy-data/User.gql",
-            resolvers: { Query: {} }
+            resolvers: { Query: {} },
+            enums: [petEnum]
         });
 
         expect(node).to.be.a("object");
@@ -107,6 +157,10 @@ describe("GraphQLNode", () => {
         expect(node)
             .to.have.property("resolvers")
             .to.be.a("object");
+
+        expect(node)
+            .to.have.property("enums")
+            .to.be.a("array");
     });
 
     it("should return a instance of GraphQLNode with real path", () => {

@@ -1,5 +1,10 @@
 const { expect } = require("chai");
-const { combineNodes, GraphQLNode } = require("../src/index.js");
+const {
+    combineNodes,
+    GraphQLNode,
+    IdioEnum,
+    IdioScalar
+} = require("../src/index.js");
 
 describe("combineNodes", () => {
     it("should throw nodes required", async () => {
@@ -215,7 +220,305 @@ describe("combineNodes", () => {
             .to.contain("extend type Query");
     });
 
-    it("should throw if node in not a instance of GraphQLNode", async () => {
+    it("should throw expected scalars to be an array", async () => {
+        try {
+            const UserNode = new GraphQLNode({
+                name: "User",
+                typeDefs: "./dummy-data/User-extend-full.gql",
+                resolvers: {
+                    Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+                }
+            });
+
+            await combineNodes([UserNode], {
+                scalars: {}
+            });
+        } catch (error) {
+            expect(error.message).to.contain("expected scalars to be an array");
+        }
+    });
+
+    it("should throw expected scalar to be of type IdioScalar", async () => {
+        try {
+            const UserNode = new GraphQLNode({
+                name: "User",
+                typeDefs: "./dummy-data/User-extend-full.gql",
+                resolvers: {
+                    Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+                }
+            });
+
+            await combineNodes([UserNode], {
+                scalars: [{ name: "JSON", resolver: () => true }]
+            });
+        } catch (error) {
+            expect(error.message).to.contain(
+                "expected scalar to be of type IdioScalar"
+            );
+        }
+    });
+
+    it("should return typeDefs and resolvers & add scalars", async () => {
+        const UserNode = new GraphQLNode({
+            name: "User",
+            typeDefs: "./dummy-data/User-extend-full.gql",
+            resolvers: {
+                Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+            }
+        });
+
+        const PostNode = new GraphQLNode({
+            name: "Post",
+            typeDefs: "./dummy-data/Post.gql",
+            resolvers: {
+                Query: {
+                    post: () => ({
+                        title: "title",
+                        content: "blabla",
+                        likes: [],
+                        user: {}
+                    })
+                }
+            }
+        });
+
+        const jsonScalar = new IdioScalar({
+            name: "JSON",
+            resolver: () => true
+        });
+
+        const { resolvers, typeDefs } = await combineNodes(
+            [UserNode, PostNode],
+            { scalars: [jsonScalar] }
+        );
+
+        expect(resolvers).to.be.a("object");
+
+        expect(resolvers)
+            .to.have.property("Query")
+            .to.be.a("object");
+
+        expect(resolvers).to.have.property("JSON");
+
+        expect(resolvers.Query)
+            .to.have.property("user")
+            .to.be.a("function");
+
+        expect(resolvers.Query)
+            .to.have.property("post")
+            .to.be.a("function");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Mutation");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Subscription");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("extend type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("scalar JSON");
+    });
+
+    it("should throw expected enums to be an array", async () => {
+        try {
+            const UserNode = new GraphQLNode({
+                name: "User",
+                typeDefs: "./dummy-data/User-extend-full.gql",
+                resolvers: {
+                    Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+                }
+            });
+
+            await combineNodes([UserNode], {
+                enums: {}
+            });
+        } catch (error) {
+            expect(error.message).to.contain("expected enums to be an array");
+        }
+    });
+
+    it("should throw expected enum to be of type IdioEnum", async () => {
+        try {
+            const UserNode = new GraphQLNode({
+                name: "User",
+                typeDefs: "./dummy-data/User-extend-full.gql",
+                resolvers: {
+                    Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+                }
+            });
+
+            await combineNodes([UserNode], {
+                enums: [
+                    {
+                        name: "JSON",
+                        typeDefs: "./dummy-data/Pets-Enum.gql",
+                        resolver: () => true
+                    }
+                ]
+            });
+        } catch (error) {
+            expect(error.message).to.contain(
+                "expected enum to be of type IdioEnum"
+            );
+        }
+    });
+
+    it("should return typeDefs and resolvers & add enums", async () => {
+        const UserNode = new GraphQLNode({
+            name: "User",
+            typeDefs: "./dummy-data/User-extend-full.gql",
+            resolvers: {
+                Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+            }
+        });
+
+        const PostNode = new GraphQLNode({
+            name: "Post",
+            typeDefs: "./dummy-data/Post.gql",
+            resolvers: {
+                Query: {
+                    post: () => ({
+                        title: "title",
+                        content: "blabla",
+                        likes: [],
+                        user: {}
+                    })
+                }
+            }
+        });
+
+        const petEnum = new IdioEnum({
+            name: "Pets",
+            typeDefs: "./dummy-data/Pets-Enum.gql",
+            resolver: () => true
+        });
+
+        const { resolvers, typeDefs } = await combineNodes(
+            [UserNode, PostNode],
+            { enums: [petEnum] }
+        );
+
+        expect(resolvers).to.be.a("object");
+
+        expect(resolvers)
+            .to.have.property("Query")
+            .to.be.a("object");
+
+        expect(resolvers).to.have.property("Pets");
+
+        expect(resolvers.Query)
+            .to.have.property("user")
+            .to.be.a("function");
+
+        expect(resolvers.Query)
+            .to.have.property("post")
+            .to.be.a("function");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Mutation");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Subscription");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("extend type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("enum Pets");
+    });
+
+    it("should return typeDefs and resolvers & add enums from the node", async () => {
+        const UserNode = new GraphQLNode({
+            name: "User",
+            typeDefs: "./dummy-data/User-extend-full.gql",
+            resolvers: {
+                Query: { user: () => ({ name: "Dan", age: 20, posts: [] }) }
+            }
+        });
+
+        const petEnum = new IdioEnum({
+            name: "Pets",
+            typeDefs: "./dummy-data/Pets-Enum.gql",
+            resolver: () => true
+        });
+
+        const PostNode = new GraphQLNode({
+            name: "Post",
+            typeDefs: "./dummy-data/Post.gql",
+            resolvers: {
+                Query: {
+                    post: () => ({
+                        title: "title",
+                        content: "blabla",
+                        likes: [],
+                        user: {}
+                    })
+                }
+            },
+            enums: [petEnum]
+        });
+
+        const { resolvers, typeDefs } = await combineNodes([
+            UserNode,
+            PostNode
+        ]);
+
+        expect(resolvers).to.be.a("object");
+
+        expect(resolvers)
+            .to.have.property("Query")
+            .to.be.a("object");
+
+        expect(resolvers).to.have.property("Pets");
+
+        expect(resolvers.Query)
+            .to.have.property("user")
+            .to.be.a("function");
+
+        expect(resolvers.Query)
+            .to.have.property("post")
+            .to.be.a("function");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Mutation");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Subscription");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("extend type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("enum Pets");
+    });
+
+    it("should throw if node is not a instance of GraphQLNode", async () => {
         try {
             const fakeNode = {
                 name: "User",

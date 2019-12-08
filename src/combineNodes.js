@@ -1,124 +1,121 @@
+const { parse } = require("graphql/language/parser");
 const GraphQLNode = require("./GraphQLNode.js");
 const graphQLLoader = require("./graphQLLoader.js");
+const IdioEnum = require("./IdioEnum.js");
+const IdioScalar = require("./IdioScalar.js");
 
-// [^d\s*] not after 'extend '
-const QueryRegex = /\s*[^d\s*]\s*type\s*Query/g;
-const MutationRegex = /\s*[^d\s*]\s*type\s*Mutation/g;
-const SubscriptionRegex = /\s*[^d\s*]\s*type\s*Subscription/g;
-
-const ExtendQueryRegex = /\s*extend\s*type\s*Query/g;
-const ExtendMutationRegex = /\s*extend\s*type\s*Mutation/g;
-const ExtendSubscriptionRegex = /\s*extend\s*type\s*Subscription/g;
+/**
+ * @typedef {import('./IdioEnum.js')} IdioEnum
+ * @typedef {import('./IdioScalar.js')} IdioScalar
+ * @typedef {import('./GraphQLNode.js')} GraphQLNode
+ */
 
 async function loadNode(n) {
     const node = { ...n };
 
     node.typeDefs = await graphQLLoader(node.typeDefs);
 
+    if (node.enums) {
+        const loadedEnumsTypeDefs = (
+            await Promise.all(
+                node.enums.map(
+                    async (_enum) =>
+                        `\n${await graphQLLoader(_enum.typeDefs)}\n`
+                )
+            )
+        ).reduce((result, typeDef) => result + typeDef, "");
+
+        node.typeDefs += `\n${loadedEnumsTypeDefs}\n`;
+
+        node.enumResolvers = node.enums.reduce((result, _enum) => {
+            result[`${_enum.name}`] = _enum.resolver;
+
+            return result;
+        }, {});
+    }
+
     return node;
 }
 
-function typeDefsContainsRootTypes(typeDefs) {
-    let query = false;
-    let mutation = false;
-    let subscription = false;
-
-    if (QueryRegex.test(typeDefs)) {
-        query = true;
-    }
-
-    if (MutationRegex.test(typeDefs)) {
-        mutation = true;
-    }
-
-    if (SubscriptionRegex.test(typeDefs)) {
-        subscription = true;
-    }
-
-    return [query, mutation, subscription];
+function astContainsRootType(ast, type) {
+    return ast.definitions
+        .filter((node) => node.kind === "ObjectTypeDefinition")
+        .find((node) => node.name.value === type);
 }
 
-function typeDefsExtendsRootTypes(typeDefs) {
-    let query = false;
-    let mutation = false;
-    let subscription = false;
-
-    if (ExtendQueryRegex.test(typeDefs)) {
-        query = true;
-    }
-
-    if (ExtendMutationRegex.test(typeDefs)) {
-        mutation = true;
-    }
-
-    if (ExtendSubscriptionRegex.test(typeDefs)) {
-        subscription = true;
-    }
-
-    return [query, mutation, subscription];
+function astContainsExtensionRootType(ast, type) {
+    return ast.definitions
+        .filter((node) => node.kind === "ObjectTypeExtension")
+        .find((node) => node.name.value === type);
 }
 
-function reduceNodes(result, currentValue, index) {
-    const [
-        typeQuery,
-        typeMutation,
-        typeSubscription
-    ] = typeDefsContainsRootTypes(currentValue.typeDefs);
+function reduceNodes(result, node) {
+    const ast = parse(node.typeDefs);
 
-    if (typeQuery) {
+    if (astContainsRootType(ast, "Query")) {
         throw new Error(
-            `combineNodes: ${currentValue.name} contains: "type Query" replace with "extend type Query"`
+            `combineNodes: ${node.name} contains: "type Query" replace with "extend type Query"`
         );
     }
 
-    if (typeMutation) {
+    if (astContainsRootType(ast, "Mutation")) {
         throw new Error(
-            `combineNodes: ${currentValue.name} contains: "type Mutation" replace with "extend type Mutation"`
+            `combineNodes: ${node.name} contains: "type Mutation" replace with "extend type Mutation"`
         );
     }
 
-    if (typeSubscription) {
+    if (astContainsRootType(ast, "Subscription")) {
         throw new Error(
-            `combineNodes: ${currentValue.name} contains: "type Subscription" replace with "extend type Subscription"`
+            `combineNodes: ${node.name} contains: "type Subscription" replace with "extend type Subscription"`
         );
     }
 
-    const [
-        extendTypeQuery,
-        extendTypeMutation,
-        extendTypeSubscription
-    ] = typeDefsExtendsRootTypes(currentValue.typeDefs);
-
-    if (extendTypeQuery) {
+    if (
+        !result.haveSeenExtendTypeQuery &&
+        astContainsExtensionRootType(ast, "Query")
+    ) {
         result.haveSeenExtendTypeQuery = true;
     }
 
-    if (extendTypeMutation) {
+    if (
+        !result.haveSeenExtendTypeMutation &&
+        astContainsExtensionRootType(ast, "Mutation")
+    ) {
         result.haveSeenExtendTypeMutation = true;
     }
 
-    if (extendTypeSubscription) {
+    if (
+        !result.haveSeenExtendTypeSubscription &&
+        astContainsExtensionRootType(ast, "Subscription")
+    ) {
         result.haveSeenExtendTypeSubscription = true;
     }
 
-    result.typeDefs = `${result.typeDefs}\n${currentValue.typeDefs}`;
+    result.typeDefs = `${result.typeDefs}\n${node.typeDefs}\n`;
 
     result.resolvers.Query = {
         ...result.resolvers.Query,
-        ...(currentValue.resolvers.Query || {})
+        ...(node.resolvers.Query || {})
     };
 
     result.resolvers.Mutation = {
         ...result.resolvers.Mutation,
-        ...(currentValue.resolvers.Mutation || {})
+        ...(node.resolvers.Mutation || {})
     };
 
     result.resolvers.Subscription = {
         ...result.resolvers.Subscription,
-        ...(currentValue.resolvers.Subscription || {})
+        ...(node.resolvers.Subscription || {})
     };
 
-    result.resolvers[currentValue.name] = currentValue.resolvers.Fields || {};
+    if (node.enumResolvers) {
+        result.resolvers = {
+            ...result.resolvers,
+            ...node.enumResolvers
+        };
+    }
+
+    result.resolvers[node.name] = node.resolvers.Fields || {};
 
     return result;
 }
@@ -138,6 +135,96 @@ function checkInstanceOfNode(node) {
 }
 
 /**
+ * @param {Array.<IdioEnum>} enums
+ */
+async function resolveEnums(enums) {
+    if (!Array.isArray(enums)) {
+        throw new Error("expected enums to be an array");
+    }
+
+    function reduceEnum(result, _enum) {
+        result.typeDefs += _enum.typeDefs;
+
+        result.resolvers[_enum.name] = _enum.resolver;
+
+        return result;
+    }
+
+    function checkInstanceOfEnum(_enum) {
+        if (!(_enum instanceof IdioEnum)) {
+            throw new Error(
+                `expected enum to be of type IdioEnum, recived: ${JSON.stringify(
+                    _enum,
+                    undefined,
+                    2
+                )}`
+            );
+        }
+
+        return _enum;
+    }
+
+    const { typeDefs, resolvers } = (
+        await Promise.all(
+            enums.map(async (_enum) => {
+                checkInstanceOfEnum(_enum);
+
+                return {
+                    name: _enum.name,
+                    typeDefs: `${await graphQLLoader(_enum.typeDefs)} `,
+                    resolver: _enum.resolver
+                };
+            })
+        )
+    ).reduce(reduceEnum, {
+        typeDefs: "",
+        resolvers: {}
+    });
+
+    return { typeDefs, resolvers };
+}
+
+/**
+ * @param {Array.<IdioScalar>} scalars
+ */
+async function resolveScalars(scalars) {
+    if (!Array.isArray(scalars)) {
+        throw new Error("expected scalars to be an array");
+    }
+
+    function reduceScalar(result, { name, resolver }) {
+        result.typeDefs += `\nscalar ${name}\n`;
+
+        result.resolvers[name] = resolver;
+
+        return result;
+    }
+
+    function checkInstanceOfScalar(scalar) {
+        if (!(scalar instanceof IdioScalar)) {
+            throw new Error(
+                `expected scalar to be of type IdioScalar, recived: ${JSON.stringify(
+                    scalar,
+                    undefined,
+                    2
+                )}`
+            );
+        }
+
+        return scalar;
+    }
+
+    const { typeDefs, resolvers } = scalars
+        .map(checkInstanceOfScalar)
+        .reduce(reduceScalar, {
+            typeDefs: "",
+            resolvers: {}
+        });
+
+    return { typeDefs, resolvers };
+}
+
+/**
  * @typedef {Object} Schema
  * @property {string} typeDefs - graphql typeDefs
  * @property {Object} resolvers - graphql resolvers
@@ -147,20 +234,26 @@ function checkInstanceOfNode(node) {
  */
 
 /**
- * Combines and returns the combined typeDefs and resolvers, ready to be passed into apollo-server, graphQL-yoga & more.
+ * @typedef {Object} appliances
+ * @property {Array.<IdioScalar>} scalars - array of IdioScalar
+ * @property {Array.<IdioEnum>} enums - array of IdioEnum
+ */
+
+/**
+ * Combines and returns the combined typeDefs and resolvers, ready to be passed into apollo-server, graphQL-yoga & makeExecutableSchema.
  *
  * @param {Array.<GraphQLNode>} nodes - Array of type GraphQLNode.
- *
- * @returns {Schema}
+ * @param {appliances} appliances
+ * @returns Schema
  */
-async function combineNodes(nodes) {
+async function combineNodes(nodes, appliances = {}) {
     if (!nodes) {
         throw new Error("combineNodes: nodes required");
     }
 
     if (!Array.isArray(nodes)) {
         throw new Error(
-            `combineNodes: expected nodes to be of type array recived ${typeof nodes}`
+            `combineNodes: expected nodes to be of type array recived ${typeof nodes} `
         );
     }
 
@@ -186,16 +279,32 @@ async function combineNodes(nodes) {
         }
     });
 
+    if (appliances.scalars) {
+        const resolvedScalars = await resolveScalars(appliances.scalars);
+
+        typeDefs += `\n${resolvedScalars.typeDefs}\n`;
+
+        resolvers = { ...resolvers, ...resolvedScalars.resolvers };
+    }
+
+    if (appliances.enums) {
+        const resolvedEnums = await resolveEnums(appliances.enums);
+
+        typeDefs += `\n${resolvedEnums.typeDefs}\n`;
+
+        resolvers = { ...resolvers, ...resolvedEnums.resolvers };
+    }
+
     if (haveSeenExtendTypeQuery) {
-        typeDefs += "\n type Query";
+        typeDefs += "\ntype Query\n";
     }
 
     if (haveSeenExtendTypeMutation) {
-        typeDefs += "\n type Mutation";
+        typeDefs += "\ntype Mutation\n";
     }
 
     if (haveSeenExtendTypeSubscription) {
-        typeDefs += "\n type Subscription";
+        typeDefs += "\ntype Subscription\n";
     }
 
     function deleteEmptyResolver(key) {
