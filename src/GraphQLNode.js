@@ -1,31 +1,40 @@
 const fs = require("fs");
 const caller = require("caller");
 const path = require("path");
+const IdioEnum = require("./IdioEnum.js");
+
+/**
+ * @typedef {import('./IdioEnum.js')} IdioEnum
+ */
 
 /**
  * @typedef {Object} GraphQLNode
  * @property {string} name - The nodes name.
- * @property {string} typeDefs - Path to the nodes graphql file.
- * @property {Object} resolvers - graphql resolvers
- * @property {Object} resolvers.Query - graphql resolvers.Query
- * @property {Object} resolvers.Mutation - graphql resolvers.Mutation
- * @property {Object} resolvers.Subscription - graphql resolvers.Subscription
- * @property {Object} resolvers.Fields - graphql resolvers.Fields
+ * @property {string} typeDefs - Path to the nodes gql file.
+ * @property {Object} resolvers - Graphql resolvers
+ * @property {Object} resolvers.Query - Graphql resolvers.Query
+ * @property {Object} resolvers.Mutation - Graphql resolvers.Mutation
+ * @property {Object} resolvers.Subscription - Graphql resolvers.Subscription
+ * @property {Object} resolvers.Fields - Graphql resolvers.Fields
+ * @property {Array.<IdioEnum>} enums - The nodes enums.
  */
 
 /**
- * Creates a instance of a GraphQLNode, should be used as the index to your node.
- *
- * @typedef {Object} GraphQLNode
-
- * @param {Object} config - An object.
- * @param {string} config.name - The nodes name
- * @param {string} config.typeDefs - Path to the nodes graphql file.
- * @param {{Query: {Object}, Mutation: {Object}, Subscription: {Object}, Fields: {Object} }} config.resolvers - Nodes resolvers.
- * 
- *  @returns GraphQLNode
+ * @typedef {Object} GraphQLNodeConfig
+ * @property {name} name - The nodes name.
+ * @property {string} typeDefs - Path to the nodes gql file.
+ * @property {{Query: {Object}, Mutation: {Object}, Subscription: {Object}, Fields: {Object} }} resolvers - \The nodes resolvers.
+ * @property {Array.<IdioEnum>} enums - The nodes enums.
  */
-function GraphQLNode({ name, typeDefs, resolvers } = {}) {
+
+/**
+ * Creates a instance of a GraphQLNode.
+ *
+ * @param {GraphQLNodeConfig} config - An object.
+ *
+ * @returns GraphQLNode
+ */
+function GraphQLNode({ name, typeDefs, resolvers, enums } = {}) {
     if (!name) {
         throw new Error("GraphQLNode: name required");
     }
@@ -67,9 +76,32 @@ function GraphQLNode({ name, typeDefs, resolvers } = {}) {
         }
     }
 
+    if (enums) {
+        if (!Array.isArray(enums)) {
+            throw new Error(
+                `GraphQLNode: creating node: '${name}' enums must be of type array`
+            );
+        }
+
+        function checkInstanceOfEnum(_enum) {
+            if (!(_enum instanceof IdioEnum)) {
+                throw new Error(
+                    `GraphQLNode: creating node: '${name}' expected enum to be instance of IdioEnum, recived ${JSON.stringify(
+                        _enum,
+                        undefined,
+                        2
+                    )}`
+                );
+            }
+        }
+
+        enums.forEach(checkInstanceOfEnum);
+    }
+
     this.name = name;
     this.typeDefs = typeDefs;
     this.resolvers = resolvers;
+    this.enums = enums;
 }
 
 module.exports = GraphQLNode;
