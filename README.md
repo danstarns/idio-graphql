@@ -127,7 +127,7 @@ _note that developer must use `extend` on all graphql [root types](https://graph
 
 # GraphQLNode
 
-[`GraphQLNode`](#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. its recommended to create new folders for `resolvers` to separate logic & keep things clean.
+[`GraphQLNode`](#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. Its recommended to create new folders for `resolvers` to separate logic & keep things clean.
 
 **example**
 
@@ -261,7 +261,7 @@ enum StatusEnum {
 ```
 
 # IdioScalar
-If you need to declare an scalar, idio-grphql encourages the developer to separate the type definition and resolver for the scalar. [`IdioScalar`](#IdioScalar) allows developers to modularize an scalar within the graphql API. You can only specify scalars top-level [`combineNodes`](#combineNodes).
+If you need to declare an scalar, idio-graphql encourages the developer to separate the type definition and resolver for the scalar. [`IdioScalar`](#IdioScalar) allows developers to modularize an scalar within the graphql API. You can only specify scalars top-level [`combineNodes`](#combineNodes).
 
 _note [`IdioScalar`](#IdioScalar) does not require a .gql file, it seems useless to make a new file for 1 line._
 
@@ -282,6 +282,25 @@ const JSONScalar = new IdioScalar({
 module.exports = JSONScalar;
 ```
 
+**definitions**
+
+```javascript
+/**
+ * @typedef {Object} IdioScalar
+ * @property {string} name - The Scalar name.
+ * @property {Object} resolver - The Scalar resolver.
+ */
+
+/**
+ * Creates a instance of a IdioScalar.
+ *
+ * @param {Object} config - An object.
+ * @param {string} config.name - The Scalar name.
+ * @param {Object} config.resolver - The Scalar resolver.
+ *
+ * @returns IdioScalar
+ */
+```
 
 # License
 
