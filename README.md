@@ -7,7 +7,7 @@ $ npm install idio-graphql
 
 # Intro
 
-idio-graphql provides a set of methods to enable developers to structure and modularize a graphql API. idio-graphql encourages the practice of a schema first solution to architecting a graphql API. idio-graphql provides a set of [methods](#API) to enable developers to structure and modularize a graphql API. idio-graphql encourages the practice of a schema first solution to architecting a graphql API. With all the tools around graphql, none was here to normalize the way our servers look. idio-graphql hopes to solve this.
+idio-graphql provides a set of [methods](#API) to enable developers to structure and modularize a graphql API. idio-graphql encourages the practice of a schema first solution to architecting a graphql API. With all the tools around graphql, none was here to normalize the way our servers look. idio-graphql hopes to solve this.
 
 
 # Index
