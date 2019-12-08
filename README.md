@@ -1,52 +1,37 @@
 # idio-graphql (idiomatic-graphql)
+[![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Coverage](https://img.shields.io/badge/coverage-100%25-green)](https://github.com/danstarns/idio-graphql/tree/master/test)
 
-`npm install idio-graphql`
-
-A Schema first solution to structuring your graphql API. Allows developers to modularize graphql nodes & extend root types without the need for a blank type. 
-
-### Common solution
-
-```graphql
-type Query {
-    _blank: String
-}
+```
+$ npm install idio-graphql
 ```
 
-### idio solution
+# Intro
 
-```graphql
-extend type Query {
-    myMethod: String
-}
-```
-
-Developers wanting to modularize there schema would have to first write a blank type to later extend it. idio-graphql solves this. Simply use `extend` in all your modularized nodes & let the package combine them. (pssst.... its a big reduce!)
-
-### idiomatic
-With all the tools around graphql, none was here to normalize the way our servers look. idio-graphql employees 2 methods to help developers structure and architect their APIs. 
-
-```const {GraphQLNode, combineNodes} = require("idio-graphql")```
-
-### Getting started
-Following the examples, you will create a simple idio-graphql api using [apollo-server](https://www.apollographql.com/docs/apollo-server/). If you want to get started straight away checkout the [example repo](https://github.com/danstarns/idio-graphql-example)
+idio-graphql provides a set of methods to enable developers to structure and modularize a graphql API. idio-graphql encourages the practice of a schema first solution to architecting a graphql API. idio-graphql provides a set of [methods](#API) to enable developers to structure and modularize a graphql API. idio-graphql encourages the practice of a schema first solution to architecting a graphql API. With all the tools around graphql, none was here to normalize the way our servers look. idio-graphql hopes to solve this.
 
 
-### Creating your server
-1. ```npm install graphql apollo-server idio-graphql```
-2. ```mkdir src```
-3. ```touch index.js```
+# Index
+<!-- toc -->
+* [Intro](#Intro)
+* [Getting Started](#Getting-Started)
+* [API](#API)
+<!-- tocstop -->
 
-**index.js**
+
+# Getting Started
+Examples use [apollo-server](https://www.npmjs.com/package/apollo-server) however, feel free to plug into your own solution. 
+
+If you want to get started straight away checkout the [example repo](https://github.com/danstarns/idio-graphql-example).
 
 ```javascript
 const { ApolloServer } = require("apollo-server");
 const { combineNodes } = require("idio-graphql");
 
-const nodes = require("./nodes/index.js");
+const userNode = require("./user-node.js");
 
 (async function Main() {
     try {
-        const { typeDefs, resolvers } = await combineNodes(nodes);
+        const { typeDefs, resolvers } = await combineNodes([userNode]);
 
         const server = new ApolloServer({ typeDefs, resolvers });
 
@@ -57,101 +42,147 @@ const nodes = require("./nodes/index.js");
         console.error(error);
     }
 })();
-``` 
-
-4. `mkdir nodes`
-5. `cd nodes && touch index.js`
-
-**nodes/index.js**
-
-```javascript 
-const User = require("./User/index.js");
-
-module.exports = [User];
 ```
-
-6. `mkdir User`
-7. `cd User && touch index.js`
-
-**nodes/User/index.js**
+**`user-node.js`**
 
 ```javascript
+const { GraphQLNode } = require("idio-graphql");
+
+const Query = {
+    getUser: async (_, { id }) => {
+        // get user from db...
+
+        return user
+    }
+};
+
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: "./User.gql",
+    resolvers: { Query }
+});
+
+module.exports = User;
+```
+
+**`User.gql`**
+```graphql
+type User {
+    name: String
+    age: Int
+}
+
+extend type Query {
+    getUser(id: ID!): User
+}
+```
+
+**example results**
+```javascript 
+const { typeDefs, resolvers } = await combineNodes([userNode]);
+```
+
+**typeDefs**
+```graphql
+type User {
+    name: String
+    age: Int
+}
+
+extend type Query {
+    getUser(id: ID!): User
+}
+
+type Query
+```
+
+**resolvers**
+```javascript
+{
+    Query: {
+        getUser: async (_, { id }) => {
+            // get user from db...
+
+            return user;
+        }
+    }
+};
+
+```
+
+_note that developer must use `extend` on all graphql [root types](https://graphql.org/learn/schema/)_ 
+
+### Root types
+1. Query => `extend type Query`
+1. Mutation => `extend type Mutation`
+1. Subscription => `extend type Subscription`
+
+# API
+<!-- toc -->
+* [GraphQLNode](#GraphQLNode)
+* [combineNodes](#combineNodes)
+* [IdioEnum](#IdioEnum)
+* [IdioScalar](#IdioScalar)
+<!-- tocstop -->
+
+# GraphQLNode
+
+[`GraphQLNode`](#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. its recommended to create new folders for `resolvers` to separate logic & keep things clean.
+
+**example**
+
+```javascript 
 const { GraphQLNode } = require("idio-graphql");
 
 const Query = require("./Query/index.js");
 const Mutation = require("./Mutation/index.js");
 const Subscription = require("./Subscription/index.js");
 const Fields = require("./Fields/index.js");
+const enums = require("./enums/index.js");
 
 const User = new GraphQLNode({
     name: "User",
     typeDefs: "./User.gql",
-    resolvers: { Query, Mutation, Subscription, Fields }
+    resolvers: { Query, Mutation, Subscription, Fields },
+    enums
 });
 
 module.exports = User;
 ```
 
-Using `GraphQLNode` you can supply the resolvers for each root type & the `Fields` object is the resolvers based around the node type. It's suggested keeping each node based purely around 1 type.
+**definitions**
 
-**nodes/User/User.gql**
-
-```graphql
-type User {
-    name: String
-    age: Int
-    posts: [Post]
-    resolvedField: String
-}
-
-extend type Query {
-    user: User
-}
-
-extend type Mutation {
-    createUser(name: String age: Int): User
-}
-
-extend type Subscription {
-    userCreation: User
-}
-```
-
-`combineNodes` will handle the use of `extend` and if you use `type Query` ect ect, `combineNodes` will throw a error. 
-
-
----
-## `GraphQLNode`
-
-```
+```javascript
 /**
  * @typedef {Object} GraphQLNode
  * @property {string} name - The nodes name.
- * @property {string} typeDefs - Path to the nodes graphql file.
- * @property {Object} resolvers - graphql resolvers
- * @property {Object} resolvers.Query - graphql resolvers.Query
- * @property {Object} resolvers.Mutation - graphql resolvers.Mutation
- * @property {Object} resolvers.Subscription - graphql resolvers.Subscription
- * @property {Object} resolvers.Fields - graphql resolvers.Fields
+ * @property {string} typeDefs - Path to the nodes gql file.
+ * @property {Object} resolvers - Graphql resolvers
+ * @property {Object} resolvers.Query - Graphql resolvers.Query
+ * @property {Object} resolvers.Mutation - Graphql resolvers.Mutation
+ * @property {Object} resolvers.Subscription - Graphql resolvers.Subscription
+ * @property {Object} resolvers.Fields - Graphql resolvers.Fields
+ * @property {Array.<IdioEnum>} enums - The nodes enums.
  */
-
- /**
- * Creates a instance of a GraphQLNode, should be used as the index to your node.
- *
- * @typedef {Object} GraphQLNode
-
- * @param {Object} config - An object.
- * @param {string} config.name - The nodes name
- * @param {string} config.typeDefs - Path to the nodes graphql file.
- * @param {{Query: {Object}, Mutation: {Object}, Subscription: {Object}, Fields: {Object} }} config.resolvers - Nodes resolvers.
- * 
- *  @returns GraphQLNode
- */
- ```
-
- ## `combineNodes`
-
 ```
+
+# combineNodes
+
+[`combineNodes`](#combineNodes) is where all the magic happens, (its a big reduce). [`combineNodes`](#combineNodes) will combine; [`GraphQLNodes`](#GraphQLNode), [`IdioScalars`](#IdioScalar) & [`IdioEnums`](#IdioEnum) together to produce...
+
+```javascript
+const { typeDefs, resolvers } = await combineNodes(...);
+```
+ready to be passed to your favorite graphql implementation. 
+
+1. [apollo-server](https://github.com/apollographql/apollo-server)
+2. [graphql-yoga](https://github.com/prisma-labs/graphql-yoga)
+3. [makeExecutableSchema](https://www.apollographql.com/docs/apollo-server/api/graphql-tools/)
+4. and many more...
+
+**definitions**
+
+```javascript
 /**
  * @typedef {Object} Schema
  * @property {string} typeDefs - graphql typeDefs
@@ -162,29 +193,91 @@ extend type Subscription {
  */
 
 /**
- * Combines and returns the combined typeDefs and resolvers, ready to be passed into apollo-server, graphQL-yoga & more.
+ * @typedef {Object} appliances
+ * @property {Array.<IdioScalar>} scalars - array of IdioScalar
+ * @property {Array.<IdioEnum>} enums - array of IdioEnum
+ */
+
+/**
+ * Combines and returns the combined typeDefs and resolvers, ready to be passed into apollo-server, graphQL-yoga & makeExecutableSchema.
  *
  * @param {Array.<GraphQLNode>} nodes - Array of type GraphQLNode.
- *
- * @returns {Schema}
+ * @param {appliances} appliances
+ * @returns Schema
  */
- ```
-
-
-## `graphQLLoader`
-
 ```
+
+# IdioEnum
+If you need to declare an enum with a resolver, idio-graphql encourages the developer to separate the type definition and resolver for the enum. [`IdioEnum`](#IdioEnum) allows developers to modularize an enum within the graphql API. You can specify enums top-level [`combineNodes`](#combineNodes) or at a [`GraphQLNode`](#GraphQLNode) level. 
+
+**example**
+
+```javascript
+const { IdioEnum } = require("idio-graphql");
+
+const StatusEnum = new IdioEnum({
+    name: "StatusEnum",
+    typeDefs: "./StatusEnum.gql",
+    resolver: {
+        ONLINE: "online",
+        OFFLINE: "offline",
+        INACTIVE: "inactive"
+    }
+});
+
+module.exports = StatusEnum;
+```
+
+**`./StatusEnum.gql`**
+
+```graphql
+enum StatusEnum {
+    ONLINE
+    OFFLINE
+    INACTIVE
+}
+```
+
+**definitions**
+
+```javascript
 /**
- * A fancy promise based wrapper around fs.readFile.
+ * @typedef {Object} IdioEnum
+ * @property {string} name - The Enum name.
+ * @property {string} typeDefs - Path to the Enum.gql file.
+ * @property {Object} resolver - The Enum resolver
+ */
+
+/**
+ * Creates a instance of a IdioEnum.
  *
- * @param {string} filePath - filePath of graphqlfile.
+ * @param {Object} config - An object.
+ * @param {string} config.name - The Enum name.
+ * @param {string} config.typeDefs - Path to the Enum.gql file.
+ * @param {Object} config.resolver - The Enum resolver.
  *
- * @returns String
+ * @returns IdioEnum
  */
 ```
 
+# IdioScalar
+If you need to declare an scalar, idio-grphql encourages the developer to separate the type definition and resolver for the scalar. [`IdioScalar`](#IdioScalar) allows developers to modularize an scalar within the graphql API. You can only specify scalars top-level [`combineNodes`](#combineNodes).
+
+_note [`IdioScalar`](#IdioScalar) does not require a .gql file, it seems useless to make a new file for 1 line._
 
 
+_example uses [graphql-type-json](https://github.com/taion/graphql-type-json)_
 
+**example**
 
+```javascript
+const { GraphQLJSON } = require("graphql-type-json");
+const { IdioScalar } = require("idio-graphql");
 
+const JSONScalar = new IdioScalar({
+    name: "JSON",
+    resolver: GraphQLJSON
+});
+
+module.exports = JSONScalar;
+```
