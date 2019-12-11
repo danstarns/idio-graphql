@@ -15,8 +15,8 @@ idio-graphql provides a set of [methods](#API) to enable developers to structure
 * [Intro](#Intro)
 * [Getting Started](#Getting-Started)
 * [API](#API)
-* [License](#License)
 * [Changelog](#Changelog)
+* [License](#License)
 <!-- tocstop -->
 
 
@@ -310,7 +310,7 @@ module.exports = JSONScalar;
 # IdioDirective 
 If you need to declare an directive, idio-graphql encourages the developer to separate the type definition and resolver for the directive. [`IdioDirective`](#IdioDirective) allows developers to modularize an directive within the graphql API. You can only specify scalars top-level at [`combineNodes`](#combineNodes).
 
-_example uses [graphql-auth-directives](npmjs.com/package/graphql-auth-directives)_
+_example uses [graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)_
 
 **example**
 
