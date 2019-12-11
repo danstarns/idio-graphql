@@ -3,11 +3,13 @@ const graphQLLoader = require("./graphQLLoader.js");
 const combineNodes = require("./combineNodes.js");
 const IdioScalar = require("./IdioScalar.js");
 const IdioEnum = require("./IdioEnum.js");
+const IdioDirective = require("./IdioDirective.js");
 
 module.exports = {
     GraphQLNode,
     graphQLLoader,
     combineNodes,
     IdioScalar,
-    IdioEnum
+    IdioEnum,
+    IdioDirective
 };

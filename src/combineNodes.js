@@ -3,10 +3,12 @@ const GraphQLNode = require("./GraphQLNode.js");
 const graphQLLoader = require("./graphQLLoader.js");
 const IdioEnum = require("./IdioEnum.js");
 const IdioScalar = require("./IdioScalar.js");
+const IdioDirective = require("./IdioDirective.js");
 
 /**
  * @typedef {import('./IdioEnum.js')} IdioEnum
  * @typedef {import('./IdioScalar.js')} IdioScalar
+ * @typedef {import('./IdioDirective')} IdioDirective
  * @typedef {import('./GraphQLNode.js')} GraphQLNode
  */
 
@@ -185,6 +187,56 @@ async function resolveEnums(enums) {
 }
 
 /**
+ * @param {Array.<IdioDirective>} directives
+ */
+async function resolveDirectives(directives) {
+    if (!Array.isArray(directives)) {
+        throw new Error("expected directives to be an array");
+    }
+
+    function reduceDirective(result, directive) {
+        result.typeDefs += directive.typeDefs;
+
+        result.resolvers[directive.name] = directive.resolver;
+
+        return result;
+    }
+
+    function checkInstanceOfDirective(directive) {
+        if (!(directive instanceof IdioDirective)) {
+            throw new Error(
+                `expected directive to be of type IdioDirective, recived: ${JSON.stringify(
+                    directive,
+                    undefined,
+                    2
+                )}`
+            );
+        }
+
+        return directive;
+    }
+
+    const { typeDefs, resolvers } = (
+        await Promise.all(
+            directives.map(async (directive) => {
+                checkInstanceOfDirective(directive);
+
+                return {
+                    name: directive.name,
+                    typeDefs: `${await graphQLLoader(directive.typeDefs)} `,
+                    resolver: directive.resolver
+                };
+            })
+        )
+    ).reduce(reduceDirective, {
+        typeDefs: "",
+        resolvers: {}
+    });
+
+    return { typeDefs, resolvers };
+}
+
+/**
  * @param {Array.<IdioScalar>} scalars
  */
 async function resolveScalars(scalars) {
@@ -231,12 +283,14 @@ async function resolveScalars(scalars) {
  * @property {Object} resolvers.Query - graphql resolvers.Query
  * @property {Object} resolvers.Mutation - graphql resolvers.Mutation
  * @property {Object} resolvers.Subscription - graphql resolvers.Subscription
+ * @property {Object} schemaDirectives - graphql schemaDirectives resolvers
  */
 
 /**
  * @typedef {Object} appliances
  * @property {Array.<IdioScalar>} scalars - array of IdioScalar
  * @property {Array.<IdioEnum>} enums - array of IdioEnum
+ * @property {Array.<IdioDirective>} directives - array of IdioDirective
  */
 
 /**
@@ -256,6 +310,8 @@ async function combineNodes(nodes, appliances = {}) {
             `combineNodes: expected nodes to be of type array recived ${typeof nodes} `
         );
     }
+
+    let schemaDirectives = {};
 
     let {
         haveSeenExtendTypeQuery,
@@ -295,6 +351,16 @@ async function combineNodes(nodes, appliances = {}) {
         resolvers = { ...resolvers, ...resolvedEnums.resolvers };
     }
 
+    if (appliances.directives) {
+        const resolvedDirectives = await resolveDirectives(
+            appliances.directives
+        );
+
+        typeDefs += `\n${resolvedDirectives.typeDefs}\n`;
+
+        schemaDirectives = resolvedDirectives.resolvers;
+    }
+
     if (haveSeenExtendTypeQuery) {
         typeDefs += "\ntype Query\n";
     }
@@ -317,7 +383,8 @@ async function combineNodes(nodes, appliances = {}) {
 
     return {
         typeDefs,
-        resolvers
+        resolvers,
+        schemaDirectives
     };
 }
 

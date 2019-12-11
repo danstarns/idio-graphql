@@ -15,6 +15,8 @@ idio-graphql provides a set of [methods](#API) to enable developers to structure
 * [Intro](#Intro)
 * [Getting Started](#Getting-Started)
 * [API](#API)
+* [License](#License)
+* [Changelog](#Changelog)
 <!-- tocstop -->
 
 
@@ -123,6 +125,7 @@ _note that developer must use `extend` on all graphql [root types](https://graph
 * [combineNodes](#combineNodes)
 * [IdioEnum](#IdioEnum)
 * [IdioScalar](#IdioScalar)
+* [IdioDirective](#IdioDirective)
 <!-- tocstop -->
 
 # GraphQLNode
@@ -168,10 +171,10 @@ module.exports = User;
 
 # combineNodes
 
-[`combineNodes`](#combineNodes) is where all the magic happens, (its a big reduce). [`combineNodes`](#combineNodes) will combine; [`GraphQLNodes`](#GraphQLNode), [`IdioScalars`](#IdioScalar) & [`IdioEnums`](#IdioEnum) together to produce...
+[`combineNodes`](#combineNodes) is where all the magic happens, (its a big reduce). [`combineNodes`](#combineNodes) will combine; [`GraphQLNodes`](#GraphQLNode), [`IdioScalars`](#IdioScalar), [`IdioEnums`](#IdioEnum) & [`IdioDirectives`](#IdioDirective) together to produce...
 
 ```javascript
-const { typeDefs, resolvers } = await combineNodes(...);
+const { typeDefs, resolvers, schemaDirectives } = await combineNodes(...);
 ```
 ready to be passed to your favorite graphql implementation. 
 
@@ -190,12 +193,14 @@ ready to be passed to your favorite graphql implementation.
  * @property {Object} resolvers.Query - graphql resolvers.Query
  * @property {Object} resolvers.Mutation - graphql resolvers.Mutation
  * @property {Object} resolvers.Subscription - graphql resolvers.Subscription
+ * @property {Object} schemaDirectives - graphql schemaDirectives resolvers
  */
 
 /**
  * @typedef {Object} appliances
  * @property {Array.<IdioScalar>} scalars - array of IdioScalar
  * @property {Array.<IdioEnum>} enums - array of IdioEnum
+ * @property {Array.<IdioDirective>} directives - array of IdioDirective
  */
 
 /**
@@ -208,7 +213,7 @@ ready to be passed to your favorite graphql implementation.
 ```
 
 # IdioEnum
-If you need to declare an enum with a resolver, idio-graphql encourages the developer to separate the type definition and resolver for the enum. [`IdioEnum`](#IdioEnum) allows developers to modularize an enum within the graphql API. You can specify enums top-level [`combineNodes`](#combineNodes) or at a [`GraphQLNode`](#GraphQLNode) level. 
+If you need to declare an enum with a resolver, idio-graphql encourages the developer to separate the type definition and resolver for the enum. [`IdioEnum`](#IdioEnum) allows developers to modularize an enum within the graphql API. You can specify enums top-level at [`combineNodes`](#combineNodes) or at a [`GraphQLNode`](#GraphQLNode) level. 
 
 **example**
 
@@ -301,6 +306,67 @@ module.exports = JSONScalar;
  * @returns IdioScalar
  */
 ```
+
+# IdioDirective 
+If you need to declare an directive, idio-graphql encourages the developer to separate the type definition and resolver for the directive. [`IdioDirective`](#IdioDirective) allows developers to modularize an directive within the graphql API. You can only specify scalars top-level at [`combineNodes`](#combineNodes).
+
+_example uses [graphql-auth-directives](npmjs.com/package/graphql-auth-directives)_
+
+**example**
+
+```javascript
+const { HasScopeDirective } = require("graphql-auth-directives");
+const { IdioDirective } = require("idio-graphql");
+
+const hasScopeDirective = new IdioDirective({
+    name: "hasScope",
+    typeDefs: "./HasScopeDirective.gql",
+    resolver: HasScopeDirective
+});
+
+module.exports = hasScopeDirective;
+```
+
+**./HasScopeDirective.gql**
+
+```graphql
+directive @hasScope(
+    scopes: [String]!
+) on FIELD_DEFINITION 
+```
+
+**definitions**
+
+```javascript
+/**
+ * @typedef {Object} IdioDirective
+ * @property {string} name - The Directive name.
+ * @property {string} typeDefs - Path to the Directive.gql file.
+ * @property {Object} resolver - The Directive resolver
+ */
+
+/**
+ * Creates a instance of a IdioDirective.
+ *
+ * @param {Object} config - An object.
+ * @param {string} config.name - The Directive name.
+ * @param {string} config.typeDefs - Path to the Directive.gql file.
+ * @param {Object} config.resolver - The Directive resolver.
+ *
+ * @returns IdioDirective
+ */
+```
+
+# Changelog
+_Change log started at release 1.1.0_
+
+All notable changes to this project will be documented in this section. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.0] - 2019-11-12
+### Added
+- Provide [`IdioDirectives`](#IdioDirective) to [`combineNodes`](#combineNodes)
+
+
 
 # License
 
