@@ -12,7 +12,7 @@ const { parseTypeDefs } = require("./util/index.js");
  *
  * @param {Object} config
  * @param {string} config.name - The Enum name.
- * @param {string} typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
+ * @param {string} config.typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Enum resolver.
  *
  * @returns IdioEnum
