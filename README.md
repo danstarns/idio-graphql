@@ -1,5 +1,5 @@
-# idio-graphql (idiomatic-graphql)
-[![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Coverage](https://img.shields.io/badge/coverage-100%25-green)](https://github.com/danstarns/idio-graphql/tree/master/test)
+# idio-graphql
+[![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Coverage](https://img.shields.io/badge/coverage-100%25-green)](https://github.com/danstarns/idio-graphql/tree/master/test) [![Stars](https://img.shields.io/github/stars/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql)
 
 ```
 $ npm install idio-graphql
@@ -7,130 +7,93 @@ $ npm install idio-graphql
 
 # Intro
 
-idio-graphql provides a set of [methods](#API) to enable developers to structure and modularize a graphql API. idio-graphql encourages the practice of a schema first solution to architecting a graphql API. With all the tools around graphql, none was here to normalize the way our servers look. idio-graphql hopes to solve this.
-
+[idio-graphql](https://github.com/danstarns/idio-graphql) provides a set of [methods](https://github.com/danstarns/idio-graphql#API) to enable developers to structure and modularize a [GraphQL](https://graphql.org/) API into individual, maintainable, modules.
 
 # Index
 <!-- toc -->
-* [Intro](#Intro)
-* [Getting Started](#Getting-Started)
-* [API](#API)
-* [Changelog](#Changelog)
-* [License](#License)
+* [Intro](https://github.com/danstarns/idio-graphql#Intro)
+* [Getting Started](https://github.com/danstarns/idio-graphql#Getting-Started)
+* [API](https://github.com/danstarns/idio-graphql#API)
+    * [GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode)
+    * [combineNodes](https://github.com/danstarns/idio-graphql#combineNodes)
+    * [IdioEnum](https://github.com/danstarns/idio-graphql#IdioEnum)
+    * [IdioScalar](https://github.com/danstarns/idio-graphql#IdioScalar)
+    * [IdioDirective](https://github.com/danstarns/idio-graphql#IdioDirective)
+* [Changelog](https://github.com/danstarns/idio-graphql#Changelog)
+* [License](https://github.com/danstarns/idio-graphql#License)
 <!-- tocstop -->
-
 
 # Getting Started
 Examples use [apollo-server](https://www.npmjs.com/package/apollo-server) however, feel free to plug into your own solution. 
 
-If you want to get started straight away checkout the [example repo](https://github.com/danstarns/idio-graphql-example).
-
 ```javascript
+const {
+    combineNodes,
+    GraphQLNode
+} = require("idio-graphql");
+
 const { ApolloServer } = require("apollo-server");
-const { combineNodes } = require("idio-graphql");
-
-const userNode = require("./user-node.js");
-
-(async function Main() {
-    try {
-        const { typeDefs, resolvers } = await combineNodes([userNode]);
-
-        const server = new ApolloServer({ typeDefs, resolvers });
-
-        await server.listen(4000);
-
-        console.log("Listing on localhost:4000/graphql");
-    } catch (error) {
-        console.error(error);
-    }
-})();
-```
-**`user-node.js`**
-
-```javascript
-const { GraphQLNode } = require("idio-graphql");
-
-const Query = {
-    getUser: async (_, { id }) => {
-        // get user from db...
-
-        return user
-    }
-};
+const gql = require("graphql-tag");
 
 const User = new GraphQLNode({
     name: "User",
-    typeDefs: "./User.gql",
-    resolvers: { Query }
-});
+    typeDefs: gql`
+        type User {
+            id: ID
+            name: String
+            age: Int
+        }
 
-module.exports = User;
-```
+        type Query {
+            user(id: ID!): User
+        }
+    `,
+    resolvers: {
+        Query: {
+            user: (parent, { id }) => {
+                // get user from source
 
-**`User.gql`**
-```graphql
-type User {
-    name: String
-    age: Int
-}
-
-extend type Query {
-    getUser(id: ID!): User
-}
-```
-
-**example results**
-```javascript 
-const { typeDefs, resolvers } = await combineNodes([userNode]);
-```
-
-**typeDefs**
-```graphql
-type User {
-    name: String
-    age: Int
-}
-
-extend type Query {
-    getUser(id: ID!): User
-}
-
-type Query
-```
-
-**resolvers**
-```javascript
-{
-    Query: {
-        getUser: async (_, { id }) => {
-            // get user from db...
-
-            return user;
+                return user;
+            }
         }
     }
-};
+});
+
+async function main() {
+    const { typeDefs, resolvers } = await combineNodes([User]);
+
+    const server = new ApolloServer({ typeDefs, resolvers });
+
+    await server.listen(4000);
+
+    console.log(`Server up on port 4000 🚀`);
+}
+
+main();
 
 ```
-
-_note that developer must use `extend` on all graphql [root types](https://graphql.org/learn/schema/)_ 
-
-### Root types
-1. Query => `extend type Query`
-1. Mutation => `extend type Mutation`
-1. Subscription => `extend type Subscription`
 
 # API
 <!-- toc -->
-* [GraphQLNode](#GraphQLNode)
-* [combineNodes](#combineNodes)
-* [IdioEnum](#IdioEnum)
-* [IdioScalar](#IdioScalar)
-* [IdioDirective](#IdioDirective)
+* [GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode)
+* [combineNodes](https://github.com/danstarns/idio-graphql#combineNodes)
+* [IdioEnum](https://github.com/danstarns/idio-graphql#IdioEnum)
+* [IdioScalar](https://github.com/danstarns/idio-graphql#IdioScalar)
+* [IdioDirective](https://github.com/danstarns/idio-graphql#IdioDirective)
 <!-- tocstop -->
 
 # GraphQLNode
 
-[`GraphQLNode`](#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. Its recommended to create new folders for `resolvers` to separate logic & keep things clean.
+1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/graphql-node.js)
+2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/graphql-node.test.js)
+
+```javascript 
+const { GraphQLNode } = require("idio-graphql")
+```
+
+## intro
+
+[`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. Its recommended to create new folders for `resolvers` to separate logic & keep things clean.
 
 **example**
 
@@ -142,13 +105,16 @@ const Mutation = require("./Mutation/index.js");
 const Subscription = require("./Subscription/index.js");
 const Fields = require("./Fields/index.js");
 const enums = require("./enums/index.js");
+const nodes = require("./nodes/index.js");
 
 const User = new GraphQLNode({
     name: "User",
-    typeDefs: "./User.gql",
+    typeDefs: "./User.gql", // gql-tag, string or filePath
     resolvers: { Query, Mutation, Subscription, Fields },
-    enums
+    enums,
+    nodes
 });
+
 
 module.exports = User;
 ```
@@ -159,19 +125,46 @@ module.exports = User;
 /**
  * @typedef {Object} GraphQLNode
  * @property {string} name - The nodes name.
- * @property {string} typeDefs - Path to the nodes gql file.
+ * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
  * @property {Object} resolvers - Graphql resolvers
  * @property {Object} resolvers.Query - Graphql resolvers.Query
  * @property {Object} resolvers.Mutation - Graphql resolvers.Mutation
  * @property {Object} resolvers.Subscription - Graphql resolvers.Subscription
  * @property {Object} resolvers.Fields - Graphql resolvers.Fields
  * @property {Array.<IdioEnum>} enums - The nodes enums.
+ * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
+ */
+
+/**
+ * @typedef {Object} GraphQLNodeConfig
+ * @property {name} name - The nodes name.
+ * @property {string} typeDefs - Graphql typeDefs, use filePath, string, or gql-tag
+ * @property {{Query: {Object}, Mutation: {Object}, Subscription: {Object}, Fields: {Object} }} resolvers - The nodes resolvers.
+ * @property {Array.<IdioEnum>} enums - The nodes enums.
+ * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
+ */
+
+/**
+ * Creates a instance of a GraphQLNode.
+ *
+ * @param {GraphQLNodeConfig} config - An object.
+ *
+ * @returns GraphQLNode
  */
 ```
 
 # combineNodes
 
-[`combineNodes`](#combineNodes) is where all the magic happens, (its a big reduce). [`combineNodes`](#combineNodes) will combine; [`GraphQLNodes`](#GraphQLNode), [`IdioScalars`](#IdioScalar), [`IdioEnums`](#IdioEnum) & [`IdioDirectives`](#IdioDirective) together to produce...
+1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/combine-nodes.js)
+2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/combine-nodes.test.js)
+
+```javascript 
+const { combineNodes } = require("idio-graphql")
+```
+
+## intro
+
+[`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) is where all the magic happens, (its a big reduce). [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) will combine; [`GraphQLNodes`](https://github.com/danstarns/idio-graphql#GraphQLNode), [`IdioScalars`](https://github.com/danstarns/idio-graphql#IdioScalar), [`IdioEnums`](https://github.com/danstarns/idio-graphql#IdioEnum) & [`IdioDirectives`](https://github.com/danstarns/idio-graphql#IdioDirective) together to produce...
 
 ```javascript
 const { typeDefs, resolvers, schemaDirectives } = await combineNodes(...);
@@ -181,26 +174,60 @@ ready to be passed to your favorite graphql implementation.
 1. [apollo-server](https://github.com/apollographql/apollo-server)
 2. [graphql-yoga](https://github.com/prisma-labs/graphql-yoga)
 3. [makeExecutableSchema](https://www.apollographql.com/docs/apollo-server/api/graphql-tools/)
-4. and many more...
+
+
+
+**example**
+
+```javascript 
+const { combineNodes } = require("idio-graphql");
+
+const nodes = require("./nodes/index.js");
+const directives = require("./directives/index.js");
+const scalars = require("./scalars/index.js");
+const enums = require("./enums/index.js");
+const schemaGlobals = require("./schemaGlobals/index.js");
+
+async function main() {
+    const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
+        nodes,
+        {
+            directives,
+            scalars,
+            enums,
+            schemaGlobals
+        }
+    );
+
+    const server = new ApolloServer({ typeDefs, resolvers, schemaDirectives });
+
+    await server.listen(4000);
+
+    console.log(`Server up on port 4000 🚀`);
+}
+
+main();
+```
 
 **definitions**
 
 ```javascript
 /**
  * @typedef {Object} Schema
- * @property {string} typeDefs - graphql typeDefs
- * @property {Object} resolvers - graphql resolvers
- * @property {Object} resolvers.Query - graphql resolvers.Query
- * @property {Object} resolvers.Mutation - graphql resolvers.Mutation
- * @property {Object} resolvers.Subscription - graphql resolvers.Subscription
- * @property {Object} schemaDirectives - graphql schemaDirectives resolvers
+ * @property {string} typeDefs - graphql typeDefs.
+ * @property {Object} resolvers - graphql resolvers.
+ * @property {Object} resolvers.Query - graphql resolvers.Query.
+ * @property {Object} resolvers.Mutation - graphql resolvers.Mutation.
+ * @property {Object} resolvers.Subscription - graphql resolvers.Subscription.
+ * @property {Object} schemaDirectives - graphql schemaDirectives resolvers.
  */
 
 /**
  * @typedef {Object} appliances
- * @property {Array.<IdioScalar>} scalars - array of IdioScalar
- * @property {Array.<IdioEnum>} enums - array of IdioEnum
- * @property {Array.<IdioDirective>} directives - array of IdioDirective
+ * @property {Array.<IdioScalar>} scalars
+ * @property {Array.<IdioEnum>} enums
+ * @property {Array.<IdioDirective>} directives
+ * @property {any} schemaGlobals - an Array or a single instance of Graphql typedefs, use filePath, string, or gql-tag.
  */
 
 /**
@@ -213,7 +240,16 @@ ready to be passed to your favorite graphql implementation.
 ```
 
 # IdioEnum
-If you need to declare an enum with a resolver, idio-graphql encourages the developer to separate the type definition and resolver for the enum. [`IdioEnum`](#IdioEnum) allows developers to modularize an enum within the graphql API. You can specify enums top-level at [`combineNodes`](#combineNodes) or at a [`GraphQLNode`](#GraphQLNode) level. 
+
+1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-enum.js)
+2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-enum.test.js)
+
+```javascript 
+const { IdioEnum } = require("idio-graphql");
+```
+
+## intro
+If you need to declare an enum with a resolver. [`IdioEnum`](https://github.com/danstarns/idio-graphql#IdioEnum) allows developers to modularize an enum within the graphql API. You can specify enums top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) or at a [`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) level. 
 
 **example**
 
@@ -222,7 +258,7 @@ const { IdioEnum } = require("idio-graphql");
 
 const StatusEnum = new IdioEnum({
     name: "StatusEnum",
-    typeDefs: "./StatusEnum.gql",
+    typeDefs: "./StatusEnum.gql", // gql-tag, string or filePath
     resolver: {
         ONLINE: "online",
         OFFLINE: "offline",
@@ -249,16 +285,16 @@ enum StatusEnum {
 /**
  * @typedef {Object} IdioEnum
  * @property {string} name - The Enum name.
- * @property {string} typeDefs - Path to the Enum.gql file.
- * @property {Object} resolver - The Enum resolver
+ * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
+ * @property {Object} resolver - The Enum resolver.
  */
 
 /**
- * Creates a instance of a IdioEnum.
+ * Creates a instance of IdioEnum.
  *
- * @param {Object} config - An object.
+ * @param {Object} config
  * @param {string} config.name - The Enum name.
- * @param {string} config.typeDefs - Path to the Enum.gql file.
+ * @param {string} typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Enum resolver.
  *
  * @returns IdioEnum
@@ -266,10 +302,18 @@ enum StatusEnum {
 ```
 
 # IdioScalar
-If you need to declare an scalar, idio-graphql encourages the developer to separate the type definition and resolver for the scalar. [`IdioScalar`](#IdioScalar) allows developers to modularize an scalar within the graphql API. You can only specify scalars top-level [`combineNodes`](#combineNodes).
 
-_note [`IdioScalar`](#IdioScalar) does not require a .gql file, it seems useless to make a new file for 1 line._
+1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-scalar.js)
+2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-scalar.test.js)
 
+```javascript 
+const { IdioScalar } = require("idio-graphql");
+```
+
+## intro
+If you need to declare an scalar, idio-graphql encourages the developer to separate the type definition and resolver for the scalar. [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) allows developers to modularize a scalar within the graphql API. You can only specify scalars top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
+
+_note [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) does not require typeDefs it uses the Scalar name to match up the resolver._
 
 _example uses [graphql-type-json](https://github.com/taion/graphql-type-json)_
 
@@ -297,9 +341,9 @@ module.exports = JSONScalar;
  */
 
 /**
- * Creates a instance of a IdioScalar.
+ * Creates a instance of IdioScalar.
  *
- * @param {Object} config - An object.
+ * @param {Object} config
  * @param {string} config.name - The Scalar name.
  * @param {Object} config.resolver - The Scalar resolver.
  *
@@ -307,8 +351,17 @@ module.exports = JSONScalar;
  */
 ```
 
-# IdioDirective 
-If you need to declare an directive, idio-graphql encourages the developer to separate the type definition and resolver for the directive. [`IdioDirective`](#IdioDirective) allows developers to modularize an directive within the graphql API. You can only specify scalars top-level at [`combineNodes`](#combineNodes).
+# IdioDirective
+
+1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-enum.js)
+2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-enum.test.js)
+
+```javascript 
+const { IdioDirective } = require("idio-graphql");
+```
+
+## intro
+[`IdioDirective`](https://github.com/danstarns/idio-graphql#IdioDirective) allows developers to modularize an directive within the graphql API. You can only specify scalars top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
 
 _example uses [graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)_
 
@@ -320,12 +373,13 @@ const { IdioDirective } = require("idio-graphql");
 
 const hasScopeDirective = new IdioDirective({
     name: "hasScope",
-    typeDefs: "./HasScopeDirective.gql",
+    typeDefs: "./HasScopeDirective.gql", // gql-tag, string or filePath
     resolver: HasScopeDirective
 });
 
 module.exports = hasScopeDirective;
 ```
+
 
 **./HasScopeDirective.gql**
 
@@ -335,22 +389,23 @@ directive @hasScope(
 ) on FIELD_DEFINITION 
 ```
 
+
 **definitions**
 
 ```javascript
 /**
  * @typedef {Object} IdioDirective
  * @property {string} name - The Directive name.
- * @property {string} typeDefs - Path to the Directive.gql file.
- * @property {Object} resolver - The Directive resolver
+ * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
+ * @property {Object} resolver - The Directive resolver.
  */
 
 /**
  * Creates a instance of a IdioDirective.
  *
- * @param {Object} config - An object.
+ * @param {Object} config
  * @param {string} config.name - The Directive name.
- * @param {string} config.typeDefs - Path to the Directive.gql file.
+ * @param {string} typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Directive resolver.
  *
  * @returns IdioDirective
@@ -362,9 +417,12 @@ _Change log started at release 1.1.0_
 
 All notable changes to this project will be documented in this section. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0] - 2019-23-12
+[see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.0.md)
+
 ## [1.1.0] - 2019-11-12
 ### Added
-- Provide [`IdioDirectives`](#IdioDirective) to [`combineNodes`](#combineNodes)
+- Provide [`IdioDirectives`](https://github.com/danstarns/idio-graphql#IdioDirective) to [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes)
 
 
 
