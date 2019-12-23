@@ -12,6 +12,7 @@ $ npm install idio-graphql
 # Index
 <!-- toc -->
 * [Intro](https://github.com/danstarns/idio-graphql#Intro)
+* [Contributing](https://github.com/danstarns/idio-graphql/blob/master/.github/CONTRIBUTING/contributing.md)
 * [Getting Started](https://github.com/danstarns/idio-graphql#Getting-Started)
 * [API](https://github.com/danstarns/idio-graphql#API)
     * [GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode)
@@ -20,7 +21,7 @@ $ npm install idio-graphql
     * [IdioScalar](https://github.com/danstarns/idio-graphql#IdioScalar)
     * [IdioDirective](https://github.com/danstarns/idio-graphql#IdioDirective)
 * [Changelog](https://github.com/danstarns/idio-graphql#Changelog)
-* [License](https://github.com/danstarns/idio-graphql#License)
+* [License](https://github.com/danstarns/idio-graphql/blob/master/LICENSE)
 <!-- tocstop -->
 
 # Getting Started
@@ -417,35 +418,10 @@ _Change log started at release 1.1.0_
 
 All notable changes to this project will be documented in this section. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0] - 2019-23-12
+## [2.0.0] - 2019-23-12
 [see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.0.md)
 
 ## [1.1.0] - 2019-11-12
 ### Added
 - Provide [`IdioDirectives`](https://github.com/danstarns/idio-graphql#IdioDirective) to [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes)
 
-
-
-# License
-
-MIT License
-
-Copyright (c) 2019 Daniel Starns
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
