@@ -1,5 +1,0 @@
-enum Pets {
-    CAT
-    DOG
-    SNAKE
-}

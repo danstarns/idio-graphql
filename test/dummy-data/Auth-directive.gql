@@ -1,8 +1,0 @@
-input permissionInput {
-    resource: String!
-    action: String!
-}
-
-directive @hasPermission(
-    permission: permissionInput!
-) on FIELD_DEFINITION 

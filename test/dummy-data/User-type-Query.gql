@@ -1,9 +1,0 @@
-type User {
-    name: String
-    age: Int
-    posts: [Post]
-}
-
-type Query {
-    user: User
-}
