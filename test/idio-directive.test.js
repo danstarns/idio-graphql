@@ -1,6 +1,10 @@
+/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
-const IdioDirective = require("../src/idio-directive.js");
+
+const { SOURCE_PATH = "src" } = process.env;
+
+const IdioDirective = require(`../${SOURCE_PATH}/idio-directive.js`);
 
 describe("IdioDirective", () => {
     it("should throw name required", () => {

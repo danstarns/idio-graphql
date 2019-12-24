@@ -1,8 +1,15 @@
-const {
-    promises: fs,
-    constants: { R_OK }
-} = require("fs");
+const fs = require("fs");
 
+function readFileAsync(...options) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(...options, (err, res) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(res);
+        });
+    });
+}
 /**
  * A fancy promise based wrapper around fs.readFile.
  *
@@ -16,9 +23,7 @@ async function graphQLLoader(filePath) {
         throw new Error("graphQLLoader: filePath required");
     }
 
-    await fs.access(filePath, R_OK);
-
-    return fs.readFile(filePath, "utf-8");
+    return readFileAsync(filePath, "utf-8");
 }
 
 module.exports = graphQLLoader;

@@ -1,9 +1,13 @@
+/* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
-const combineNodes = require("../src/combine-nodes.js");
-const GraphQLNode = require("../src/graphql-node.js");
-const IdioEnum = require("../src/idio-enum.js");
-const IdioScalar = require("../src/idio-scalar.js");
-const IdioDirective = require("../src/idio-directive.js");
+
+const { SOURCE_PATH = "src" } = process.env;
+
+const combineNodes = require(`../${SOURCE_PATH}/combine-nodes.js`);
+const GraphQLNode = require(`../${SOURCE_PATH}/graphql-node.js`);
+const IdioEnum = require(`../${SOURCE_PATH}/idio-enum.js`);
+const IdioScalar = require(`../${SOURCE_PATH}/idio-scalar.js`);
+const IdioDirective = require(`../${SOURCE_PATH}/idio-directive.js`);
 
 describe("combineNodes", () => {
     it("should throw nodes required", async () => {
