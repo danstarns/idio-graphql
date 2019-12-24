@@ -1,3 +1,6 @@
+require("core-js/stable");
+require("regenerator-runtime/runtime");
+
 const GraphQLNode = require("./graphql-node.js");
 const combineNodes = require("./combine-nodes.js");
 const IdioScalar = require("./idio-scalar.js");
