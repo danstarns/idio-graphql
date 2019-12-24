@@ -22,4 +22,12 @@ describe("graphQLLoader", () => {
             .to.be.a("string")
             .to.contain(`type User`);
     });
+
+    it("should throw fs error when cant access file", async () => {
+        try {
+            await graphQLLoader("./snjkf/ajhdks/fanjdfkashjkfajhjeywbjbjko");
+        } catch (error) {
+            expect(error.message).to.be.a("string");
+        }
+    });
 });
