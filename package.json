@@ -1,8 +1,8 @@
 {
   "name": "idio-graphql",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A Schema first solution to structuring your graphql API",
-  "main": "./build/index.js",
+  "main": "./dist/index.js",
   "keywords": [
     "graphql",
     "schema",
