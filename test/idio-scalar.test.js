@@ -1,6 +1,10 @@
+/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
-const IdioScalar = require("../src/idio-scalar.js");
+
+const { SOURCE_PATH = "src" } = process.env;
+
+const IdioScalar = require(`../${SOURCE_PATH}/idio-scalar.js`);
 
 describe("IdioScalar", () => {
     it("should throw IdioScalar: name required", () => {

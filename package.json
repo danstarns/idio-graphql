@@ -4,8 +4,9 @@
   "description": "A Schema first solution to structuring your graphql API",
   "main": "./src/index.js",
   "scripts": {
-    "test": "cross-env ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive  --timeout 100000 \"test/**/*.test.js\"",
-    "build:babel": "mkdir dist && babel src -d dist"
+    "test": "cross-env SOURCE_PATH=\"src\" ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive  --timeout 100000 \"test/**/*.test.js\"",
+    "test:build": "cross-env SOURCE_PATH=\"dist\" ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive  --timeout 100000 \"test/**/*.test.js\"",
+    "build": "mkdir dist && babel src -d dist"
   },
   "keywords": [
     "graphql",

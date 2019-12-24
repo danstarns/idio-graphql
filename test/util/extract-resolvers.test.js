@@ -1,6 +1,10 @@
+/* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
 const { parse } = require("graphql/language/parser");
-const extractResolvers = require("../../src/util/extract-resolvers.js");
+
+const { SOURCE_PATH = "src" } = process.env;
+
+const extractResolvers = require(`../../${SOURCE_PATH}/util/extract-resolvers.js`);
 
 describe("extractResolvers", () => {
     it("should return an array of Querys", () => {

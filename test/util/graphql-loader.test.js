@@ -1,6 +1,10 @@
+/* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
 const path = require("path");
-const graphQLLoader = require("../../src/util/graphql-loader.js");
+
+const { SOURCE_PATH = "src" } = process.env;
+
+const graphQLLoader = require(`../../${SOURCE_PATH}/util/graphql-loader.js`);
 
 describe("graphQLLoader", () => {
     it("should throw filePath required", async () => {
