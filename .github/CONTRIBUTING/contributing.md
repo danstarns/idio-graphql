@@ -10,7 +10,7 @@
 1. `npm install eslint -g`
 2. install vs-code `dbaeumer.vscode-eslint`
 3. disable prettier
-4. node version 8.16.0 >
+4. node version >= 12
 
 
 _feel free to use other editors if you can get the linter to work correctly_
