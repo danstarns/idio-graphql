@@ -433,4 +433,48 @@ describe("GraphQLNode ", () => {
             expect(_node).to.be.a.instanceOf(GraphQLNode);
         });
     });
+
+    it("should throw name already registered", () => {
+        try {
+            const node = new GraphQLNode({
+                name: "User",
+                typeDefs: `
+                type User {
+                    name: String
+                    age: Int
+                }
+                
+                type Query {
+                    getUserByID(id: ID!): User
+                }
+            `,
+                resolvers: {
+                    Query: {}
+                }
+            });
+
+            const node2 = new GraphQLNode({
+                name: "User",
+                typeDefs: `
+                type User {
+                    name: String
+                    age: Int
+                }
+                
+                type Query {
+                    getUserByID(id: ID!): User
+                }
+            `,
+                resolvers: {
+                    Query: {}
+                }
+            });
+        } catch (error) {
+            expect(error.message)
+                .to.be.a("string")
+                .to.contain(
+                    "GraphQLNode: node with name 'User' already registered"
+                );
+        }
+    });
 });
