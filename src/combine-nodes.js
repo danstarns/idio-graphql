@@ -41,10 +41,53 @@ async function loadNode(n) {
     const resolverKeys = {
         Query: Object.keys(node.resolvers.Query || {}),
         Mutation: Object.keys(node.resolvers.Mutation || {}),
-        Subscription: Object.keys(node.resolvers.Subscription || {})
+        Subscription: Object.keys(node.resolvers.Subscription || {}),
+        Fields: Object.keys(node.resolvers.Fields || {})
     };
 
-    const ast = parse(node.typeDefs);
+    let ast;
+
+    try {
+        ast = parse(node.typeDefs);
+    } catch (error) {
+        throw new Error(
+            `combineNodes: loading node with name: '${node.name}' could not parse typeDefs: Error: ${error} `
+        );
+    }
+
+    const nodeNameObjectType = ast.definitions
+        .filter((definition) => {
+            if (definition.kind === "ObjectTypeDefinition") {
+                return definition;
+            }
+
+            return false;
+        })
+        .find((leaf) => {
+            const {
+                name: { value }
+            } = leaf;
+
+            return value === node.name;
+        });
+
+    if (!nodeNameObjectType) {
+        throw new Error(
+            `combineNodes: node with name '${node.name}' should contain a ObjectTypeDefinition called '${node.name}'`
+        );
+    }
+
+    const nodeNameObjectTypeFields = nodeNameObjectType.fields.map((field) => {
+        return field.name.value;
+    });
+
+    resolverKeys.Fields.forEach((key) => {
+        if (!nodeNameObjectTypeFields.includes(key)) {
+            throw new Error(
+                `combineNodes: node with name: '${node.name}' has a Field resolver called '${key}' thats not defined in typeDefs`
+            );
+        }
+    });
 
     const {
         Query: queryFields,

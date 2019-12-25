@@ -418,6 +418,9 @@ _Change log started at release 1.1.0_
 
 All notable changes to this project will be documented in this section. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2019-25-12
+[see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.1.0.md)
+
 ## [2.0.0] - 2019-23-12
 [see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.0.md)
 

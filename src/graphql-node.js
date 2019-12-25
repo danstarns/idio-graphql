@@ -50,10 +50,10 @@ function GraphQLNode({ name, typeDefs, resolvers, enums, nodes } = {}) {
     }
 
     const notAllowedNodeNames = {
-        query: true,
-        mutation: true,
-        subscription: true,
-        fields: true
+        query: 1,
+        mutation: 1,
+        subscription: 1,
+        fields: 1
     };
 
     if (notAllowedNodeNames[name.toLowerCase()]) {

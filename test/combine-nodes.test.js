@@ -1,5 +1,6 @@
 /* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
+const path = require("path");
 
 const { SOURCE_PATH = "src" } = process.env;
 
@@ -842,7 +843,10 @@ describe("combineNodes", () => {
                 }
             `,
             resolvers: {
-                Query: { getUserByID: () => true }
+                Query: { getUserByID: () => true },
+                Fields: {
+                    age: () => 20
+                }
             }
         });
 
@@ -921,6 +925,94 @@ describe("combineNodes", () => {
                 .to.be.a("string")
                 .to.contain(
                     "combineNodes: node with name 'User' already registered"
+                );
+        }
+    });
+
+    it("should throw nodes typeDefs should contain a ObjectTypeDefinition called node.name", async () => {
+        try {
+            const node = new GraphQLNode({
+                name: "User",
+                typeDefs: `
+                type post {
+                    title: String
+                    description: Int
+                }
+                
+                type Mutation {
+                    likePost(id: ID!): post
+                }
+            `,
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    }
+                }
+            });
+
+            await combineNodes([node]);
+        } catch (error) {
+            expect(error.message).to.contain(
+                "combineNodes: node with name 'User' should contain a ObjectTypeDefinition called 'User'"
+            );
+        }
+    });
+
+    it("node with name has a Field resolver called thats not defined in typeDefs`", async () => {
+        try {
+            const node = new GraphQLNode({
+                name: "Post",
+                typeDefs: `
+                type Post {
+                    title: String
+                    description: Int
+                }
+                
+                type Mutation {
+                    likePost(id: ID!): Post
+                }
+            `,
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    },
+                    Fields: {
+                        random: () => true
+                    }
+                }
+            });
+
+            await combineNodes([node]);
+        } catch (error) {
+            expect(error.message)
+                .to.be.a("string")
+                .to.contain(
+                    "combineNodes: node with name: 'Post' has a Field resolver called 'random' thats not defined in typeDefs"
+                );
+        }
+    });
+
+    it("should throw could not parseTypeDefs", async () => {
+        try {
+            const node = new GraphQLNode({
+                name: "Post",
+                typeDefs: path.join(__dirname, "./dummy-data/Error-Post.gql"),
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    },
+                    Fields: {
+                        random: () => true
+                    }
+                }
+            });
+
+            await combineNodes([node]);
+        } catch (error) {
+            expect(error.message)
+                .to.be.a("string")
+                .to.contain(
+                    `combineNodes: loading node with name: 'Post' could not parse typeDefs: Error:`
                 );
         }
     });
