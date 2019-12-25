@@ -137,10 +137,17 @@ function reduceNodes(result, node) {
         };
     }
 
+    if (result.INTERNALS.REGISTERED_NODES[node.name]) {
+        throw new Error(
+            `combineNodes: node with name ${node.name} already registered`
+        );
+    }
+
     result.resolvers[node.name] = node.resolvers.Fields || {};
 
     if (node.nodes) {
         const nested = node.nodes.reduce(reduceNodes, {
+            ...result,
             typeDefs: [],
             resolvers: {
                 Query: {},
@@ -360,6 +367,9 @@ async function combineNodes(nodes, appliances = {}) {
     let { typeDefs, resolvers } = (
         await Promise.all(nodes.map(loadNode))
     ).reduce(reduceNodes, {
+        INTERNALS: {
+            REGISTERED_NODES: {}
+        },
         typeDefs: [],
         resolvers: {
             Query: {},
