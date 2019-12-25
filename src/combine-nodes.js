@@ -139,9 +139,11 @@ function reduceNodes(result, node) {
 
     if (result.INTERNALS.REGISTERED_NODES[node.name]) {
         throw new Error(
-            `combineNodes: node with name ${node.name} already registered`
+            `combineNodes: node with name '${node.name}' already registered`
         );
     }
+
+    result.INTERNALS.REGISTERED_NODES[node.name] = node.name;
 
     result.resolvers[node.name] = node.resolvers.Fields || {};
 
