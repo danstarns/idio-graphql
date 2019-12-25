@@ -433,4 +433,38 @@ describe("GraphQLNode ", () => {
             expect(_node).to.be.a.instanceOf(GraphQLNode);
         });
     });
+
+    it("should throw node has a invalid name", () => {
+        try {
+            const node = new GraphQLNode({
+                name: "Query",
+                typeDefs: `
+                type Query {
+                    method: String
+                }`,
+                resolvers: {}
+            });
+        } catch (error) {
+            expect(error.message).contain(
+                "GraphQLNode: creating node 'Query' with invalid name"
+            );
+        }
+    });
+
+    it("should throw node has a invalid name", () => {
+        try {
+            const node = new GraphQLNode({
+                name: "subscription",
+                typeDefs: `
+                type subscription {
+                    method: String
+                }`,
+                resolvers: {}
+            });
+        } catch (error) {
+            expect(error.message).contain(
+                "GraphQLNode: creating node 'subscription' with invalid name"
+            );
+        }
+    });
 });
