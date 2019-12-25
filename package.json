@@ -1,7 +1,7 @@
 {
   "name": "idio-graphql",
-  "version": "2.0.4",
-  "description": "A Schema first solution to structuring your graphql API",
+  "version": "2.1.0",
+  "description": "A set of methods to enable developers to structure and modularize a GraphQL API into individual, maintainable, modules",
   "main": "./src/index.js",
   "scripts": {
     "test": "cross-env SOURCE_PATH=\"src\" ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive  --timeout 100000 \"test/**/*.test.js\"",
@@ -10,10 +10,10 @@
   },
   "keywords": [
     "graphql",
-    "schema",
-    "gql",
-    "idiomatic",
-    "API"
+    "modules",
+    "structure",
+    "modularize",
+    "node"
   ],
   "engines": {
     "node": ">=8.16.0"

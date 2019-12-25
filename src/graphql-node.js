@@ -49,6 +49,19 @@ function GraphQLNode({ name, typeDefs, resolvers, enums, nodes } = {}) {
         throw new Error("GraphQLNode: name must be of type 'string'");
     }
 
+    const notAllowedNodeNames = {
+        query: 1,
+        mutation: 1,
+        subscription: 1,
+        fields: 1
+    };
+
+    if (notAllowedNodeNames[name.toLowerCase()]) {
+        throw new Error(
+            `GraphQLNode: creating node '${name}' with invalid name`
+        );
+    }
+
     this.name = name;
 
     if (!typeDefs) {
