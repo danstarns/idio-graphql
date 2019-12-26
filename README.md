@@ -1,5 +1,6 @@
 # idio-graphql
-[![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Coverage](https://img.shields.io/badge/coverage-100%25-green)](https://github.com/danstarns/idio-graphql/tree/master/test) [![Stars](https://img.shields.io/github/stars/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql)
+[![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Coverage](https://img.shields.io/badge/coverage-100%25-green)](https://github.com/danstarns/idio-graphql/tree/master/test) [![Stars](https://img.shields.io/github/stars/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/idio-graphql)
+
 
 ```
 $ npm install idio-graphql
@@ -12,7 +13,7 @@ $ npm install idio-graphql
 # Index
 <!-- toc -->
 * [Intro](https://github.com/danstarns/idio-graphql#Intro)
-* [Contributing](https://github.com/danstarns/idio-graphql/blob/master/.github/CONTRIBUTING/contributing.md)
+* [Contributing](https://github.com/danstarns/idio-graphql/blob/master/contributing.md)
 * [Getting Started](https://github.com/danstarns/idio-graphql#Getting-Started)
 * [API](https://github.com/danstarns/idio-graphql#API)
     * [GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode)
@@ -20,12 +21,15 @@ $ npm install idio-graphql
     * [IdioEnum](https://github.com/danstarns/idio-graphql#IdioEnum)
     * [IdioScalar](https://github.com/danstarns/idio-graphql#IdioScalar)
     * [IdioDirective](https://github.com/danstarns/idio-graphql#IdioDirective)
+* [Gists](#Gists)
 * [Changelog](https://github.com/danstarns/idio-graphql#Changelog)
 * [License](https://github.com/danstarns/idio-graphql/blob/master/LICENSE)
 <!-- tocstop -->
 
 # Getting Started
 Examples use [apollo-server](https://www.npmjs.com/package/apollo-server) however, feel free to plug into your own solution. 
+
+_[gists](#Gists)_
 
 ```javascript
 const {
@@ -94,7 +98,7 @@ const { GraphQLNode } = require("idio-graphql")
 
 ## intro
 
-[`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. Its recommended to create new folders for `resolvers` to separate logic & keep things clean.
+[`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. 
 
 **example**
 
@@ -312,7 +316,7 @@ const { IdioScalar } = require("idio-graphql");
 ```
 
 ## intro
-If you need to declare an scalar, idio-graphql encourages the developer to separate the type definition and resolver for the scalar. [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) allows developers to modularize a scalar within the graphql API. You can only specify scalars top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
+If you need to declare an scalar. [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) allows developers to modularize a scalar within the graphql API. You can only specify scalars top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
 
 _note [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) does not require typeDefs it uses the Scalar name to match up the resolver._
 
@@ -412,6 +416,15 @@ directive @hasScope(
  * @returns IdioDirective
  */
 ```
+
+# Gists
+1. [Nested Nodes](https://gist.github.com/danstarns/2cd0e6e14d51a07897268699450fef9b)
+2. [Field Resolvers](https://gist.github.com/danstarns/ff3d8153a08f70c45de676da9ab7a0cc)
+3. [Node Enums](https://gist.github.com/danstarns/7df5a15eb02fa5b89fb89295403ef539)
+4. [Directives](https://gist.github.com/danstarns/2fcfa8b560e7b47784d59648a0ec229d)
+5. [Scalars](https://gist.github.com/danstarns/ff911579b0c402ae97264577ffc6c4b1)
+6. [Schema Globals](https://gist.github.com/danstarns/4f85304e3fba292bc0da4d813987ce68)
+
 
 # Changelog
 _Change log started at release 1.1.0_
