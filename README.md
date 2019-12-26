@@ -21,7 +21,7 @@ $ npm install idio-graphql
     * [IdioEnum](https://github.com/danstarns/idio-graphql#IdioEnum)
     * [IdioScalar](https://github.com/danstarns/idio-graphql#IdioScalar)
     * [IdioDirective](https://github.com/danstarns/idio-graphql#IdioDirective)
-* [Gists](#Gists)
+* [Gists](https://github.com/danstarns/idio-graphql#Gists)
 * [Changelog](https://github.com/danstarns/idio-graphql#Changelog)
 * [License](https://github.com/danstarns/idio-graphql/blob/master/LICENSE)
 <!-- tocstop -->
@@ -29,7 +29,7 @@ $ npm install idio-graphql
 # Getting Started
 Examples use [apollo-server](https://www.npmjs.com/package/apollo-server) however, feel free to plug into your own solution. 
 
-_[gists](#Gists)_
+_[gists](#https://github.com/danstarns/idio-graphql#Gists)_
 
 ```javascript
 const {
