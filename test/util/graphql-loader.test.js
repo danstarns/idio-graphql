@@ -10,6 +10,8 @@ describe("graphQLLoader", () => {
     it("should throw filePath required", async () => {
         try {
             await graphQLLoader();
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "graphQLLoader: filePath required"
@@ -30,6 +32,8 @@ describe("graphQLLoader", () => {
     it("should throw fs error when cant access file", async () => {
         try {
             await graphQLLoader("./snjkf/ajhdks/fanjdfkashjkfajhjeywbjbjko");
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.be.a("string");
         }

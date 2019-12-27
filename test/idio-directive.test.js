@@ -10,6 +10,8 @@ describe("IdioDirective", () => {
     it("should throw name required", () => {
         try {
             const directive = new IdioDirective();
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("IdioDirective: name required");
         }
@@ -18,6 +20,8 @@ describe("IdioDirective", () => {
     it("should throw name must be of type string", () => {
         try {
             const directive = new IdioDirective({ name: [] });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioDirective: name must be of type 'string'"
@@ -28,6 +32,8 @@ describe("IdioDirective", () => {
     it("should throw typeDefs required", () => {
         try {
             const directive = new IdioDirective({ name: "hasPermission" });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioDirective: creating Directive: 'hasPermission' typeDefs required"
@@ -41,6 +47,8 @@ describe("IdioDirective", () => {
                 name: "hasPermission",
                 typeDefs: `dhjdklh`
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioDirective: creating Directive: 'hasPermission' Error: "
@@ -63,6 +71,8 @@ describe("IdioDirective", () => {
                 ) on FIELD_DEFINITION 
             `
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioDirective: creating Directive: 'hasPermission' without a resolver"

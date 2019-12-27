@@ -10,6 +10,8 @@ describe("IdioScalar", () => {
     it("should throw IdioScalar: name required", () => {
         try {
             const scalar = new IdioScalar();
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.equal("IdioScalar: name required");
         }
@@ -18,6 +20,8 @@ describe("IdioScalar", () => {
     it("should throw IdioScalar: name must be of type 'string'", () => {
         try {
             const scalar = new IdioScalar({ name: [] });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.equal(
                 "IdioScalar: name must be of type 'string'"
@@ -28,6 +32,8 @@ describe("IdioScalar", () => {
     it("should throw IdioScalar: creating scalar: 'test' without resolver", () => {
         try {
             const scalar = new IdioScalar({ name: "test" });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.equal(
                 "IdioScalar: creating scalar: 'test' without resolver"
@@ -53,6 +59,8 @@ describe("IdioScalar", () => {
                 name: "scalar",
                 resolver: () => true
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioScalar: creating scalar: 'scalar' with invalid name"

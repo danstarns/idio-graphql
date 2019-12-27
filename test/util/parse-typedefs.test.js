@@ -31,6 +31,8 @@ describe("parseTypeDefs", () => {
                     getUserById(id: ID!!!); User
                 ]    `
             );
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "parseTypeDefs: error parsing typeDefs"
@@ -81,6 +83,8 @@ describe("parseTypeDefs", () => {
     it("should throw cannot resolve typeDefs when invalid AST is provided", () => {
         try {
             parseTypeDefs({ invalid: "AST" });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("cannot resolve typeDefs: ");
         }
@@ -89,6 +93,8 @@ describe("parseTypeDefs", () => {
     it("should throw cannot parse typeDefs when a number is provided", () => {
         try {
             parseTypeDefs(278);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("cannot parse typeDefs: 278");
         }

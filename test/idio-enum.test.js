@@ -10,6 +10,8 @@ describe("IdioEnum", () => {
     it("should throw IdioEnum: name required", () => {
         try {
             const _enum = new IdioEnum();
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.equal("IdioEnum: name required");
         }
@@ -18,6 +20,8 @@ describe("IdioEnum", () => {
     it("should throw IdioEnum: name must be of type 'string'", () => {
         try {
             const _enum = new IdioEnum({ name: [] });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.equal(
                 "IdioEnum: name must be of type 'string'"
@@ -28,6 +32,8 @@ describe("IdioEnum", () => {
     it("should throw typDefs required", () => {
         try {
             const _enum = new IdioEnum({ name: "Test" });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioEnum: creating Enum: 'Test' typeDefs required"
@@ -46,6 +52,8 @@ describe("IdioEnum", () => {
                     TEST2
                 `
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioEnum: creating Enum: 'Test' Error: "
@@ -65,6 +73,8 @@ describe("IdioEnum", () => {
                 }
                 `
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "IdioEnum: creating Enum: 'Test' without a resolver"

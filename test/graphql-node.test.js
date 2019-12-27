@@ -11,6 +11,8 @@ describe("GraphQLNode ", () => {
     it("should name required", () => {
         try {
             const node = new GraphQLNode();
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("GraphQLNode: name required");
         }
@@ -19,6 +21,8 @@ describe("GraphQLNode ", () => {
     it("should throw name should be a string", () => {
         try {
             const node = new GraphQLNode({ name: [] });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "GraphQLNode: name must be of type 'string'"
@@ -29,6 +33,8 @@ describe("GraphQLNode ", () => {
     it("should throw typeDefs required", () => {
         try {
             const node = new GraphQLNode({ name: "User" });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "GraphQLNode: creating node: 'User' typeDefs required"
@@ -47,6 +53,8 @@ describe("GraphQLNode ", () => {
                 ]
             `
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "GraphQLNode: creating node: 'User' Error:"
@@ -69,6 +77,8 @@ describe("GraphQLNode ", () => {
                 }
             `
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "GraphQLNode: creating node: 'User' resolvers required"
@@ -92,6 +102,8 @@ describe("GraphQLNode ", () => {
             `,
                 resolvers: 9999
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `GraphQLNode: expected node: 'User' resolvers to be of type 'object' but recived 'number'`
@@ -117,6 +129,8 @@ describe("GraphQLNode ", () => {
                     notAllowed: {}
                 }
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `GraphQLNode: creating node: 'User' resolvers recived unexpected properties '[ notAllowed ]'`
@@ -197,6 +211,8 @@ describe("GraphQLNode ", () => {
                 },
                 enums: {}
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `GraphQLNode: creating node: 'User' enums must be of type 'array'`
@@ -226,6 +242,8 @@ describe("GraphQLNode ", () => {
                 },
                 enums: [{ name: "Status", resolver: () => true }]
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `GraphQLNode: creating node: 'User' expected enum to be instance of IdioEnum`
@@ -325,6 +343,8 @@ describe("GraphQLNode ", () => {
                 },
                 nodes: {}
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `GraphQLNode: creating node: 'User' nodes must be of type 'array'`
@@ -354,6 +374,8 @@ describe("GraphQLNode ", () => {
                 },
                 nodes: [{ name: "Post", resolvers: {}, typeDefs: `` }]
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `GraphQLNode: creating node: 'User' expected node to be instance of GraphQLNode`
@@ -444,6 +466,8 @@ describe("GraphQLNode ", () => {
                 }`,
                 resolvers: {}
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).contain(
                 "GraphQLNode: creating node 'Query' with invalid name"
@@ -461,6 +485,8 @@ describe("GraphQLNode ", () => {
                 }`,
                 resolvers: {}
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).contain(
                 "GraphQLNode: creating node 'subscription' with invalid name"
