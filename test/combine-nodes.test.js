@@ -14,6 +14,8 @@ describe("combineNodes", () => {
     it("should throw nodes required", async () => {
         try {
             await combineNodes();
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("combineNodes: nodes required");
         }
@@ -22,6 +24,8 @@ describe("combineNodes", () => {
     it("should throw node should be of type array", async () => {
         try {
             await combineNodes(99);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "combineNodes: expected nodes to be of type array recived 'number'"
@@ -52,6 +56,8 @@ describe("combineNodes", () => {
                     }
                 }
             ]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "combineNodes: recived a node not a instance of GraphQLNode"
@@ -180,6 +186,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "node with name: 'User' has a Query in the typeDefs called 'users' thats not defined in resolvers"
@@ -210,6 +218,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "node with name: 'User' has a Query resolver called 'users' thats not defined in typeDefs"
@@ -240,6 +250,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "node with name: 'User' has a Mutation in the typeDefs called 'updateUser' thats not defined in resolvers"
@@ -273,6 +285,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "node with name: 'User' has a Mutation resolver called 'createUser' thats not defined in typeDefs"
@@ -303,6 +317,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "node with name: 'User' has a Subscription in the typeDefs called 'userCreation' thats not defined in resolvers"
@@ -336,6 +352,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "node with name: 'User' has a Subscription resolver called 'userUpdate' thats not defined in typeDefs"
@@ -429,6 +447,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode], { enums: {} });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("expected enums to be an array");
         }
@@ -470,6 +490,8 @@ describe("combineNodes", () => {
                     }
                 ]
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `expected enum to be of type IdioEnum, recived:`
@@ -558,6 +580,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode], { scalars: {} });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain("expected scalars to be an array");
         }
@@ -585,6 +609,8 @@ describe("combineNodes", () => {
             await combineNodes([UserNode], {
                 scalars: [{ name: "JSON", resolver: () => true }]
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `expected scalar to be of type IdioScalar, recived:`
@@ -663,6 +689,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([UserNode], { directives: {} });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "expected directives to be an array"
@@ -707,6 +735,8 @@ describe("combineNodes", () => {
                     }
                 ]
             });
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 `expected directive to be of type IdioDirective, recived:`
@@ -920,6 +950,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([node1, node2]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")
@@ -951,6 +983,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([node]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
                 "combineNodes: node with name 'User' should contain a ObjectTypeDefinition called 'User'"
@@ -983,6 +1017,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([node]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")
@@ -1008,6 +1044,8 @@ describe("combineNodes", () => {
             });
 
             await combineNodes([node]);
+
+            throw new Error();
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")

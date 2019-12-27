@@ -159,7 +159,7 @@ async function loadNode(n) {
     return node;
 }
 
-function reduceNodes(result, node) {
+function reduceNode(result, node) {
     result.typeDefs.push(node.typeDefs);
 
     function mergeResolvers(instance) {
@@ -191,27 +191,7 @@ function reduceNodes(result, node) {
     result.resolvers[node.name] = node.resolvers.Fields || {};
 
     if (node.nodes) {
-        const nested = node.nodes.reduce(reduceNodes, {
-            ...result,
-            typeDefs: [],
-            resolvers: {
-                Query: {},
-                Mutation: {},
-                Subscription: {}
-            }
-        });
-
-        mergeResolvers(nested);
-
-        result.typeDefs = [...result.typeDefs, ...nested.typeDefs];
-
-        const {
-            resolvers: { Query, Mutation, Subscription, ...Fields }
-        } = nested;
-
-        Object.keys(Fields).forEach((key) => {
-            result.resolvers[key] = Fields[key];
-        });
+        node.nodes.forEach((nestedNode) => reduceNode(result, nestedNode));
     }
 
     return result;
@@ -411,7 +391,7 @@ async function combineNodes(nodes, appliances = {}) {
 
     let { typeDefs, resolvers } = (
         await Promise.all(nodes.map(loadNode))
-    ).reduce(reduceNodes, {
+    ).reduce(reduceNode, {
         INTERNALS: {
             REGISTERED_NODES: {}
         },
