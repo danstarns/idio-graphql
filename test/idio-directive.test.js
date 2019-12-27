@@ -99,4 +99,29 @@ describe("IdioDirective", () => {
             .to.have.property("resolver")
             .to.be.a("function");
     });
+
+    it("should throw creating directive: with invalid name", () => {
+        try {
+            const directive = new IdioDirective({
+                name: "directive",
+                typeDefs: `
+                input permissionInput {
+                    resource: String!
+                    action: String!
+                }
+                
+                directive @directive(
+                    permission: permissionInput!
+                ) on FIELD_DEFINITION 
+            `,
+                resolver: () => true
+            });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioDirective: creating directive: 'directive' with invalid name"
+            );
+        }
+    });
 });
