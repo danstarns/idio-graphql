@@ -1,5 +1,6 @@
 const IdioEnum = require("./idio-enum.js");
 const { parseTypeDefs } = require("./util/index.js");
+const { RESTRICTED_NAMES } = require("./constants/index.js");
 
 /**
  * @typedef {import('./idio-enum.js')} IdioEnum
@@ -49,14 +50,7 @@ function GraphQLNode({ name, typeDefs, resolvers, enums, nodes } = {}) {
         throw new Error("GraphQLNode: name must be of type 'string'");
     }
 
-    const notAllowedNodeNames = {
-        query: 1,
-        mutation: 1,
-        subscription: 1,
-        fields: 1
-    };
-
-    if (notAllowedNodeNames[name.toLowerCase()]) {
+    if (RESTRICTED_NAMES[name.toLowerCase()]) {
         throw new Error(
             `GraphQLNode: creating node '${name}' with invalid name`
         );
