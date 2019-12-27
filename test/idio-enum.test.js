@@ -95,4 +95,26 @@ describe("IdioEnum", () => {
 
         expect(_enum).to.have.property("resolver");
     });
+
+    it("should throw creating enum: with invalid name", () => {
+        try {
+            const _enum = new IdioEnum({
+                name: "enum",
+                typeDefs: `
+                enum enum {
+                    TEST
+                    TEST1
+                    TEST2
+                }
+                `,
+                resolver: {}
+            });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioEnum: creating enum: 'enum' with invalid name"
+            );
+        }
+    });
 });
