@@ -29,7 +29,7 @@ $ npm install idio-graphql
 # Getting Started
 Examples use [apollo-server](https://www.npmjs.com/package/apollo-server) however, feel free to plug into your own solution. 
 
-_[gists](#https://github.com/danstarns/idio-graphql#Gists)_
+_[gists](https://github.com/danstarns/idio-graphql#Gists)_
 
 ```javascript
 const {
@@ -358,8 +358,8 @@ module.exports = JSONScalar;
 
 # IdioDirective
 
-1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-enum.js)
-2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-enum.test.js)
+1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-directive.js)
+2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-directive.test.js)
 
 ```javascript 
 const { IdioDirective } = require("idio-graphql");
@@ -430,6 +430,9 @@ directive @hasScope(
 _Change log started at release 1.1.0_
 
 All notable changes to this project will be documented in this section. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.2.0] - 2019-27-12
+[see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.2.0.md)
 
 ## [2.1.0] - 2019-25-12
 [see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.1.0.md)
