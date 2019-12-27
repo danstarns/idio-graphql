@@ -46,4 +46,17 @@ describe("IdioScalar", () => {
             .to.have.property("resolver")
             .to.be.a("function");
     });
+
+    it("should throw creating scalar: with invalid name", () => {
+        try {
+            const scalar = new IdioScalar({
+                name: "scalar",
+                resolver: () => true
+            });
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioScalar: creating scalar: 'scalar' with invalid name"
+            );
+        }
+    });
 });

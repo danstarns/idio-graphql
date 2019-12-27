@@ -1,3 +1,5 @@
+const { RESTRICTED_NAMES } = require("./constants/index.js");
+
 /**
  * @typedef {Object} IdioScalar
  * @property {string} name - The Scalar name.
@@ -23,6 +25,12 @@ function IdioScalar({ name, resolver } = {}) {
 
     if (typeof name !== "string") {
         throw new Error("IdioScalar: name must be of type 'string'");
+    }
+
+    if (RESTRICTED_NAMES[name.toLowerCase()]) {
+        throw new Error(
+            `IdioScalar: creating scalar: '${name}' with invalid name`
+        );
     }
 
     this.name = name;
