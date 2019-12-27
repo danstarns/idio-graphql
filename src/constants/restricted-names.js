@@ -13,7 +13,8 @@ const RESTRICTED_NAMES = {
     string: 1,
     boolean: 1,
     id: 1,
-    input: 1
+    input: 1,
+    directive: 1
 };
 
 module.exports = RESTRICTED_NAMES;

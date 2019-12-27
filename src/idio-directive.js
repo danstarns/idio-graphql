@@ -1,4 +1,5 @@
 const { parseTypeDefs } = require("./util/index.js");
+const { RESTRICTED_NAMES } = require("./constants/index.js");
 
 /**
  * @typedef {Object} IdioDirective
@@ -28,6 +29,12 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
 
     if (typeof name !== "string") {
         throw new Error("IdioDirective: name must be of type 'string'");
+    }
+
+    if (RESTRICTED_NAMES[name.toLowerCase()]) {
+        throw new Error(
+            `IdioDirective: creating directive: '${name}' with invalid name`
+        );
     }
 
     this.name = name;
