@@ -1,4 +1,5 @@
 const { parseTypeDefs } = require("./util/index.js");
+const { RESTRICTED_NAMES } = require("./constants/index.js");
 
 /**
  * @typedef {Object} IdioEnum
@@ -28,6 +29,10 @@ function IdioEnum({ name, typeDefs, resolver } = {}) {
 
     if (typeof name !== "string") {
         throw new Error("IdioEnum: name must be of type 'string'");
+    }
+
+    if (RESTRICTED_NAMES[name.toLowerCase()]) {
+        throw new Error(`IdioEnum: creating enum: '${name}' with invalid name`);
     }
 
     this.name = name;
