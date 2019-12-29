@@ -187,8 +187,6 @@ Query: {
 ```
 
 ## Async hooks
-All hooks can be `async` to be resolved sequentiality.
-
 ```javascript
 Query: {
     users: {
@@ -325,25 +323,35 @@ module.exports = User;
 
 ```javascript
 /**
+ * @typedef {Object} ResolverType
+ * @property {Object} Query
+ * @property {Object} Mutation
+ * @property {Object} Subscription
+ * @property {Object} Fields
+ */
+
+/**
+ * @typedef {(Function|any)} Injections
+ */
+
+/**
  * @typedef {Object} GraphQLNode
  * @property {string} name - The nodes name.
  * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
- * @property {Object} resolvers - Graphql resolvers
- * @property {Object} resolvers.Query - Graphql resolvers.Query
- * @property {Object} resolvers.Mutation - Graphql resolvers.Mutation
- * @property {Object} resolvers.Subscription - Graphql resolvers.Subscription
- * @property {Object} resolvers.Fields - Graphql resolvers.Fields
+ * @property {ResolverType} resolvers - Graphql resolvers
  * @property {Array.<IdioEnum>} enums - The nodes enums.
  * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
+ * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
  */
 
 /**
  * @typedef {Object} GraphQLNodeConfig
  * @property {name} name - The nodes name.
  * @property {string} typeDefs - Graphql typeDefs, use filePath, string, or gql-tag
- * @property {{Query: {Object}, Mutation: {Object}, Subscription: {Object}, Fields: {Object} }} resolvers - The nodes resolvers.
+ * @property {ResolverType} resolvers - The nodes resolvers.
  * @property {Array.<IdioEnum>} enums - The nodes enums.
  * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
+ * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
  */
 
 /**

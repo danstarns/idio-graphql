@@ -254,10 +254,6 @@ async function loadNode(n, { INTERNALS }) {
     return node;
 }
 
-/**
- * @param {GraphQLNode} node
- */
-
 function reduceNode(result, node) {
     result.typeDefs.push(node.typeDefs);
 
