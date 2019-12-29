@@ -1,177 +1,272 @@
 const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
 const { parse } = require("graphql/language");
+const {
+    parseTypeDefs,
+    isFunction,
+    checkInstance,
+    wrappedResolver
+} = require("./util/index.js");
+
+const APPLIANCE_METADATA = require("./constants/appliance-metadata.js");
 
 const GraphQLNode = require("./graphql-node.js");
-const IdioEnum = require("./idio-enum.js");
-const IdioScalar = require("./idio-scalar.js");
-const IdioDirective = require("./idio-directive.js");
-const { parseTypeDefs, extractResolvers } = require("./util/index.js");
+const IdioError = require("./idio-error.js");
 
 /**
- * @typedef {import('./idio-enum.js')} IdioEnum
- * @typedef {import('./idio-scalar.js')} IdioScalar
- * @typedef {import('./idio-directive.js')} IdioDirective
  * @typedef {import('./graphql-node.js')} GraphQLNode
+ * @typedef {import('./idio-scalar.js')} IdioScalar
+ * @typedef {import('./idio-enum.js')} IdioEnum
+ * @typedef {import('./idio-directive.js')} IdioDirective
  */
+
+async function resolveAppliance({
+    name,
+    appliance,
+    applianceConstructor,
+    plural,
+    kind,
+    INTERNALS
+}) {
+    if (name === "schemaGlobals") {
+        if (Array.isArray(appliance)) {
+            const loadedTypeDefs = await Promise.all(
+                appliance.map((def) => parseTypeDefs(def)())
+            );
+
+            return { typeDefs: mergeTypeDefs(loadedTypeDefs) };
+        }
+
+        return { typeDefs: await parseTypeDefs(appliance)() };
+    }
+
+    if (!Array.isArray(appliance)) {
+        throw new IdioError(`expected '${name}' to be an array.`);
+    }
+
+    let typeDefs = [];
+    let resolvers = {};
+
+    await Promise.all(
+        appliance.map(async (instance) => {
+            checkInstance({
+                instance,
+                of: applianceConstructor,
+                name: plural
+            });
+
+            if (INTERNALS.REGISTERED_NAMES[instance.name]) {
+                throw new IdioError(
+                    `loading ${applianceConstructor.name} with a name: '${instance.name}' thats already registered.`
+                );
+            }
+
+            INTERNALS.REGISTERED_NAMES[instance.name] = 1;
+
+            let ast;
+
+            try {
+                ast = parse(await instance.typeDefs());
+            } catch (error) {
+                throw new IdioError(
+                    `loading ${applianceConstructor.name} with name: '${instance.name}' could not parse typeDefs \n${error}.`
+                );
+            }
+
+            const foundDefinition = ast.definitions
+                .filter((def) => def.kind === kind)
+                .find((def) => def.name.value === instance.name);
+
+            if (!foundDefinition) {
+                throw new IdioError(
+                    `${applianceConstructor.name} with name: '${instance.name}' should contain a ${kind} called '${instance.name}'.`
+                );
+            }
+
+            typeDefs.push(ast);
+
+            resolvers[instance.name] = instance.resolver;
+        })
+    );
+
+    return { typeDefs: printWithComments(mergeTypeDefs(typeDefs)), resolvers };
+}
 
 /**
  * @param {GraphQLNode} n
  */
-async function loadNode(n) {
+async function loadNode(n, { INTERNALS }) {
     const node = { ...n };
+
+    const prefix = `GraphQLNode with name: '${node.name}'`;
 
     node.typeDefs = await node.typeDefs();
 
-    if (node.enums) {
-        const loadedEnumsTypeDefs = (
-            await Promise.all(
-                node.enums.map(async (_enum) => `\n${await _enum.typeDefs()}\n`)
-            )
-        ).reduce((result, typeDef) => result + typeDef, "");
-
-        node.typeDefs += `\n${loadedEnumsTypeDefs}\n`;
-
-        node.enumResolvers = node.enums.reduce((result, _enum) => {
-            result[`${_enum.name}`] = _enum.resolver;
-
-            return result;
-        }, {});
+    try {
+        if (isFunction(node.injections)) {
+            node.injections = await node.injections();
+        }
+    } catch (error) {
+        throw new IdioError(`${prefix} failed executing injections\n${error}`);
     }
 
-    const resolverKeys = {
-        Query: Object.keys(node.resolvers.Query || {}),
-        Mutation: Object.keys(node.resolvers.Mutation || {}),
-        Subscription: Object.keys(node.resolvers.Subscription || {}),
-        Fields: Object.keys(node.resolvers.Fields || {})
-    };
+    if (node.enums) {
+        const loadedEnums = await resolveAppliance({
+            ...APPLIANCE_METADATA.find(({ name }) => name === "enums"),
+            appliance: node.enums,
+            INTERNALS
+        });
+
+        node.typeDefs += `\n${loadedEnums.typeDefs}\n`;
+
+        node.enumResolvers = loadedEnums.resolvers;
+    }
 
     let ast;
 
     try {
         ast = parse(node.typeDefs);
     } catch (error) {
-        throw new Error(
-            `combineNodes: loading node with name: '${node.name}' could not parse typeDefs: Error: ${error} `
+        throw new IdioError(`${prefix} could not parse typeDefs \n${error}.`);
+    }
+
+    const nodeAst = ast.definitions
+        .filter(({ kind }) => kind === "ObjectTypeDefinition")
+        .find(({ name: { value } }) => value === node.name);
+
+    if (!nodeAst) {
+        throw new IdioError(
+            `${prefix} should contain a ObjectTypeDefinition called '${node.name}'.`
         );
     }
 
-    const nodeNameObjectType = ast.definitions
-        .filter((definition) => {
-            if (definition.kind === "ObjectTypeDefinition") {
-                return definition;
+    const nodeFields = nodeAst.fields.map(({ name }) => name.value);
+
+    Object.keys(node.resolvers.Fields || {}).forEach((key) => {
+        if (!nodeFields.includes(key)) {
+            throw new IdioError(
+                `${prefix} has a Field resolver called '${key}' thats not defined in typeDefs.`
+            );
+        }
+    });
+
+    ["Query", "Mutation", "Subscription"].forEach((type) => {
+        const resolvers = {
+            SDL: ast.definitions
+                .filter(({ kind, name: { value } }) => {
+                    if (
+                        kind === "ObjectTypeDefinition" ||
+                        kind === "ObjectTypeExtension"
+                    ) {
+                        return value === type;
+                    }
+
+                    return false;
+                })
+                .flatMap(({ fields }) => fields)
+                .map(({ name: { value } }) => value),
+            JS: Object.keys(node.resolvers[type] || {})
+        };
+
+        resolvers.SDL.forEach((field) => {
+            if (!resolvers.JS.includes(field)) {
+                throw new IdioError(
+                    `${prefix} has a ${type} in the typeDefs called '${field}' thats not defined in resolvers.`
+                );
             }
-
-            return false;
-        })
-        .find((leaf) => {
-            const {
-                name: { value }
-            } = leaf;
-
-            return value === node.name;
         });
 
-    if (!nodeNameObjectType) {
-        throw new Error(
-            `combineNodes: node with name '${node.name}' should contain a ObjectTypeDefinition called '${node.name}'`
-        );
-    }
-
-    const nodeNameObjectTypeFields = nodeNameObjectType.fields.map((field) => {
-        return field.name.value;
+        resolvers.JS.forEach((method) => {
+            if (!resolvers.SDL.includes(method)) {
+                throw new IdioError(
+                    `${prefix} has a ${type} resolver called '${method}' thats not defined in typeDefs.`
+                );
+            }
+        });
     });
 
-    resolverKeys.Fields.forEach((key) => {
-        if (!nodeNameObjectTypeFields.includes(key)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Field resolver called '${key}' thats not defined in typeDefs`
-            );
-        }
-    });
+    node.resolvers = ["Query", "Mutation", "Subscription", "Fields"].reduce(
+        (resolvers, type) => {
+            const methods = node.resolvers[type];
 
-    const {
-        Query: queryFields,
-        Mutation: mutationFields,
-        Subscription: subscriptionFields
-    } = ["Query", "Mutation", "Subscription"].reduce(
-        (result, type) => {
-            const extracted = extractResolvers(ast, type);
+            if (methods) {
+                Object.keys(methods).forEach((name) => {
+                    const method = methods[name];
 
-            result[type] = [...result[type], ...extracted];
+                    resolvers[type] = {};
 
-            return result;
+                    if (isFunction(method)) {
+                        resolvers[type][name] = wrappedResolver(method, {
+                            name: `${node.name}.resolvers.${type}.${name}`,
+                            injections: node.injections
+                        });
+
+                        return;
+                    }
+
+                    if (Object.keys(method).includes("resolve")) {
+                        if (Object.keys(method.resolve).includes("subscribe")) {
+                            resolvers[type][name] = {
+                                ...method.resolve,
+                                subscribe: wrappedResolver(
+                                    method.resolve.subscribe,
+                                    {
+                                        pre: method.pre,
+                                        post: method.post,
+                                        name: `${node.name}.resolvers.${type}.${name}`,
+                                        injections: node.injections
+                                    }
+                                )
+                            };
+
+                            return;
+                        }
+
+                        resolvers[type][name] = wrappedResolver(
+                            method.resolve,
+                            {
+                                pre: method.pre,
+                                post: method.post,
+                                name: `${node.name}.resolvers.${type}.${name}`,
+                                injections: node.injections
+                            }
+                        );
+
+                        return;
+                    }
+
+                    throw new IdioError(
+                        `${prefix} has resolver.${type}.${name} that requires a 'resolve' method`
+                    );
+                });
+            }
+
+            return resolvers;
         },
-        { Query: [], Mutation: [], Subscription: [] }
+        {}
     );
 
-    queryFields.forEach((field) => {
-        if (!resolverKeys.Query.includes(field)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Query in the typeDefs called '${field}' thats not defined in resolvers`
-            );
-        }
-    });
-
-    resolverKeys.Query.forEach((key) => {
-        if (!queryFields.includes(key)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Query resolver called '${key}' thats not defined in typeDefs`
-            );
-        }
-    });
-
-    mutationFields.forEach((field) => {
-        if (!resolverKeys.Mutation.includes(field)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Mutation in the typeDefs called '${field}' thats not defined in resolvers`
-            );
-        }
-    });
-
-    resolverKeys.Mutation.forEach((key) => {
-        if (!mutationFields.includes(key)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Mutation resolver called '${key}' thats not defined in typeDefs`
-            );
-        }
-    });
-
-    subscriptionFields.forEach((field) => {
-        if (!resolverKeys.Subscription.includes(field)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Subscription in the typeDefs called '${field}' thats not defined in resolvers`
-            );
-        }
-    });
-
-    resolverKeys.Subscription.forEach((key) => {
-        if (!subscriptionFields.includes(key)) {
-            throw new Error(
-                `combineNodes: node with name: '${node.name}' has a Subscription resolver called '${key}' thats not defined in typeDefs`
-            );
-        }
-    });
-
     if (node.nodes) {
-        node.nodes = await Promise.all(node.nodes.map(loadNode));
+        node.nodes = await Promise.all(
+            node.nodes.map((n) => loadNode(n, { INTERNALS }))
+        );
     }
 
     return node;
 }
 
+/**
+ * @param {GraphQLNode} node
+ */
+
 function reduceNode(result, node) {
     result.typeDefs.push(node.typeDefs);
 
-    function mergeResolvers(instance) {
-        ["Query", "Mutation", "Subscription"].forEach((key) => {
-            result.resolvers[key] = {
-                ...result.resolvers[key],
-                ...(instance.resolvers[key] || {})
-            };
-        });
-    }
-
-    mergeResolvers(node);
+    ["Query", "Mutation", "Subscription"].forEach((key) => {
+        result.resolvers[key] = {
+            ...result.resolvers[key],
+            ...(node.resolvers[key] || {})
+        };
+    });
 
     if (node.enumResolvers) {
         result.resolvers = {
@@ -180,13 +275,13 @@ function reduceNode(result, node) {
         };
     }
 
-    if (result.INTERNALS.REGISTERED_NODES[node.name]) {
-        throw new Error(
-            `combineNodes: node with name '${node.name}' already registered`
+    if (result.INTERNALS.REGISTERED_NAMES[node.name]) {
+        throw new IdioError(
+            `GraphQLNode with name: '${node.name}' already registered.`
         );
     }
 
-    result.INTERNALS.REGISTERED_NODES[node.name] = node.name;
+    result.INTERNALS.REGISTERED_NAMES[node.name] = 1;
 
     result.resolvers[node.name] = node.resolvers.Fields || {};
 
@@ -198,153 +293,13 @@ function reduceNode(result, node) {
 }
 
 /**
- * @param {Array.<IdioEnum>} enums
- */
-async function resolveEnums(enums) {
-    if (!Array.isArray(enums)) {
-        throw new Error("expected enums to be an array");
-    }
-
-    function reduceEnum(result, _enum) {
-        result.typeDefs += _enum.typeDefs;
-
-        result.resolvers[_enum.name] = _enum.resolver;
-
-        return result;
-    }
-
-    function checkInstanceOfEnum(_enum) {
-        if (!(_enum instanceof IdioEnum)) {
-            throw new Error(
-                `expected enum to be of type IdioEnum, recived: ${JSON.stringify(
-                    _enum,
-                    undefined,
-                    2
-                )}`
-            );
-        }
-
-        return _enum;
-    }
-
-    const { typeDefs, resolvers } = (
-        await Promise.all(
-            enums.map(async (_enum) => {
-                checkInstanceOfEnum(_enum);
-
-                return {
-                    name: _enum.name,
-                    typeDefs: `${await _enum.typeDefs()} `,
-                    resolver: _enum.resolver
-                };
-            })
-        )
-    ).reduce(reduceEnum, {
-        typeDefs: "",
-        resolvers: {}
-    });
-
-    return { typeDefs, resolvers };
-}
-
-/**
- * @param {Array.<IdioDirective>} directives
- */
-async function resolveDirectives(directives) {
-    if (!Array.isArray(directives)) {
-        throw new Error("expected directives to be an array");
-    }
-
-    function reduceDirective(result, directive) {
-        result.typeDefs += directive.typeDefs;
-
-        result.resolvers[directive.name] = directive.resolver;
-
-        return result;
-    }
-
-    function checkInstanceOfDirective(directive) {
-        if (!(directive instanceof IdioDirective)) {
-            throw new Error(
-                `expected directive to be of type IdioDirective, recived: ${JSON.stringify(
-                    directive,
-                    undefined,
-                    2
-                )}`
-            );
-        }
-
-        return directive;
-    }
-
-    const { typeDefs, resolvers } = (
-        await Promise.all(
-            directives.map(async (directive) => {
-                checkInstanceOfDirective(directive);
-
-                return {
-                    name: directive.name,
-                    typeDefs: `${await directive.typeDefs()} `,
-                    resolver: directive.resolver
-                };
-            })
-        )
-    ).reduce(reduceDirective, {
-        typeDefs: "",
-        resolvers: {}
-    });
-
-    return { typeDefs, resolvers };
-}
-
-/**
- * @param {Array.<IdioScalar>} scalars
- */
-async function resolveScalars(scalars) {
-    if (!Array.isArray(scalars)) {
-        throw new Error("expected scalars to be an array");
-    }
-
-    function reduceScalar(result, { name, resolver }) {
-        result.typeDefs += `\nscalar ${name}\n`;
-
-        result.resolvers[name] = resolver;
-
-        return result;
-    }
-
-    function checkInstanceOfScalar(scalar) {
-        if (!(scalar instanceof IdioScalar)) {
-            throw new Error(
-                `expected scalar to be of type IdioScalar, recived: ${JSON.stringify(
-                    scalar,
-                    undefined,
-                    2
-                )}`
-            );
-        }
-
-        return scalar;
-    }
-
-    const { typeDefs, resolvers } = scalars
-        .map(checkInstanceOfScalar)
-        .reduce(reduceScalar, {
-            typeDefs: "",
-            resolvers: {}
-        });
-
-    return { typeDefs, resolvers };
-}
-
-/**
  * @typedef {Object} Schema
- * @property {string} typeDefs - graphql typeDefs.
- * @property {Object} resolvers - graphql resolvers.
- * @property {Object} resolvers.Query - graphql resolvers.Query.
- * @property {Object} resolvers.Mutation - graphql resolvers.Mutation.
- * @property {Object} resolvers.Subscription - graphql resolvers.Subscription.
- * @property {Object} schemaDirectives - graphql schemaDirectives resolvers.
+ * @property {string} typeDefs - GraphQL typeDefs.
+ * @property {Object} resolvers - GraphQL resolvers.
+ * @property {Object} resolvers.Query - GraphQL resolvers.Query.
+ * @property {Object} resolvers.Mutation - GraphQL resolvers.Mutation.
+ * @property {Object} resolvers.Subscription - GraphQL resolvers.Subscription.
+ * @property {Object} schemaDirectives - GraphQL schemaDirectives resolvers.
  */
 
 /**
@@ -352,7 +307,7 @@ async function resolveScalars(scalars) {
  * @property {Array.<IdioScalar>} scalars
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioDirective>} directives
- * @property {any} schemaGlobals - an Array or a single instance of Graphql typedefs, use filePath, string, or gql-tag.
+ * @property {any} schemaGlobals - an Array or a single instance of Graphql typeDefs, use filePath, string, or gql-tag.
  */
 
 /**
@@ -363,38 +318,36 @@ async function resolveScalars(scalars) {
  * @returns Schema
  */
 async function combineNodes(nodes, appliances = {}) {
+    let schemaDirectives = {};
+
     if (!nodes) {
-        throw new Error("combineNodes: nodes required");
+        throw new IdioError("nodes required.");
     }
 
     if (!Array.isArray(nodes)) {
-        throw new Error(
-            `combineNodes: expected nodes to be of type array recived '${typeof nodes}'`
+        throw new IdioError(
+            `expected nodes to be of type array received '${typeof nodes}'.`
         );
     }
 
-    function checkInstanceOfNode(node) {
-        if (!(node instanceof GraphQLNode)) {
-            throw new Error(
-                `combineNodes: recived a node not a instance of GraphQLNode. ${JSON.stringify(
-                    node,
-                    undefined,
-                    2
-                )}`
-            );
-        }
-    }
+    const INTERNALS = {
+        REGISTERED_NAMES: {}
+    };
 
-    nodes.forEach(checkInstanceOfNode);
+    const loadedNodes = await Promise.all(
+        nodes.map((node) => {
+            checkInstance({
+                instance: node,
+                of: GraphQLNode,
+                name: "node"
+            });
 
-    let schemaDirectives = {};
+            return loadNode(node, { INTERNALS });
+        })
+    );
 
-    let { typeDefs, resolvers } = (
-        await Promise.all(nodes.map(loadNode))
-    ).reduce(reduceNode, {
-        INTERNALS: {
-            REGISTERED_NODES: {}
-        },
+    let { typeDefs, resolvers } = loadedNodes.reduce(reduceNode, {
+        INTERNALS,
         typeDefs: [],
         resolvers: {
             Query: {},
@@ -403,58 +356,34 @@ async function combineNodes(nodes, appliances = {}) {
         }
     });
 
-    if (appliances.scalars) {
-        const resolvedScalars = await resolveScalars(appliances.scalars);
+    await Promise.all(
+        APPLIANCE_METADATA.map(async (metadata) => {
+            const appliance = appliances[metadata.name];
 
-        typeDefs.push(resolvedScalars.typeDefs);
+            if (appliance) {
+                const result = await resolveAppliance({
+                    ...metadata,
+                    appliance,
+                    INTERNALS
+                });
 
-        resolvers = { ...resolvers, ...resolvedScalars.resolvers };
-    }
+                typeDefs.push(result.typeDefs);
 
-    if (appliances.enums) {
-        const resolvedEnums = await resolveEnums(appliances.enums);
+                if (metadata.name === "directives") {
+                    schemaDirectives = result.resolvers;
 
-        typeDefs.push(resolvedEnums.typeDefs);
+                    return;
+                }
 
-        resolvers = { ...resolvers, ...resolvedEnums.resolvers };
-    }
-
-    if (appliances.directives) {
-        const resolvedDirectives = await resolveDirectives(
-            appliances.directives
-        );
-
-        typeDefs.push(resolvedDirectives.typeDefs);
-
-        schemaDirectives = resolvedDirectives.resolvers;
-    }
-
-    if (appliances.schemaGlobals) {
-        if (Array.isArray(appliances.schemaGlobals)) {
-            (
-                await Promise.all(
-                    appliances.schemaGlobals.map((def) => parseTypeDefs(def)())
-                )
-            ).forEach((def) => typeDefs.push(def));
-        } else {
-            typeDefs.push(await parseTypeDefs(appliances.schemaGlobals)());
-        }
-    }
-
-    function isFunction(value) {
-        return (
-            value &&
-            (Object.prototype.toString.call(value) === "[object Function]" ||
-                typeof value === "function" ||
-                value instanceof Function)
-        );
-    }
+                resolvers = { ...resolvers, ...(result.resolvers || {}) };
+            }
+        })
+    );
 
     function deleteEmptyResolver(key) {
-        if (
-            !isFunction(resolvers[key]) &&
-            !Object.keys(resolvers[key]).length
-        ) {
+        const resolver = resolvers[key];
+
+        if (!isFunction(resolver) && !Object.keys(resolver).length) {
             delete resolvers[key];
         }
     }

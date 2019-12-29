@@ -15,6 +15,10 @@ $ npm install idio-graphql
 * [Intro](https://github.com/danstarns/idio-graphql#Intro)
 * [Contributing](https://github.com/danstarns/idio-graphql/blob/master/contributing.md)
 * [Getting Started](https://github.com/danstarns/idio-graphql#Getting-Started)
+* [Guides](https://github.com/danstarns/idio-graphql#Guides)
+    * [Dependency Injection](https://github.com/danstarns/idio-graphql#Dependency-Injection)
+    * [Resolver Hooks](https://github.com/danstarns/idio-graphql#Resolver-Hooks)
+    * [Composing Nodes](https://github.com/danstarns/idio-graphql#Composing-nodes)
 * [API](https://github.com/danstarns/idio-graphql#API)
     * [GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode)
     * [combineNodes](https://github.com/danstarns/idio-graphql#combineNodes)
@@ -27,6 +31,11 @@ $ npm install idio-graphql
 <!-- tocstop -->
 
 # Getting Started
+
+```
+$ npm install idio-graphql apollo-server graphql-tag
+```
+
 Examples use [apollo-server](https://www.npmjs.com/package/apollo-server) however, feel free to plug into your own solution. 
 
 _[gists](https://github.com/danstarns/idio-graphql#Gists)_
@@ -78,6 +87,194 @@ main();
 
 ```
 
+# Guides
+<!-- toc -->
+* [Dependency Injection](https://github.com/danstarns/idio-graphql#Dependency-Injection)
+* [Resolver Hooks](https://github.com/danstarns/idio-graphql#Resolver-Hooks)
+* [Composing Nodes](https://github.com/danstarns/idio-graphql#Composing-nodes)
+<!-- tocstop -->
+
+# Dependency Injection
+1. [gist](https://gist.github.com/danstarns/029500e68b627d4bd51ea0f2ea768d96)
+2. [test](https://github.com/danstarns/idio-graphql/tree/master/test/gists/dependency-injection.test.js)
+
+[GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode) allows you to provide a `injections` parameter. This can either be a value or a function, the result  to be appended to `context.injections` for each resolver.
+
+```javascript
+new GraphQLNode({
+    injections: {}
+})
+```
+```javascript
+new GraphQLNode({
+    injections: async () => ({})
+})
+```
+
+With [apollo-server](https://www.npmjs.com/package/apollo-server) the context is the `arguments[2]` element. This is behind a __env flag `CONTEXT_INDEX` default is 2__
+```javascript
+new GraphQLNode({
+    name: "User",
+    typeDefs: gql`
+        type User {
+            name: String
+        }
+
+        type Query {
+            user: User
+        }
+    `,
+    injections: () => ({
+        models: {...}
+    }),
+    resolvers: {
+        Query: {
+            user: (root, args, { injections }) => {
+                return injections.models.User.findOne()
+            }
+        }
+    }
+})
+```
+
+# Resolver Hooks
+1. [gist](https://gist.github.com/danstarns/769eaae250dd3970943836bc87aa8087)
+2. [test](https://github.com/danstarns/idio-graphql/tree/master/test/gists/resolver-hooks.test.js)
+
+Sometimes you might need to run function(s), `pre` or `post` your resolver. You could use [Schema Directives](https://www.apollographql.com/docs/graphql-tools/schema-directives/) with [IdioDirectives](https://github.com/danstarns/idio-graphql#IdioDirective)
+for this. Resolver hooks allow you to achive similiar heights.
+
+_You can describe resolver hook's on any [`GraphQLNode.resolver`](https://github.com/danstarns/idio-graphql#GraphQLNode)_
+
+```javascript
+new GraphQLNode({
+    name: "User",
+    typeDefs: gql`
+        type User {
+            name: String
+        }
+
+        type Query {
+            users: User
+        }
+    `,
+    resolvers: {
+        Query: {
+            users: {
+                pre: isRequestAdmin,
+                resolve: () => {
+                    // return User.find()
+                },
+                post: updateAudit
+            }
+        }
+    }
+})
+```
+
+## Multiple hooks
+An array of functions that will be resolved sequentiality. 
+
+```javascript
+Query: {
+    users: {
+        pre: [isRequestAdmin, canRequest(view("users"))],
+        resolve: () => {
+                // return User.find()
+        }
+    }
+}
+```
+
+## Async hooks
+All hooks can be `async` to be resolved sequentiality.
+
+```javascript
+Query: {
+    users: {
+        resolve: () => {
+                // return User.find()
+        },
+        post: async (result) => {
+            await updateAudit(result)
+        }
+    }
+}
+```
+
+## `pre`
+```javascript
+/**
+ * @callback PreHook
+ * @param {any}    root - The GraphQl root argument.
+ * @param {Object} args - The GraphQl args argument.
+ * @param {Object} context - The GraphQl context argument.
+ * @param {Object} info - The GraphQl info argument.
+ */
+```
+
+## `post`
+```javascript
+/**
+ * @callback PostHook
+ * @param {any}    resolve - The outcome of the resolve method.
+ * @param {any}    root - The GraphQl root argument.
+ * @param {Object} args - The GraphQl args argument.
+ * @param {Object} context - The GraphQl context argument.
+ * @param {Object} info - The GraphQl info argument.
+ */
+
+```
+
+# Composing Nodes
+1. [gist](https://gist.github.com/danstarns/2cd0e6e14d51a07897268699450fef9b)
+2. [test](https://github.com/danstarns/idio-graphql/tree/master/test/gists/nested-nodes.test.js)
+
+You can recursivity nest [`GraphQLNode.nodes`](https://github.com/danstarns/idio-graphql#GraphQLNode).
+
+```javascript
+const Comment = new GraphQLNode({
+    name: "Comment",
+    typeDefs: gql`
+        type Comment {
+            id: ID
+            content: String
+            User: User
+        }
+        type Query {
+            comment(id: ID!): Comment
+        }
+    `,
+    resolvers: {
+        Query: {
+            comment: () => { }
+        }
+    }
+});
+
+const Post = new GraphQLNode({
+    name: "Post",
+    typeDefs: gql`
+        type Post {
+            id: ID
+            title: String
+            content: Int
+            comments: [Comment]
+        }
+        type Query {
+            post(id: ID!): Post
+        }
+    `,
+    resolvers: {
+        Query: {
+            post: () => { }
+        }
+    },
+    nodes: [Comment]
+});
+```
+
+
 # API
 <!-- toc -->
 * [GraphQLNode](https://github.com/danstarns/idio-graphql#GraphQLNode)
@@ -98,7 +295,7 @@ const { GraphQLNode } = require("idio-graphql")
 
 ## intro
 
-[`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) is at the core of idio-graphql, enables developers to encapsulate each node within your graphql API. 
+You can use [`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) to modularize a node ( `ObjectTypeDefinition` ) together with its related resolvers & nodes. 
 
 **example**
 
@@ -168,8 +365,7 @@ const { combineNodes } = require("idio-graphql")
 ```
 
 ## intro
-
-[`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) is where all the magic happens, (its a big reduce). [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) will combine; [`GraphQLNodes`](https://github.com/danstarns/idio-graphql#GraphQLNode), [`IdioScalars`](https://github.com/danstarns/idio-graphql#IdioScalar), [`IdioEnums`](https://github.com/danstarns/idio-graphql#IdioEnum) & [`IdioDirectives`](https://github.com/danstarns/idio-graphql#IdioDirective) together to produce...
+ [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) will reduce; [`GraphQLNodes`](https://github.com/danstarns/idio-graphql#GraphQLNode), [`IdioScalars`](https://github.com/danstarns/idio-graphql#IdioScalar), [`IdioEnums`](https://github.com/danstarns/idio-graphql#IdioEnum) & [`IdioDirectives`](https://github.com/danstarns/idio-graphql#IdioDirective) to produce...
 
 ```javascript
 const { typeDefs, resolvers, schemaDirectives } = await combineNodes(...);
@@ -219,12 +415,12 @@ main();
 ```javascript
 /**
  * @typedef {Object} Schema
- * @property {string} typeDefs - graphql typeDefs.
- * @property {Object} resolvers - graphql resolvers.
- * @property {Object} resolvers.Query - graphql resolvers.Query.
- * @property {Object} resolvers.Mutation - graphql resolvers.Mutation.
- * @property {Object} resolvers.Subscription - graphql resolvers.Subscription.
- * @property {Object} schemaDirectives - graphql schemaDirectives resolvers.
+ * @property {string} typeDefs - GraphQL typeDefs.
+ * @property {Object} resolvers - GraphQL resolvers.
+ * @property {Object} resolvers.Query - GraphQL resolvers.Query.
+ * @property {Object} resolvers.Mutation - GraphQL resolvers.Mutation.
+ * @property {Object} resolvers.Subscription - GraphQL resolvers.Subscription.
+ * @property {Object} schemaDirectives - GraphQL schemaDirectives resolvers.
  */
 
 /**
@@ -232,7 +428,7 @@ main();
  * @property {Array.<IdioScalar>} scalars
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioDirective>} directives
- * @property {any} schemaGlobals - an Array or a single instance of Graphql typedefs, use filePath, string, or gql-tag.
+ * @property {any} schemaGlobals - an Array or a single instance of Graphql typeDefs, use filePath, string, or gql-tag.
  */
 
 /**
@@ -248,13 +444,14 @@ main();
 
 1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-enum.js)
 2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-enum.test.js)
+3. [gist](https://gist.github.com/danstarns/7df5a15eb02fa5b89fb89295403ef539)
 
 ```javascript 
 const { IdioEnum } = require("idio-graphql");
 ```
 
 ## intro
-If you need to declare an enum with a resolver. [`IdioEnum`](https://github.com/danstarns/idio-graphql#IdioEnum) allows developers to modularize an enum within the graphql API. You can specify enums top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) or at a [`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) level. 
+You can use [`IdioEnum`](https://github.com/danstarns/idio-graphql#IdioEnum) to modularize an enum ( `EnumTypeDefinition` ), together with its resolver. You can specify enums 'top-level' at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes) or at a [`GraphQLNode`](https://github.com/danstarns/idio-graphql#GraphQLNode) level. 
 
 **example**
 
@@ -299,7 +496,7 @@ enum StatusEnum {
  *
  * @param {Object} config
  * @param {string} config.name - The Enum name.
- * @param {string} config.typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
+ * @param {string} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Enum resolver.
  *
  * @returns IdioEnum
@@ -310,15 +507,16 @@ enum StatusEnum {
 
 1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-scalar.js)
 2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-scalar.test.js)
+3. [gist](https://gist.github.com/danstarns/ff911579b0c402ae97264577ffc6c4b1)
 
 ```javascript 
 const { IdioScalar } = require("idio-graphql");
 ```
 
 ## intro
-If you need to declare an scalar. [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) allows developers to modularize a scalar within the graphql API. You can only specify scalars top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
+You can use [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) to modularize a scalar ( `ScalarTypeDefinition` ), together with its resolver. You can only apply scalars 'top-level' at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
 
-_note [`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) does not require typeDefs it uses the Scalar name to match up the resolver._
+_[`IdioScalar`](https://github.com/danstarns/idio-graphql#IdioScalar) does not require typeDefs it uses the Scalar name to match up the resolver._
 
 _example uses [graphql-type-json](https://github.com/taion/graphql-type-json)_
 
@@ -342,6 +540,7 @@ module.exports = JSONScalar;
 /**
  * @typedef {Object} IdioScalar
  * @property {string} name - The Scalar name.
+ * @property {Promise<string>} typeDefs - Graphql typeDefs resolver..
  * @property {Object} resolver - The Scalar resolver.
  */
 
@@ -360,13 +559,14 @@ module.exports = JSONScalar;
 
 1. [source](https://github.com/danstarns/idio-graphql/blob/master/src/idio-directive.js)
 2. [tests](https://github.com/danstarns/idio-graphql/blob/master/test/idio-directive.test.js)
+3. [gist](https://gist.github.com/danstarns/2fcfa8b560e7b47784d59648a0ec229d)
 
 ```javascript 
 const { IdioDirective } = require("idio-graphql");
 ```
 
 ## intro
-[`IdioDirective`](https://github.com/danstarns/idio-graphql#IdioDirective) allows developers to modularize an directive within the graphql API. You can only specify scalars top-level at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
+You can use [`IdioDirective`](https://github.com/danstarns/idio-graphql#IdioDirective) to modularize an directive ( `DirectiveDefinition` ), together with its resolver. You can only apply directives 'top-level' at [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes).
 
 _example uses [graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)_
 
@@ -410,7 +610,7 @@ directive @hasScope(
  *
  * @param {Object} config
  * @param {string} config.name - The Directive name.
- * @param {string} config.typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
+ * @param {string} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Directive resolver.
  *
  * @returns IdioDirective
@@ -424,6 +624,8 @@ directive @hasScope(
 4. [Directives](https://gist.github.com/danstarns/2fcfa8b560e7b47784d59648a0ec229d)
 5. [Scalars](https://gist.github.com/danstarns/ff911579b0c402ae97264577ffc6c4b1)
 6. [Schema Globals](https://gist.github.com/danstarns/4f85304e3fba292bc0da4d813987ce68)
+6. [Dependency Injection](https://gist.github.com/danstarns/029500e68b627d4bd51ea0f2ea768d96)
+6. [Resolver Hooks](https://gist.github.com/danstarns/769eaae250dd3970943836bc87aa8087)
 
 
 # Changelog
@@ -431,16 +633,9 @@ _Change log started at release 1.1.0_
 
 All notable changes to this project will be documented in this section. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.2.0] - 2019-27-12
+## [2.2.0] - 2019-29-12
 [see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.2.0.md)
 
 ## [2.1.0] - 2019-25-12
 [see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.1.0.md)
-
-## [2.0.0] - 2019-23-12
-[see changes](https://github.com/danstarns/idio-graphql/blob/master/changelog/2.0.md)
-
-## [1.1.0] - 2019-11-12
-### Added
-- Provide [`IdioDirectives`](https://github.com/danstarns/idio-graphql#IdioDirective) to [`combineNodes`](https://github.com/danstarns/idio-graphql#combineNodes)
 

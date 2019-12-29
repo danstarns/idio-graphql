@@ -2,10 +2,9 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { SOURCE_PATH = "src" } = process.env;
+const { SOURCE_PATH = "../src/index.js" } = process.env;
 
-const GraphQLNode = require(`../${SOURCE_PATH}/graphql-node.js`);
-const IdioEnum = require(`../${SOURCE_PATH}/idio-enum.js`);
+const { GraphQLNode, IdioEnum } = require(SOURCE_PATH);
 
 describe("GraphQLNode ", () => {
     it("should name required", () => {
@@ -14,7 +13,9 @@ describe("GraphQLNode ", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain("GraphQLNode: name required");
+            expect(error.message).to.contain(
+                "constructing GraphQLNode: name required"
+            );
         }
     });
 
@@ -25,7 +26,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "GraphQLNode: name must be of type 'string'"
+                "constructing GraphQLNode: name must be of type 'string'"
             );
         }
     });
@@ -37,7 +38,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "GraphQLNode: creating node: 'User' typeDefs required"
+                "constructing GraphQLNode: 'User' typeDefs required"
             );
         }
     });
@@ -57,7 +58,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "GraphQLNode: creating node: 'User' Error:"
+                "constructing GraphQLNode: 'User' Error:"
             );
         }
     });
@@ -81,7 +82,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "GraphQLNode: creating node: 'User' resolvers required"
+                "constructing GraphQLNode: 'User' resolvers required"
             );
         }
     });
@@ -106,12 +107,12 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `GraphQLNode: expected node: 'User' resolvers to be of type 'object' but recived 'number'`
+                `constructing GraphQLNode: expected node: 'User' resolvers to be of type 'object' but received 'number'`
             );
         }
     });
 
-    it("should throw resolvers recived unexpected properties", () => {
+    it("should throw resolvers received unexpected properties", () => {
         try {
             const node = new GraphQLNode({
                 name: "User",
@@ -133,7 +134,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `GraphQLNode: creating node: 'User' resolvers recived unexpected properties '[ notAllowed ]'`
+                `constructing GraphQLNode: 'User' resolvers received unexpected properties '[ notAllowed ]'`
             );
         }
     });
@@ -162,7 +163,7 @@ describe("GraphQLNode ", () => {
         expect(node)
             .to.have.property("name")
             .to.be.a("string")
-            .to.equal("User");
+            .to.contain("User");
 
         expect(node)
             .to.have.property("typeDefs")
@@ -215,7 +216,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `GraphQLNode: creating node: 'User' enums must be of type 'array'`
+                `constructing GraphQLNode: 'User' enums must be of type 'array'`
             );
         }
     });
@@ -246,7 +247,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `GraphQLNode: creating node: 'User' expected enum to be instance of IdioEnum`
+                `constructing GraphQLNode: 'User' expected enum to be instance of IdioEnum`
             );
         }
     });
@@ -286,7 +287,7 @@ describe("GraphQLNode ", () => {
         expect(node)
             .to.have.property("name")
             .to.be.a("string")
-            .to.equal("User");
+            .to.contain("User");
 
         expect(node)
             .to.have.property("typeDefs")
@@ -347,7 +348,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `GraphQLNode: creating node: 'User' nodes must be of type 'array'`
+                `constructing GraphQLNode: 'User' nodes must be of type 'array'`
             );
         }
     });
@@ -378,7 +379,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `GraphQLNode: creating node: 'User' expected node to be instance of GraphQLNode`
+                `constructing GraphQLNode: 'User' expected node to be instance of GraphQLNode`
             );
         }
     });
@@ -421,7 +422,7 @@ describe("GraphQLNode ", () => {
         expect(node)
             .to.have.property("name")
             .to.be.a("string")
-            .to.equal("User");
+            .to.contain("User");
 
         expect(node)
             .to.have.property("typeDefs")
@@ -470,7 +471,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).contain(
-                "GraphQLNode: creating node 'Query' with invalid name"
+                "constructing GraphQLNode: creating node 'Query' with invalid name"
             );
         }
     });
@@ -489,7 +490,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).contain(
-                "GraphQLNode: creating node 'subscription' with invalid name"
+                "constructing GraphQLNode: creating node 'subscription' with invalid name"
             );
         }
     });

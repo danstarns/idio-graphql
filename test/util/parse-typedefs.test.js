@@ -1,11 +1,8 @@
-/* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
 const path = require("path");
 const { parse } = require("graphql/language");
 
-const { SOURCE_PATH = "src" } = process.env;
-
-const parseTypeDefs = require(`../../${SOURCE_PATH}/util/parse-typedefs.js`);
+const parseTypeDefs = require("../../src/util/parse-typedefs.js");
 
 describe("parseTypeDefs", () => {
     it("should return a promise that resolves a file", async () => {
@@ -20,7 +17,7 @@ describe("parseTypeDefs", () => {
         expect(result).to.contain("type Query");
     });
 
-    it("should throw error parsing typedefs when providing invalid SDL from string", () => {
+    it("should throw error parsing typeDefs when providing invalid SDL from string", () => {
         try {
             parseTypeDefs(
                 `terp User {
@@ -34,13 +31,11 @@ describe("parseTypeDefs", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain(
-                "parseTypeDefs: error parsing typeDefs"
-            );
+            expect(error.message).to.contain("cannot resolve typeDefs");
         }
     });
 
-    it("should return a promise that resolves the inital string provided", async () => {
+    it("should return a promise that resolves the initial string provided", async () => {
         const resultFunction = parseTypeDefs(`
             type User {
                 name: String

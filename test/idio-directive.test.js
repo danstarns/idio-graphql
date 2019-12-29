@@ -2,9 +2,9 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { SOURCE_PATH = "src" } = process.env;
+const { SOURCE_PATH = "../src/index.js" } = process.env;
 
-const IdioDirective = require(`../${SOURCE_PATH}/idio-directive.js`);
+const { IdioDirective } = require(SOURCE_PATH);
 
 describe("IdioDirective", () => {
     it("should throw name required", () => {
@@ -13,7 +13,9 @@ describe("IdioDirective", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain("IdioDirective: name required");
+            expect(error.message).to.contain(
+                "constructing IdioDirective name required"
+            );
         }
     });
 
@@ -24,7 +26,7 @@ describe("IdioDirective", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioDirective: name must be of type 'string'"
+                "constructing IdioDirective name must be of type 'string'"
             );
         }
     });
@@ -36,7 +38,7 @@ describe("IdioDirective", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioDirective: creating Directive: 'hasPermission' typeDefs required"
+                "constructing IdioDirective: 'hasPermission' typeDefs required"
             );
         }
     });
@@ -51,7 +53,7 @@ describe("IdioDirective", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioDirective: creating Directive: 'hasPermission' Error: "
+                "constructing IdioDirective: 'hasPermission'"
             );
         }
     });
@@ -75,7 +77,7 @@ describe("IdioDirective", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioDirective: creating Directive: 'hasPermission' without a resolver"
+                "constructing IdioDirective: 'hasPermission' without a resolver"
             );
         }
     });
@@ -99,7 +101,7 @@ describe("IdioDirective", () => {
         expect(directive)
             .to.have.property("name")
             .to.be.a("string")
-            .to.equal("hasPermission");
+            .to.contain("hasPermission");
 
         expect(directive)
             .to.have.property("typeDefs")
@@ -110,7 +112,7 @@ describe("IdioDirective", () => {
             .to.be.a("function");
     });
 
-    it("should throw creating directive: with invalid name", () => {
+    it("should throw constructing IdioDirective with invalid name", () => {
         try {
             const directive = new IdioDirective({
                 name: "directive",
@@ -130,7 +132,7 @@ describe("IdioDirective", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioDirective: creating directive: 'directive' with invalid name"
+                "constructing IdioDirective: 'directive' with invalid name"
             );
         }
     });

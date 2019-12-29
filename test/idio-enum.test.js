@@ -2,29 +2,31 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { SOURCE_PATH = "src" } = process.env;
+const { SOURCE_PATH = "../src/index.js" } = process.env;
 
-const IdioEnum = require(`../${SOURCE_PATH}/idio-enum.js`);
+const { IdioEnum } = require(SOURCE_PATH);
 
 describe("IdioEnum", () => {
-    it("should throw IdioEnum: name required", () => {
+    it("should throw constructing IdioEnum name required", () => {
         try {
             const _enum = new IdioEnum();
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.equal("IdioEnum: name required");
+            expect(error.message).to.contain(
+                "constructing IdioEnum name required"
+            );
         }
     });
 
-    it("should throw IdioEnum: name must be of type 'string'", () => {
+    it("should throw constructing IdioEnum name must be of type 'string'", () => {
         try {
             const _enum = new IdioEnum({ name: [] });
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.equal(
-                "IdioEnum: name must be of type 'string'"
+            expect(error.message).to.contain(
+                "constructing IdioEnum name must be of type 'string'"
             );
         }
     });
@@ -36,7 +38,7 @@ describe("IdioEnum", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioEnum: creating Enum: 'Test' typeDefs required"
+                "constructing IdioEnum: 'Test' typeDefs required."
             );
         }
     });
@@ -56,7 +58,7 @@ describe("IdioEnum", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioEnum: creating Enum: 'Test' Error: "
+                "constructing IdioEnum: 'Test' \n"
             );
         }
     });
@@ -77,7 +79,7 @@ describe("IdioEnum", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioEnum: creating Enum: 'Test' without a resolver"
+                "constructing IdioEnum: 'Test' without a resolver"
             );
         }
     });
@@ -101,7 +103,7 @@ describe("IdioEnum", () => {
 
         expect(_enum)
             .to.have.property("name")
-            .to.equal("Test");
+            .to.contain("Test");
 
         expect(_enum).to.have.property("resolver");
     });
@@ -123,7 +125,7 @@ describe("IdioEnum", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "IdioEnum: creating enum: 'enum' with invalid name"
+                "constructing IdioEnum: 'enum' with invalid name"
             );
         }
     });

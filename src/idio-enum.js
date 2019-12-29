@@ -1,5 +1,6 @@
 const { parseTypeDefs } = require("./util/index.js");
-const { RESTRICTED_NAMES } = require("./constants/index.js");
+const RESTRICTED_NAMES = require("./constants/restricted-names.js");
+const IdioError = require("./idio-error.js");
 
 /**
  * @typedef {Object} IdioEnum
@@ -13,44 +14,44 @@ const { RESTRICTED_NAMES } = require("./constants/index.js");
  *
  * @param {Object} config
  * @param {string} config.name - The Enum name.
- * @param {string} config.typeDefs - Graphql typedefs, use filePath, string, or gql-tag.
+ * @param {string} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Enum resolver.
  *
  * @returns IdioEnum
  */
 function IdioEnum({ name, typeDefs, resolver } = {}) {
+    const prefix = "constructing IdioEnum";
+
     this.name;
     this.typeDefs;
     this.resolver;
 
     if (!name) {
-        throw new Error("IdioEnum: name required");
+        throw new IdioError(`${prefix} name required.`);
     }
 
     if (typeof name !== "string") {
-        throw new Error("IdioEnum: name must be of type 'string'");
+        throw new IdioError(`${prefix} name must be of type 'string'.`);
     }
 
     if (RESTRICTED_NAMES[name.toLowerCase()]) {
-        throw new Error(`IdioEnum: creating enum: '${name}' with invalid name`);
+        throw new IdioError(`${prefix}: '${name}' with invalid name.`);
     }
 
     this.name = name;
 
     if (!typeDefs) {
-        throw new Error(`IdioEnum: creating Enum: '${name}' typeDefs required`);
+        throw new IdioError(`${prefix}: '${name}' typeDefs required.`);
     }
 
     try {
         this.typeDefs = parseTypeDefs(typeDefs);
     } catch (error) {
-        throw new Error(`IdioEnum: creating Enum: '${name}' Error: ${error}`);
+        throw new IdioError(`${prefix}: '${name}' \n${error}.`);
     }
 
     if (!resolver) {
-        throw new Error(
-            `IdioEnum: creating Enum: '${name}' without a resolver`
-        );
+        throw new IdioError(`${prefix}: '${name}' without a resolver.`);
     }
 
     this.resolver = resolver;

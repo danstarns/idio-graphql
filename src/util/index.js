@@ -1,9 +1,11 @@
 const parseTypeDefs = require("./parse-typedefs.js");
-const graphQLLoader = require("./graphql-loader.js");
-const extractResolvers = require("./extract-resolvers.js");
+const isFunction = require("./is-function.js");
+const checkInstance = require("./check-instance.js");
+const wrappedResolver = require("./wrapped-resolver.js");
 
 module.exports = {
     parseTypeDefs,
-    graphQLLoader,
-    extractResolvers
+    isFunction,
+    checkInstance,
+    wrappedResolver
 };

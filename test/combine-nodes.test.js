@@ -2,13 +2,15 @@
 const { expect } = require("chai");
 const path = require("path");
 
-const { SOURCE_PATH = "src" } = process.env;
+const { SOURCE_PATH = "../src/index.js" } = process.env;
 
-const combineNodes = require(`../${SOURCE_PATH}/combine-nodes.js`);
-const GraphQLNode = require(`../${SOURCE_PATH}/graphql-node.js`);
-const IdioEnum = require(`../${SOURCE_PATH}/idio-enum.js`);
-const IdioScalar = require(`../${SOURCE_PATH}/idio-scalar.js`);
-const IdioDirective = require(`../${SOURCE_PATH}/idio-directive.js`);
+const {
+    combineNodes,
+    GraphQLNode,
+    IdioEnum,
+    IdioScalar,
+    IdioDirective
+} = require(SOURCE_PATH);
 
 describe("combineNodes", () => {
     it("should throw nodes required", async () => {
@@ -17,7 +19,7 @@ describe("combineNodes", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain("combineNodes: nodes required");
+            expect(error.message).to.contain("nodes required");
         }
     });
 
@@ -28,7 +30,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "combineNodes: expected nodes to be of type array recived 'number'"
+                "expected nodes to be of type array received 'number'"
             );
         }
     });
@@ -60,7 +62,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "combineNodes: recived a node not a instance of GraphQLNode"
+                "received a node not a instance of GraphQLNode"
             );
         }
     });
@@ -88,6 +90,10 @@ describe("combineNodes", () => {
         expect(typeDefs)
             .to.be.a("string")
             .to.contain("type User");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Mutation");
 
         expect(typeDefs)
             .to.be.a("string")
@@ -144,6 +150,10 @@ describe("combineNodes", () => {
 
         expect(typeDefs)
             .to.be.a("string")
+            .to.contain("type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
             .to.contain("schema");
 
         expect(typeDefs)
@@ -190,7 +200,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "node with name: 'User' has a Query in the typeDefs called 'users' thats not defined in resolvers"
+                "GraphQLNode with name: 'User' has a Query in the typeDefs called 'users' thats not defined in resolvers"
             );
         }
     });
@@ -222,7 +232,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "node with name: 'User' has a Query resolver called 'users' thats not defined in typeDefs"
+                "GraphQLNode with name: 'User' has a Query resolver called 'users' thats not defined in typeDefs"
             );
         }
     });
@@ -254,7 +264,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "node with name: 'User' has a Mutation in the typeDefs called 'updateUser' thats not defined in resolvers"
+                "GraphQLNode with name: 'User' has a Mutation in the typeDefs called 'updateUser' thats not defined in resolvers"
             );
         }
     });
@@ -289,7 +299,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "node with name: 'User' has a Mutation resolver called 'createUser' thats not defined in typeDefs"
+                "GraphQLNode with name: 'User' has a Mutation resolver called 'createUser' thats not defined in typeDefs"
             );
         }
     });
@@ -321,7 +331,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "node with name: 'User' has a Subscription in the typeDefs called 'userCreation' thats not defined in resolvers"
+                "GraphQLNode with name: 'User' has a Subscription in the typeDefs called 'userCreation' thats not defined in resolvers"
             );
         }
     });
@@ -356,7 +366,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "node with name: 'User' has a Subscription resolver called 'userUpdate' thats not defined in typeDefs"
+                "GraphQLNode with name: 'User' has a Subscription resolver called 'userUpdate' thats not defined in typeDefs"
             );
         }
     });
@@ -412,6 +422,10 @@ describe("combineNodes", () => {
 
         expect(typeDefs)
             .to.be.a("string")
+            .to.contain("type Query");
+
+        expect(typeDefs)
+            .to.be.a("string")
             .to.contain("schema");
 
         expect(resolvers)
@@ -450,11 +464,11 @@ describe("combineNodes", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain("expected enums to be an array");
+            expect(error.message).to.contain("expected 'enums' to be an array");
         }
     });
 
-    it("should throw expected enum to be of type IdioEnum", async () => {
+    it("should throw received enum not a instance of IdioEnum", async () => {
         try {
             const UserNode = new GraphQLNode({
                 name: "User",
@@ -494,7 +508,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `expected enum to be of type IdioEnum, recived:`
+                `received a enum not a instance of IdioEnum`
             );
         }
     });
@@ -506,8 +520,7 @@ describe("combineNodes", () => {
                 ONLINE: "online",
                 OFFLINE: "offline"
             },
-            typeDefs: `
-            enum Status {
+            typeDefs: `enum Status {
                 ONLINE
                 OFFLINE
             }
@@ -583,11 +596,13 @@ describe("combineNodes", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain("expected scalars to be an array");
+            expect(error.message).to.contain(
+                "expected 'scalars' to be an array"
+            );
         }
     });
 
-    it("should throw expected scalar to be of type IdioScalar", async () => {
+    it("should throw received scalar to be of type IdioScalar", async () => {
         try {
             const UserNode = new GraphQLNode({
                 name: "User",
@@ -613,7 +628,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `expected scalar to be of type IdioScalar, recived:`
+                `received a scalar not a instance of IdioScalar`
             );
         }
     });
@@ -628,14 +643,14 @@ describe("combineNodes", () => {
             name: "User",
             typeDefs: `
                 type User {
-                    name: String
+                name: String
                     age: Int
-                }
+            }
                 
                 type Query {
-                    getUserByID(id: ID!): User
-                }
-            `,
+                getUserByID(id: ID!): User
+            }
+                `,
             resolvers: {
                 Query: { getUserByID: () => true }
             }
@@ -675,13 +690,13 @@ describe("combineNodes", () => {
                 name: "User",
                 typeDefs: `
                     type User {
-                        name: String
+                name: String
                         age: Int
-                    }
+            }
                     
                     type Query {
-                        getUserByID(id: ID!): User
-                    }
+                getUserByID(id: ID!): User
+            }
                 `,
                 resolvers: {
                     Query: { getUserByID: () => true }
@@ -693,24 +708,24 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "expected directives to be an array"
+                "expected 'directives' to be an array"
             );
         }
     });
 
-    it("should throw expected directive to be of type IdioDirective", async () => {
+    it("should throw received a directive not a instance of IdioDirective", async () => {
         try {
             const UserNode = new GraphQLNode({
                 name: "User",
                 typeDefs: `
                     type User {
-                        name: String
+                name: String
                         age: Int
-                    }
+            }
                     
                     type Query {
-                        getUserByID(id: ID!): User
-                    }
+                getUserByID(id: ID!): User
+            }
                 `,
                 resolvers: {
                     Query: { getUserByID: () => true }
@@ -724,14 +739,14 @@ describe("combineNodes", () => {
                         resolver: () => true,
                         typeDefs: `
                             input permissionInput {
-                                resource: String!
+                resource: String!
                                 action: String!
-                            }
+            }
                             
                             directive @hasPermission(
-                                permission: permissionInput!
-                            ) on FIELD_DEFINITION 
-                        `
+                permission: permissionInput!
+            ) on FIELD_DEFINITION
+                `
                     }
                 ]
             });
@@ -739,7 +754,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `expected directive to be of type IdioDirective, recived:`
+                `received a directive not a instance of IdioDirective`
             );
         }
     });
@@ -749,28 +764,28 @@ describe("combineNodes", () => {
             name: "hasPermission",
             resolver: () => true,
             typeDefs: `
-                input permissionInput {
-                    resource: String!
-                    action: String!
-                }
-                
-                directive @hasPermission(
-                    permission: permissionInput!
-                ) on FIELD_DEFINITION 
-            `
+            input permissionInput {
+                resource: String!
+                action: String!
+            }
+
+            directive @hasPermission(
+                permission: permissionInput!
+            ) on FIELD_DEFINITION
+                `
         });
 
         const UserNode = new GraphQLNode({
             name: "User",
             typeDefs: `
-                type User {
-                    name: String
-                    age: Int
-                }
-                
-                type Query {
-                    getUserByID(id: ID!): User
-                }
+            type User {
+                name: String
+                age: Int
+            }
+
+            type Query {
+                getUserByID(id: ID!): User
+            }
             `,
             resolvers: {
                 Query: { getUserByID: () => true }
@@ -812,15 +827,15 @@ describe("combineNodes", () => {
         const UserNode = new GraphQLNode({
             name: "User",
             typeDefs: `
-                type User {
-                    name: String
-                    age: Int
-                    address: Address
-                }
-                
-                type Query {
-                    getUserByID(id: ID!): User
-                }
+            type User {
+                name: String
+                age: Int
+                address: Address
+            }
+
+            type Query {
+                getUserByID(id: ID!): User
+            }
             `,
             resolvers: {
                 Query: { getUserByID: () => true }
@@ -830,12 +845,12 @@ describe("combineNodes", () => {
         const { typeDefs, resolvers } = await combineNodes([UserNode], {
             schemaGlobals: [
                 `
-                    type Address {
-                        line1: String
-                        line2: String
-                        postcode: String
-                    }
-                `
+            type Address {
+                line1: String
+                line2: String
+                postcode: String
+            }
+            `
             ]
         });
 
@@ -862,15 +877,15 @@ describe("combineNodes", () => {
         const UserNode = new GraphQLNode({
             name: "User",
             typeDefs: `
-                type User {
-                    name: String
-                    age: Int
-                    address: Address
-                }
-                
-                type Query {
-                    getUserByID(id: ID!): User
-                }
+            type User {
+                name: String
+                age: Int
+                address: Address
+            }
+
+            type Query {
+                getUserByID(id: ID!): User
+            }
             `,
             resolvers: {
                 Query: { getUserByID: () => true },
@@ -887,7 +902,7 @@ describe("combineNodes", () => {
                 line2: String
                 postcode: String
             }
-        `
+            `
         });
 
         expect(typeDefs)
@@ -914,14 +929,14 @@ describe("combineNodes", () => {
             const node1 = new GraphQLNode({
                 name: "User",
                 typeDefs: `
-                type User {
-                    name: String
-                    age: Int
-                }
-                
-                type Query {
-                    getUserByID(id: ID!): User
-                }
+            type User {
+                name: String
+                age: Int
+            }
+
+            type Query {
+                getUserByID(id: ID!): User
+            }
             `,
                 resolvers: {
                     Query: {
@@ -933,14 +948,14 @@ describe("combineNodes", () => {
             const node2 = new GraphQLNode({
                 name: "User",
                 typeDefs: `
-                type User {
-                    name: String
-                    age: Int
-                }
-                
-                type Query {
-                    getUserByID(id: ID!): User
-                }
+            type User {
+                name: String
+                age: Int
+            }
+
+            type Query {
+                getUserByID(id: ID!): User
+            }
             `,
                 resolvers: {
                     Query: {
@@ -955,9 +970,7 @@ describe("combineNodes", () => {
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")
-                .to.contain(
-                    "combineNodes: node with name 'User' already registered"
-                );
+                .to.contain("GraphQLNode with name: 'User' already registered");
         }
     });
 
@@ -966,14 +979,14 @@ describe("combineNodes", () => {
             const node = new GraphQLNode({
                 name: "User",
                 typeDefs: `
-                type post {
-                    title: String
-                    description: Int
-                }
-                
-                type Mutation {
-                    likePost(id: ID!): post
-                }
+            type post {
+                title: String
+                description: Int
+            }
+
+            type Mutation {
+                likePost(id: ID!): post
+            }
             `,
                 resolvers: {
                     Mutation: {
@@ -987,12 +1000,12 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "combineNodes: node with name 'User' should contain a ObjectTypeDefinition called 'User'"
+                "GraphQLNode with name: 'User' should contain a ObjectTypeDefinition called 'User'"
             );
         }
     });
 
-    it("node with name has a Field resolver called thats not defined in typeDefs`", async () => {
+    it("GraphQLNode with name has a Field resolver called thats not defined in typeDefs`", async () => {
         try {
             const node = new GraphQLNode({
                 name: "Post",
@@ -1023,7 +1036,7 @@ describe("combineNodes", () => {
             expect(error.message)
                 .to.be.a("string")
                 .to.contain(
-                    "combineNodes: node with name: 'Post' has a Field resolver called 'random' thats not defined in typeDefs"
+                    "GraphQLNode with name: 'Post' has a Field resolver called 'random' thats not defined in typeDefs"
                 );
         }
     });
@@ -1050,8 +1063,207 @@ describe("combineNodes", () => {
             expect(error.message)
                 .to.be.a("string")
                 .to.contain(
-                    `combineNodes: loading node with name: 'Post' could not parse typeDefs: Error:`
+                    `GraphQLNode with name: 'Post' could not parse typeDefs`
                 );
+        }
+    });
+
+    it("should throw when loading IdioEnum with invalid typeDefs from a file", async () => {
+        try {
+            const _Enum = new IdioEnum({
+                name: "Status",
+                typeDefs: path.join(__dirname, "./dummy-data/error.gql"),
+                resolver: {}
+            });
+
+            const node = new GraphQLNode({
+                name: "Post",
+                typeDefs: `
+                type Post {
+                    title: String
+                    description: Int
+                }
+                
+                type Mutation {
+                    likePost(id: ID!): Post
+                }
+            `,
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    }
+                }
+            });
+
+            await combineNodes([node], { enums: [_Enum] });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioEnum with name: 'Status' could not parse typeDefs \n"
+            );
+        }
+    });
+
+    it("should throw enum should contain EnumTypeDefinition", async () => {
+        try {
+            const _Enum = new IdioEnum({
+                name: "Status",
+                typeDefs: `
+                    enum notStatus {
+                        ONLINE
+                        OFFLINE
+                    }
+                `,
+                resolver: {
+                    ONLINE: "online",
+                    OFFLINE: "offline"
+                }
+            });
+
+            const node = new GraphQLNode({
+                name: "Post",
+                typeDefs: `
+                type Post {
+                    title: String
+                    description: Int
+                }
+                
+                type Mutation {
+                    likePost(id: ID!): Post
+                }
+            `,
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    }
+                },
+                enums: [_Enum]
+            });
+
+            await combineNodes([node]);
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioEnum with name: 'Status' should contain a EnumTypeDefinition called 'Status'"
+            );
+        }
+    });
+
+    it("should throw when loading IdioDirective with invalid typeDefs from a file", async () => {
+        try {
+            const hasScopeDirective = new IdioDirective({
+                name: "hasScope",
+                typeDefs: path.join(__dirname, "./dummy-data/error.gql"),
+                resolver: () => true
+            });
+
+            const node = new GraphQLNode({
+                name: "Post",
+                typeDefs: `
+                type Post {
+                    title: String
+                    description: Int
+                }
+                
+                type Mutation {
+                    likePost(id: ID!): Post
+                }
+            `,
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    }
+                }
+            });
+
+            await combineNodes([node], { directives: [hasScopeDirective] });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioDirective with name: 'hasScope' could not parse typeDefs \n"
+            );
+        }
+    });
+
+    it("should throw directive should contain DirectiveDefinition", async () => {
+        try {
+            const hasScopeDirective = new IdioDirective({
+                name: "hasScope",
+                typeDefs: `
+                    directive @hasScopeee(scopes: [String]!) on FIELD_DEFINITION
+                `,
+                resolver: () => true
+            });
+
+            const node = new GraphQLNode({
+                name: "Post",
+                typeDefs: `
+                type Post {
+                    title: String
+                    description: Int
+                }
+                
+                type Mutation {
+                    likePost(id: ID!): Post
+                }
+            `,
+                resolvers: {
+                    Mutation: {
+                        likePost: () => true
+                    }
+                }
+            });
+
+            await combineNodes([node], { directives: [hasScopeDirective] });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "IdioDirective with name: 'hasScope' should contain a DirectiveDefinition called 'hasScope'"
+            );
+        }
+    });
+
+    it("should throw creating scalar with name already registered", async () => {
+        try {
+            const JSONScalar = new IdioScalar({
+                name: "JSON",
+                resolver: async () => true
+            });
+            const JSONScalar2 = new IdioScalar({
+                name: "JSON",
+                resolver: async () => true
+            });
+
+            const UserNode = new GraphQLNode({
+                name: "User",
+                typeDefs: `
+                    type User {
+                    name: String
+                        age: Int
+                }
+                    
+                    type Query {
+                    getUserByID(id: ID!): User
+                }
+                    `,
+                resolvers: {
+                    Query: { getUserByID: () => true }
+                }
+            });
+
+            await combineNodes([UserNode], {
+                scalars: [JSONScalar, JSONScalar2]
+            });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "loading IdioScalar with a name: 'JSON' thats already registered"
+            );
         }
     });
 });
