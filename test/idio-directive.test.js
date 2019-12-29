@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { SOURCE_PATH = "../src/index.js" } = process.env;
+const { SOURCE_PATH = "../src" } = process.env;
 
 const { IdioDirective } = require(SOURCE_PATH);
 

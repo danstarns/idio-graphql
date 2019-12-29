@@ -1,5 +1,10 @@
 const { expect } = require("chai");
-const isFunction = require("../../src/util/is-function.js");
+const path = require("path");
+
+const { SOURCE_PATH = "../../src" } = process.env;
+
+// eslint-disable-next-line import/no-dynamic-require
+const isFunction = require(path.join(SOURCE_PATH, "/util/is-function.js"));
 
 describe("isFunction", () => {
     it("should return that is is a function", () => {

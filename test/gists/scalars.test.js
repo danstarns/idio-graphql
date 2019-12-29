@@ -1,5 +1,5 @@
 /* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src/index.js" } = process.env;
+const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
 const { GraphQLNode, combineNodes, IdioScalar } = require(SOURCE_PATH);

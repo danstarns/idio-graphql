@@ -2,7 +2,13 @@ const { expect } = require("chai");
 const path = require("path");
 const { parse } = require("graphql/language");
 
-const parseTypeDefs = require("../../src/util/parse-typedefs.js");
+const { SOURCE_PATH = "../../src" } = process.env;
+
+// eslint-disable-next-line import/no-dynamic-require
+const parseTypeDefs = require(path.join(
+    SOURCE_PATH,
+    "/util/parse-typedefs.js"
+));
 
 describe("parseTypeDefs", () => {
     it("should return a promise that resolves a file", async () => {

@@ -1,5 +1,13 @@
+/* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
-const wrappedResolver = require("../../src/util/wrapped-resolver.js");
+const path = require("path");
+
+const { SOURCE_PATH = "../../src" } = process.env;
+
+const wrappedResolver = require(path.join(
+    SOURCE_PATH,
+    "./util/wrapped-resolver.js"
+));
 
 describe("wrappedResolver", () => {
     it("should throw resolver required", async () => {

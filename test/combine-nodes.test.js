@@ -2,7 +2,7 @@
 const { expect } = require("chai");
 const path = require("path");
 
-const { SOURCE_PATH = "../src/index.js" } = process.env;
+const { SOURCE_PATH = "../src" } = process.env;
 
 const {
     combineNodes,

@@ -4,7 +4,7 @@
   "description": "A set of methods to enable developers to structure and modularize a GraphQL API into individual, maintainable, modules",
   "main": "./src/index.js",
   "scripts": {
-    "test": "cross-env SOURCE_PATH=\"D:\\Files\\projects\\idio-graphql\\src\" ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive --timeout 100000 \"test/**/*.test.js\"",
+    "test": "cross-env ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive --timeout 100000 \"test/**/*.test.js\"",
     "test:build": "cross-env SOURCE_PATH=\"D:\\Files\\projects\\idio-graphql\\dist\" ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit  --timeout 100000 \"test/**/*.test.js\"",
     "build": "mkdir dist && babel src -d dist"
   },
