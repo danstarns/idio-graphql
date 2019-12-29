@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A set of methods to enable developers to structure and modularize a GraphQL API into individual, maintainable, modules",
   "main": "./src/index.js",
   "scripts": {

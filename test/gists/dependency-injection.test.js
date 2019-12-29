@@ -157,14 +157,11 @@ describe("gists/dependency-injection", () => {
             resolvers: {
                 Subscription: {
                     userUpdate: {
-                        resolve: {
-                            subscribe: (...args) => {
-                                args[2].injections.song +=
-                                    " jumped over the moon";
-                                result = args[2].injections.song;
-                            },
-                            otherMethod: () => 1
-                        }
+                        subscribe: (...args) => {
+                            args[2].injections.song += " jumped over the moon";
+                            result = args[2].injections.song;
+                        },
+                        otherMethod: () => 1
                     }
                 }
             }

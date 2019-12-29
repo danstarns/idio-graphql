@@ -203,6 +203,23 @@ async function loadNode(n, { INTERNALS }) {
                         return;
                     }
 
+                    if (Object.keys(method).includes("subscribe")) {
+                        resolvers[type][name] = {
+                            ...method,
+                            subscribe: wrappedResolver(
+                                method.subscribe,
+                                {
+                                    pre: method.pre,
+                                    post: method.post,
+                                    name: `${node.name}.resolvers.${type}.${name}`,
+                                    injections: node.injections
+                                }
+                            )
+                        };
+
+                        return;
+                    }
+
                     if (Object.keys(method).includes("resolve")) {
                         if (Object.keys(method.resolve).includes("subscribe")) {
                             resolvers[type][name] = {

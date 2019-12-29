@@ -142,7 +142,7 @@ new GraphQLNode({
 2. [test](https://github.com/danstarns/idio-graphql/tree/master/test/gists/resolver-hooks.test.js)
 
 Sometimes you might need to run function(s), `pre` or `post` your resolver. You could use [Schema Directives](https://www.apollographql.com/docs/graphql-tools/schema-directives/) with [IdioDirectives](https://github.com/danstarns/idio-graphql#IdioDirective)
-for this. Resolver hooks allow you to achive similiar heights.
+for this. Resolver hooks allow you to achieve similar heights.
 
 _You can describe resolver hook's on any [`GraphQLNode.resolver`](https://github.com/danstarns/idio-graphql#GraphQLNode)_
 
@@ -228,7 +228,7 @@ Query: {
 1. [gist](https://gist.github.com/danstarns/2cd0e6e14d51a07897268699450fef9b)
 2. [test](https://github.com/danstarns/idio-graphql/tree/master/test/gists/nested-nodes.test.js)
 
-You can recursivity nest [`GraphQLNode.nodes`](https://github.com/danstarns/idio-graphql#GraphQLNode).
+You can recursively nest [`GraphQLNode.nodes`](https://github.com/danstarns/idio-graphql#GraphQLNode).
 
 ```javascript
 const Comment = new GraphQLNode({
