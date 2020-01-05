@@ -7,11 +7,13 @@ const combineNodes = require("./combine-nodes.js");
 const IdioEnum = require("./idio-enum.js");
 const IdioScalar = require("./idio-scalar.js");
 const IdioDirective = require("./idio-directive.js");
+const GraphQLGateway = require("./graphql-gateway.js");
 
 module.exports = {
     GraphQLNode,
     combineNodes,
     IdioScalar,
     IdioEnum,
-    IdioDirective
+    IdioDirective,
+    GraphQLGateway
 };

@@ -1,7 +1,9 @@
+const { ServiceBroker } = require("moleculer");
 const IdioEnum = require("./idio-enum.js");
 const { parseTypeDefs } = require("./util/index.js");
 const RESTRICTED_NAMES = require("./constants/restricted-names.js");
 const IdioError = require("./idio-error.js");
+const { loadNode } = require("./methods/index.js");
 
 /**
  * @callback PreHook
@@ -63,11 +65,12 @@ const IdioError = require("./idio-error.js");
  * @property {Array.<IdioEnum>} enums - The nodes enums.
  * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
  * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
+ * @property {Array.<string>} dependencies - Used for microspace dependency coordination, specify what services (by name) to depend on.
  */
 
 /**
  * @typedef {Object} GraphQLNodeConfig
- * @property {name} name - The nodes name.
+ * @property {string} name - The nodes name.
  * @property {string} typeDefs - Graphql typeDefs, use filePath, string, or gql-tag
  * @property {ResolverType} resolvers - The nodes resolvers.
  * @property {Array.<IdioEnum>} enums - The nodes enums.
@@ -107,7 +110,7 @@ function GraphQLNode({
         throw new IdioError(`${prefix}: name must be of type 'string'.`);
     }
 
-    if (RESTRICTED_NAMES[name.toLowerCase()]) {
+    if (RESTRICTED_NAMES[name]) {
         throw new IdioError(
             `${prefix}: creating node '${name}' with invalid name.`
         );
@@ -205,5 +208,91 @@ function GraphQLNode({
         this.injections = injections;
     }
 }
+
+async function load({ gateway } = {}, config = {}) {
+    this.name;
+    this.typeDefs;
+    this.resolvers;
+    this.enums;
+    this.nodes;
+    this.injections;
+
+    const node = new GraphQLNode({
+        name: this.name,
+        typeDefs: await this.typeDefs(),
+        resolvers: this.resolvers,
+        enums: this.enums,
+        injections: this.injections,
+        dependencies: this.dependencies
+    });
+
+    const { typeDefs, resolvers } = await loadNode(node, {
+        REGISTERED_NAMES: {}
+    });
+
+    this.typeDefs = typeDefs;
+
+    ["Query", "Mutation", "Subscription", "Fields"].forEach((type) => {
+        this.resolvers[type] = { ...(resolvers[type] || {}) };
+    });
+
+    const broker = new ServiceBroker({ ...config, nodeID: this.name });
+
+    await broker.start();
+
+    await broker.waitForServices("gateway:introspection");
+
+    if (this.nodes && this.nodes.length) {
+        await Promise.all(this.nodes.map((n) => n.load({ gateway }, config)));
+        await broker.waitForServices(this.nodes.map((n) => n.name));
+    }
+
+    Object.entries(this.resolvers).forEach(([key, methods]) =>
+        broker.createService({
+            name: `${this.name}:${key}`,
+            actions: Object.entries(methods).reduce(
+                (result, [name, method]) => ({
+                    ...result,
+                    [name]: (ctx) => method(...ctx.params.graphQLArgs)
+                }),
+                {}
+            )
+        })
+    );
+
+    // not sure about this, buts its critical to the discovery of the nested nodes.
+    broker.createService({
+        name: this.name,
+        actions: {
+            ping: () => "pong"
+        }
+    });
+
+    const introspectionCall = async () => {
+        const response = await broker.call("gateway:introspection.squawk", {
+            introspection: {
+                name: this.name,
+                typeDefs: this.typeDefs,
+                resolvers: Object.entries(this.resolvers).reduce(
+                    (result, [name, methods]) => ({
+                        ...result,
+                        [name]: Object.keys(methods)
+                    }),
+                    {}
+                )
+            }
+        });
+
+        if (!response) {
+            setImmediate(introspectionCall);
+        }
+    };
+
+    await introspectionCall();
+
+    return broker;
+}
+
+GraphQLNode.prototype.load = load;
 
 module.exports = GraphQLNode;

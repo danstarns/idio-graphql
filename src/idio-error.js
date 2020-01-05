@@ -1,7 +1,8 @@
 class IdioError extends Error {
-    constructor(message) {
+    constructor(message, { code } = {}) {
         super(message);
 
+        this.code = code || 500;
         this.name = `idio-graphql-error`;
         this.readme =
             "https://github.com/danstarns/idio-graphql/blob/master/README.md";
