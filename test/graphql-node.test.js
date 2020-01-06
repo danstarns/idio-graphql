@@ -1,10 +1,7 @@
-/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { SOURCE_PATH = "../src" } = process.env;
-
-const { GraphQLNode, IdioEnum } = require(SOURCE_PATH);
+const { GraphQLNode, IdioEnum } = require("../src");
 
 describe("GraphQLNode ", () => {
     it("should name required", () => {

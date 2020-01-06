@@ -1,8 +1,6 @@
-/* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
-const { GraphQLNode, combineNodes } = require(SOURCE_PATH);
+const { GraphQLNode, combineNodes } = require("../../src");
 
 describe("gists/field-resolvers", async () => {
     it("should verify field-resolvers", async () => {

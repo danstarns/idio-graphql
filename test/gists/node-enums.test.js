@@ -1,8 +1,6 @@
-/* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
-const { GraphQLNode, combineNodes, IdioEnum } = require(SOURCE_PATH);
+const { GraphQLNode, combineNodes, IdioEnum } = require("../../src");
 
 describe("gists/node-enums", async () => {
     it("should verify node-enums", async () => {

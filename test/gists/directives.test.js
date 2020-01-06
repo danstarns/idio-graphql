@@ -1,8 +1,6 @@
-/* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
-const { GraphQLNode, combineNodes, IdioDirective } = require(SOURCE_PATH);
+const { GraphQLNode, combineNodes, IdioDirective } = require("../../src");
 
 describe("gists/idio-directive", async () => {
     it("should verify idio-directive", async () => {

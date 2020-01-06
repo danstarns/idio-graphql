@@ -1,8 +1,5 @@
-/* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
 const path = require("path");
-
-const { SOURCE_PATH = "../src" } = process.env;
 
 const {
     combineNodes,
@@ -10,7 +7,7 @@ const {
     IdioEnum,
     IdioScalar,
     IdioDirective
-} = require(SOURCE_PATH);
+} = require("../src");
 
 describe("combineNodes", () => {
     it("should throw nodes required", async () => {

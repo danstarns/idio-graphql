@@ -1,10 +1,7 @@
-/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { SOURCE_PATH = "../src" } = process.env;
-
-const { IdioEnum } = require(SOURCE_PATH);
+const { IdioEnum } = require("../src");
 
 describe("IdioEnum", () => {
     it("should throw constructing IdioEnum name required", () => {
