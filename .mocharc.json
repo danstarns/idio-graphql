@@ -1,0 +1,10 @@
+{
+    "spec": "test/**/*.test.js",
+    "exclude": [
+        "src/**/*index.js"
+    ],
+    "recursive": true,
+    "exit": true,
+    "timeout": 100000,
+    "package": "./package.json"
+}

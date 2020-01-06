@@ -4,8 +4,7 @@
   "description": "A set of methods to enable developers to structure and modularize a GraphQL API into individual, maintainable, modules",
   "main": "./src/index.js",
   "scripts": {
-    "test": "cross-env ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit --recursive --timeout 100000 \"test/**/*.test.js\"",
-    "test:build": "cross-env SOURCE_PATH=\"dist\" ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/_mocha --exit  --timeout 100000 \"test/**/*.test.js\"",
+    "test": "nyc mocha",
     "build": "mkdir dist && babel src -d dist"
   },
   "keywords": [
@@ -39,9 +38,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.7.7",
+    "amqplib": "^0.5.5",
+    "apollo-server": "^2.9.15",
     "core-js": "^3.6.0",
     "cross-env": "^6.0.3",
     "graphql": "^14.5.8",
-    "graphql-toolkit": "^0.7.4"
+    "graphql-toolkit": "^0.7.4",
+    "ioredis": "^4.14.1",
+    "moleculer": "^0.13.12",
+    "nats": "^1.3.2"
   }
 }
