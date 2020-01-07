@@ -1,3 +1,6 @@
 {
-    "exclude": "src/**/*index.js"
+    "exclude": [
+        "src/**/*index.js",
+        "test/**/*.test.js"
+    ]
 }
