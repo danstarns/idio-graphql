@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { printWithComments } = require("graphql-toolkit");
 const { parse } = require("graphql/language");
-const IdioError = require("../idio-error.js");
+const IdioError = require("../api/idio-error.js");
 
 function graphQLLoader(...options) {
     return new Promise((resolve, reject) => {

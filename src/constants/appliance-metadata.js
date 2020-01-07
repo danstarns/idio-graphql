@@ -1,6 +1,6 @@
-const IdioScalar = require("../idio-scalar.js");
-const IdioEnum = require("../idio-enum.js");
-const IdioDirective = require("../idio-directive.js");
+const IdioScalar = require("../api/idio-scalar.js");
+const IdioEnum = require("../api/idio-enum.js");
+const IdioDirective = require("../api/idio-directive.js");
 
 const APPLIANCE_METADATA = [
     {

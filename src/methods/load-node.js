@@ -1,6 +1,6 @@
 const { parse } = require("graphql/language");
 const { wrappedResolver, isFunction } = require("../util/index.js");
-const IdioError = require("../idio-error.js");
+const IdioError = require("../api/idio-error.js");
 const resolveAppliance = require("./resolve-appliance.js");
 const APPLIANCE_METADATA = require("../constants/appliance-metadata.js");
 

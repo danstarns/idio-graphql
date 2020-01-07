@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const isFunction = require("./is-function.js");
-const IdioError = require("../idio-error.js");
+const IdioError = require("../api/idio-error.js");
 const CONTEXT_INDEX = require("../constants/context-index.js");
 
 /**
