@@ -145,11 +145,11 @@ async function combineNodes(nodes, appliances = {}) {
 
     Object.keys(resolvers).forEach(deleteEmptyResolver);
 
-    return {
+    return Object.freeze({
         typeDefs: printWithComments(mergeTypeDefs(typeDefs)),
         resolvers,
         schemaDirectives
-    };
+    });
 }
 
 module.exports = combineNodes;
