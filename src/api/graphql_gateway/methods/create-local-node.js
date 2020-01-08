@@ -1,5 +1,16 @@
 const IdioError = require("../../idio-error.js");
 
+/**
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
+ */
+
+/**
+ *
+ * @param {Object} options
+ * @param {ServiceBroker} options.broker
+ * @param {GraphQLNode} options.GraphQLNode
+ */
 function createLocalNode({ broker, GraphQLNode }) {
     return (introspection) => {
         return new GraphQLNode({

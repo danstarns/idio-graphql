@@ -1,10 +1,10 @@
 const IdioError = require("../../idio-error.js");
 
 /**
- * @typedef {import('../../../graphql-node.js')} GraphQLNode
- * @typedef {import('../../../idio-scalar.js')} IdioScalar
- * @typedef {import('../../../idio-enum.js')} IdioEnum
- * @typedef {import('../../../idio-directive.js')} IdioDirective
+ * @typedef {import('../../graphql-node.js')} GraphQLNode
+ * @typedef {import('../../idio-scalar.js')} IdioScalar
+ * @typedef {import('../../idio-enum.js')} IdioEnum
+ * @typedef {import('../../idio-directive.js')} IdioDirective
  */
 
 /**

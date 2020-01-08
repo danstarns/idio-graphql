@@ -7,93 +7,147 @@ const sleep = util.promisify(setTimeout);
 
 const createLocalNode = require("./create-local-node.js");
 
-async function start() {
-    const introspectionCall = async (service) => {
-        let introspection;
+/**
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('./validate-appliances.js').appliances} appliances
+ */
 
-        try {
-            introspection = await this.broker.call(`${service}.introspection`, {
-                gateway: this.broker.nodeID
-            });
-        } catch (error) {
-            return;
-        }
+/**
+ * @typedef {Object} Schema
+ * @property {string} typeDefs - GraphQL typeDefs.
+ * @property {Object} resolvers - GraphQL resolvers.
+ * @property {Object} resolvers.Query - GraphQL resolvers.Query.
+ * @property {Object} resolvers.Mutation - GraphQL resolvers.Mutation.
+ * @property {Object} resolvers.Subscription - GraphQL resolvers.Subscription.
+ * @property {Object} schemaDirectives - GraphQL schemaDirectives resolvers.
+ * @property {ServiceBroker} broker - Broker.
+ */
 
-        if (
-            this.REGISTERED_SERVICES.map((x) => x.name).includes(
-                introspection.name
-            )
-        ) {
-            throw new IdioError(
-                `Gateway: '${this.broker.nodeID}' already has a registered service called: '${introspection.name}'`
-            );
-        }
+/**
+ * @param {Object} curry
+ * @param {appliances} curry.appliances
+ * @param {ServiceBroker} curry.broker
+ */
+module.exports = ({ appliances, broker }) => {
+    /**
+     * Builds & orchestrates a schema from multiple sources on the network.
+     *
+     *
+     * @returns Schema
+     */
 
-        if (this.appliances.dependencies.includes(introspection.name)) {
-            this.WAITING_SERVICES = this.WAITING_SERVICES.filter(
-                (x) => x !== introspection.name
-            );
-        }
+    async function start() {
+        let started = false;
 
-        if (this.appliances.nodes) {
-            this.appliances.nodes.forEach((node) => {
-                if (node.name === introspection.name) {
-                    throw new IdioError(
-                        `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
-                    );
-                }
-            });
-        }
+        const registeredServices = [];
 
-        this.REGISTERED_SERVICES.push(introspection);
-    };
+        let waitingServices = [...(appliances.dependencies || [])];
 
-    this.broker.createService({
-        name: this.broker.nodeID,
-        events: {
-            "introspection.request": async (payload, service) => {
-                if (!this.started) {
-                    await introspectionCall(service);
+        const introspectionCall = async (service) => {
+            let introspection;
+
+            try {
+                introspection = await broker.call(`${service}.introspection`, {
+                    gateway: broker.nodeID
+                });
+            } catch (error) {
+                return;
+            }
+
+            if (
+                registeredServices
+                    .map((x) => x.name)
+                    .includes(introspection.name)
+            ) {
+                throw new IdioError(
+                    `Gateway: '${broker.nodeID}' already has a registered service called: '${introspection.name}'`
+                );
+            }
+
+            if (appliances.dependencies.includes(introspection.name)) {
+                waitingServices = waitingServices.filter(
+                    (x) => x !== introspection.name
+                );
+            }
+
+            if (appliances.nodes) {
+                appliances.nodes.forEach((node) => {
+                    if (node.name === introspection.name) {
+                        throw new IdioError(
+                            `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
+                        );
+                    }
+                });
+            }
+
+            registeredServices.push(introspection);
+        };
+
+        broker.createService({
+            name: broker.nodeID,
+            events: {
+                "introspection.request": async (payload, service) => {
+                    if (!started) {
+                        await introspectionCall(service);
+                    }
+                },
+                "gateway.broadcast": (payload, service) => {
+                    if (service !== broker.nodeID) {
+                        return broker.emit("gateway.throw", {
+                            reason: `one gateway per network.`
+                        });
+                    }
+                },
+                "gateway.throw": ({ reason } = {}, sender) => {
+                    if (sender !== broker.nodeID) {
+                        console.error(
+                            new IdioError(
+                                `Received request to shutdown from sender: '${sender}'. Reason: ${reason}`
+                            )
+                        );
+
+                        process.exit(1);
+                    }
                 }
             }
+        });
+
+        await broker.start();
+
+        await broker.emit("gateway.broadcast");
+
+        const checkForServices = async (resolve, reject) => {
+            if (waitingServices.length) {
+                broker.logger.info(
+                    `Waiting for services: [${waitingServices.join(", ")}]`
+                );
+
+                await sleep(2000);
+
+                await Promise.all(waitingServices.map(introspectionCall));
+
+                return setImmediate(checkForServices, resolve, reject);
+            }
+
+            return resolve();
+        };
+
+        await new Promise(checkForServices);
+
+        let nodes = registeredServices.map(
+            createLocalNode({ broker, GraphQLNode })
+        );
+
+        if (appliances.nodes) {
+            nodes = [...nodes, ...appliances.nodes];
         }
-    });
 
-    await this.broker.start();
+        const result = await combineNodes(nodes, { ...appliances });
 
-    const checkForServices = async (resolve, reject) => {
-        if (this.WAITING_SERVICES.length) {
-            this.broker.logger.info(
-                `Waiting for services: [ ${this.WAITING_SERVICES.join(", ")} ]`
-            );
+        started = true;
 
-            await sleep(2000);
-
-            await Promise.all(
-                this.WAITING_SERVICES.map(introspectionCall.bind(this))
-            );
-
-            return setImmediate(checkForServices, resolve, reject);
-        }
-
-        return resolve();
-    };
-
-    await new Promise(checkForServices);
-
-    let nodes = this.REGISTERED_SERVICES.map(
-        createLocalNode({ broker: this.broker, GraphQLNode })
-    );
-
-    if (this.appliances.nodes) {
-        nodes = [...nodes, ...this.appliances.nodes];
+        return Object.freeze({ ...result, broker });
     }
 
-    const result = await combineNodes(nodes, { ...this.appliances });
-
-    this.started = true;
-
-    return { ...result, broker: this.broker };
-}
-
-module.exports = start;
+    return start;
+};

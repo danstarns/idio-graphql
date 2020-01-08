@@ -2,19 +2,13 @@ const { ServiceBroker } = require("moleculer");
 const IdioError = require("../../idio-error.js");
 
 /**
- * Broker options is passed into moleculer. For more info, see link;
- * https://moleculer.services/docs/0.13/broker.html#Broker-options
- *
- * @typedef {Object} brokerOptions
- * @property {string} transporter
- * @property {string} nodeID
- * @property {string} namespace
- * @property {string} logLevel
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  */
 
 /**
  *
- * @param {brokerOptions} brokerOptions
+ * @param {BrokerOptions} brokerOptions
  */
 function validateBrokerOptions(brokerOptions) {
     if (!brokerOptions) {
@@ -38,8 +32,8 @@ function validateBrokerOptions(brokerOptions) {
 
 /**
  *
- * @param {string} brokerType - spa
- * @param {brokerOptions} brokerOptions
+ * @param {BrokerOptions} brokerOptions
+ * @returns ServiceBroker
  */
 function createGatewayBroker(brokerOptions) {
     validateBrokerOptions(brokerOptions);
