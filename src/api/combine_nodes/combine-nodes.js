@@ -1,6 +1,7 @@
 const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
 const { isFunction, checkInstance } = require("../../util/index.js");
-const { resolveAppliance, loadNode } = require("../../methods/index.js");
+const { resolveAppliance } = require("../../methods/index.js");
+const { loadNode } = require("../graphql_node/methods/index.js");
 const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
 
 const GraphQLNode = require("../graphql_node/graphql-node.js");

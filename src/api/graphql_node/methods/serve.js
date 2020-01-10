@@ -2,7 +2,7 @@ const { ServiceBroker } = require("moleculer");
 const util = require("util");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const IdioError = require("../../idio-error.js");
-const { loadNode } = require("../../../methods/index.js");
+const loadNode = require("./load-node.js");
 const { iteratorToStream } = require("../../../util/index.js");
 
 const sleep = util.promisify(setTimeout);

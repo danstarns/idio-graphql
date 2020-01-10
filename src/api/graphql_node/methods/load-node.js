@@ -1,18 +1,10 @@
-/* eslint-disable require-yield */
 /* eslint-disable no-restricted-syntax */
 const { parse } = require("graphql/language");
-const util = require("util");
-const {
-    wrappedResolver,
-    isFunction,
-    iteratorToStream
-} = require("../util/index.js");
-const IdioError = require("../api/idio-error.js");
-const resolveAppliance = require("./resolve-appliance.js");
-const APPLIANCE_METADATA = require("../constants/appliance-metadata.js");
-const CONTEXT_INDEX = require("../constants/context-index.js");
-
-const sleep = util.promisify(setImmediate);
+const { wrappedResolver, isFunction } = require("../../../util/index.js");
+const IdioError = require("../../idio-error.js");
+const resolveAppliance = require("../../../methods/resolve-appliance.js");
+const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
+const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 /**
  * @param {GraphQLNode} n
@@ -179,7 +171,7 @@ async function loadNode(n, { INTERNALS }) {
 
     if (node.nodes) {
         node.nodes = await Promise.all(
-            node.nodes.map((n) => loadNode(n, { INTERNALS }))
+            node.nodes.map((_node) => loadNode(_node, { INTERNALS }))
         );
     }
 
