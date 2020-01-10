@@ -1,7 +1,7 @@
 const {
     validateAppliances,
     createGatewayBroker,
-    start: startExport
+    start
 } = require("./methods/index.js");
 
 /**
@@ -30,7 +30,7 @@ function GraphQLGateway(appliances, brokerOptions) {
     /**
      * @typedef {() => Schema} startMethod
      */
-    const startMethod = startExport({
+    const startMethod = start({
         appliances: validateAppliances(appliances),
         broker
     });
