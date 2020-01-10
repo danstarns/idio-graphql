@@ -190,7 +190,7 @@ describe("wrappedResolver", () => {
 
         await wrapped();
 
-        expect(result).to.equal(injections);
+        expect(result).to.eql(injections);
     });
 
     it("should inject into the CONTEXT_INDEX from resolve", async () => {
@@ -209,7 +209,7 @@ describe("wrappedResolver", () => {
 
         await wrapped();
 
-        expect(result).to.equal(injections);
+        expect(result).to.eql(injections);
     });
 
     it("should inject into the CONTEXT_INDEX from post", async () => {
@@ -228,7 +228,7 @@ describe("wrappedResolver", () => {
 
         await wrapped();
 
-        expect(result).to.equal(injections);
+        expect(result).to.eql(injections);
     });
 
     it("should provide the result into the post hooks", async () => {

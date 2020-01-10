@@ -351,8 +351,12 @@ describe("combineNodes", () => {
                     Query: {},
                     Mutation: {},
                     Subscription: {
-                        userCreation: () => true,
-                        userUpdate: () => true
+                        userCreation: {
+                            subscribe: () => true
+                        },
+                        userUpdate: {
+                            subscribe: () => true
+                        }
                     },
                     Fields: {}
                 }

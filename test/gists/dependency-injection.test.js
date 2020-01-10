@@ -64,8 +64,6 @@ describe("gists/dependency-injection", () => {
     });
 
     it("should verify dependency injection with a subscriptions", async () => {
-        let result;
-
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `type User {
@@ -81,19 +79,8 @@ describe("gists/dependency-injection", () => {
             resolvers: {
                 Subscription: {
                     userUpdate: {
-                        pre: (...args) => {
-                            args[2].injections.song += " jumped";
-                        },
-                        resolve: {
-                            subscribe: (...args) => {
-                                args[2].injections.song += " over the";
-                            },
-                            otherMethod: () => 1
-                        },
-                        post: (...args) => {
-                            args[3].injections.song += " moon";
-
-                            result = args[3].injections.song;
+                        subscribe: (...args) => {
+                            args[2].injections.song += " over the";
                         }
                     }
                 }
@@ -127,19 +114,10 @@ describe("gists/dependency-injection", () => {
             .to.be.a("object")
             .to.have.property("Subscription")
             .to.be.a("object")
-            .to.have.property("userUpdate")
-            .to.be.a("object")
-            .to.have.property("otherMethod")
-            .to.be.a("function");
-
-        await resolvers.Subscription.userUpdate.subscribe(undefined, {}, {});
-
-        expect(result).to.equal("the cat jumped over the moon");
+            .to.have.property("userUpdate");
     });
 
     it("should verify dependency injection with a subscriptions", async () => {
-        let result;
-
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `type User {
@@ -196,10 +174,6 @@ describe("gists/dependency-injection", () => {
             .to.be.a("object")
             .to.have.property("otherMethod")
             .to.be.a("function");
-
-        await resolvers.Subscription.userUpdate.subscribe(undefined, {}, {});
-
-        expect(result).to.equal("the cat jumped over the moon");
     });
 
     it("should verify dependency injection with a initial function", async () => {
