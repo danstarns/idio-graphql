@@ -35,10 +35,10 @@ function GraphQLGateway(appliances, brokerOptions) {
         broker
     });
 
-    return Object.freeze({
+    return {
         broker,
         start: startMethod
-    });
+    };
 }
 
 module.exports = GraphQLGateway;

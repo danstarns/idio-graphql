@@ -1,4 +1,11 @@
+/* eslint-disable no-restricted-syntax */
+const util = require("util");
 const IdioError = require("../../idio-error.js");
+
+const {
+    iteratorToStream,
+    streamToIterator
+} = require("../../../util/index.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
@@ -18,26 +25,50 @@ function createLocalNode({ broker, GraphQLNode }) {
             resolvers: Object.entries(introspection.resolvers).reduce(
                 (result, [type, methods]) => ({
                     ...result,
-                    [type]: methods.reduce(
-                        (res, resolver) => ({
-                            ...res,
-                            [resolver]: async (...graphQLArgs) => {
-                                try {
-                                    const response = await broker.call(
-                                        `${introspection.name}:${type}.${resolver}`,
-                                        { graphQLArgs }
-                                    );
+                    [type]: methods.reduce((res, resolver) => {
+                        async function localResolver(...graphQLArgs) {
+                            try {
+                                const response = await broker.call(
+                                    `${introspection.name}:${type}.${resolver}`,
+                                    { graphQLArgs }
+                                );
 
-                                    return response;
-                                } catch (error) {
-                                    throw new IdioError(
-                                        `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
-                                    );
-                                }
+                                return response;
+                            } catch (error) {
+                                throw new IdioError(
+                                    `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
+                                );
                             }
-                        }),
-                        {}
-                    )
+                        }
+
+                        if (type === "Subscription") {
+                            return {
+                                ...res,
+                                [resolver]: {
+                                    async subscribe(...graphQLArgs) {
+                                        try {
+                                            const response = await broker.call(
+                                                `${introspection.name}:${type}.${resolver}`,
+                                                { graphQLArgs }
+                                            );
+
+                                            return streamToIterator(response);
+                                        } catch (error) {
+                                            console.error(error);
+                                            throw new IdioError(
+                                                `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
+                                            );
+                                        }
+                                    }
+                                }
+                            };
+                        }
+
+                        return {
+                            ...res,
+                            [resolver]: localResolver
+                        };
+                    }, {})
                 }),
                 {}
             )

@@ -3,6 +3,7 @@ const util = require("util");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const IdioError = require("../../idio-error.js");
 const { loadNode } = require("../../../methods/index.js");
+const { iteratorToStream } = require("../../../util/index.js");
 
 const sleep = util.promisify(setTimeout);
 
@@ -80,16 +81,35 @@ module.exports = (GraphQLNode) => {
             broker.createService({
                 name: `${this.name}:${key}`,
                 actions: Object.entries(methods).reduce(
-                    (result, [name, method]) => ({
-                        ...result,
-                        [name]: (ctx) => {
-                            ctx.params.graphQLArgs[
-                                CONTEXT_INDEX
-                            ].broker = broker;
+                    (result, [name, method]) => {
+                        if (method.subscribe) {
+                            return {
+                                ...result,
+                                [name]: (ctx) => {
+                                    ctx.params.graphQLArgs[
+                                        CONTEXT_INDEX
+                                    ].broker = broker;
 
-                            return method(...ctx.params.graphQLArgs);
+                                    return iteratorToStream(
+                                        method.subscribe(
+                                            ...ctx.params.graphQLArgs
+                                        )
+                                    );
+                                }
+                            };
                         }
-                    }),
+
+                        return {
+                            ...result,
+                            [name]: (ctx) => {
+                                ctx.params.graphQLArgs[
+                                    CONTEXT_INDEX
+                                ].broker = broker;
+
+                                return method(...ctx.params.graphQLArgs);
+                            }
+                        };
+                    },
                     {}
                 )
             })

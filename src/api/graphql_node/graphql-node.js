@@ -1,5 +1,5 @@
 const IdioEnum = require("../idio-enum.js");
-const { parseTypeDefs } = require("../../util/index.js");
+const { parseTypeDefs, isAsyncIterator } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
 
@@ -153,6 +153,16 @@ function GraphQLNode({
                 ", "
             )} ]'.`
         );
+    }
+
+    if (resolvers.Subscription) {
+        Object.entries(resolvers.Subscription).forEach(([key, resolver]) => {
+            if (!resolver.subscribe) {
+                throw new IdioError(
+                    `${prefix}: '${name}' resolvers.Subscription.${key} must contain a subscribe method`
+                );
+            }
+        });
     }
 
     this.resolvers = resolvers;

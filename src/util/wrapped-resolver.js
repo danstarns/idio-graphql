@@ -43,7 +43,7 @@ async function resultFunction(input, { direction, name, args }) {
  */
 
 /**
- * @typedef {(PreHook|Array.<PreHook>)} PostUnion
+ * @typedef {(PreHook|Array.<PreHook>)} PreHook
  */
 
 /**
@@ -56,7 +56,7 @@ async function resultFunction(input, { direction, name, args }) {
  */
 
 /**
- * @typedef {(PostHook|Array.<PostHook>)} PreUnion
+ * @typedef {(PostHook|Array.<PostHook>)} PostUnion
  */
 
 /**
@@ -124,8 +124,14 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
 
     async function newResolver(...args) {
         if (injections) {
-            args[CONTEXT_INDEX] = Object(args[CONTEXT_INDEX]);
-            args[CONTEXT_INDEX].injections = injections;
+            if (!(typeof args[CONTEXT_INDEX] === "object")) {
+                args[CONTEXT_INDEX] = Object(args[CONTEXT_INDEX] || {});
+            }
+
+            args[CONTEXT_INDEX].injections = {
+                ...(args[CONTEXT_INDEX].injections || {}),
+                ...injections
+            };
         }
 
         if (pre) {

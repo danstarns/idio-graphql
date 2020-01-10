@@ -1,8 +1,18 @@
+/* eslint-disable require-yield */
+/* eslint-disable no-restricted-syntax */
 const { parse } = require("graphql/language");
-const { wrappedResolver, isFunction } = require("../util/index.js");
+const util = require("util");
+const {
+    wrappedResolver,
+    isFunction,
+    iteratorToStream
+} = require("../util/index.js");
 const IdioError = require("../api/idio-error.js");
 const resolveAppliance = require("./resolve-appliance.js");
 const APPLIANCE_METADATA = require("../constants/appliance-metadata.js");
+const CONTEXT_INDEX = require("../constants/context-index.js");
+
+const sleep = util.promisify(setImmediate);
 
 /**
  * @param {GraphQLNode} n
@@ -119,35 +129,30 @@ async function loadNode(n, { INTERNALS }) {
                     if (Object.keys(method).includes("subscribe")) {
                         resolvers[type][name] = {
                             ...method,
-                            subscribe: wrappedResolver(method.subscribe, {
-                                pre: method.pre,
-                                post: method.post,
-                                name: `${node.name}.resolvers.${type}.${name}`,
-                                injections: node.injections
-                            })
+                            async *subscribe(...args) {
+                                try {
+                                    args[CONTEXT_INDEX].injections = {
+                                        ...args[CONTEXT_INDEX].injections,
+                                        ...node.injections
+                                    };
+
+                                    const iterator = await method.subscribe(
+                                        ...args
+                                    );
+
+                                    for await (const chunk of iterator) {
+                                        yield chunk;
+                                    }
+                                } catch (error) {
+                                    throw new IdioError(`resolver: fix me`);
+                                }
+                            }
                         };
 
                         return;
                     }
 
                     if (Object.keys(method).includes("resolve")) {
-                        if (Object.keys(method.resolve).includes("subscribe")) {
-                            resolvers[type][name] = {
-                                ...method.resolve,
-                                subscribe: wrappedResolver(
-                                    method.resolve.subscribe,
-                                    {
-                                        pre: method.pre,
-                                        post: method.post,
-                                        name: `${node.name}.resolvers.${type}.${name}`,
-                                        injections: node.injections
-                                    }
-                                )
-                            };
-
-                            return;
-                        }
-
                         resolvers[type][name] = wrappedResolver(
                             method.resolve,
                             {
