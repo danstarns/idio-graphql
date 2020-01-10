@@ -1,4 +1,3 @@
-const { ServiceBroker } = require("moleculer");
 const IdioError = require("../../idio-error.js");
 
 /**
@@ -37,6 +36,19 @@ function validateBrokerOptions(brokerOptions) {
  */
 function createGatewayBroker(brokerOptions) {
     validateBrokerOptions(brokerOptions);
+
+    let moleculer = {};
+
+    try {
+        // eslint-disable-next-line global-require
+        moleculer = require("moleculer");
+    } catch (error) {
+        throw new IdioError(
+            `Cant find module: 'moleculer' install using npm install --save moleculer `
+        );
+    }
+
+    const { ServiceBroker } = moleculer;
 
     return new ServiceBroker(brokerOptions);
 }

@@ -1,5 +1,5 @@
 const IdioEnum = require("../idio-enum.js");
-const { parseTypeDefs, isAsyncIterator } = require("../../util/index.js");
+const { parseTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
 

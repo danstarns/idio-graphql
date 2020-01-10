@@ -1,4 +1,3 @@
-const { ServiceBroker } = require("moleculer");
 const util = require("util");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const IdioError = require("../../idio-error.js");
@@ -44,6 +43,19 @@ module.exports = (GraphQLNode) => {
         ["Query", "Mutation", "Subscription", "Fields"].forEach((type) => {
             this.resolvers[type] = { ...(resolvers[type] || {}) };
         });
+
+        let moleculer = {};
+
+        try {
+            // eslint-disable-next-line global-require
+            moleculer = require("moleculer");
+        } catch (error) {
+            throw new IdioError(
+                `Cant find module: 'moleculer' install using npm install --save moleculer `
+            );
+        }
+
+        const { ServiceBroker } = moleculer;
 
         const broker = new ServiceBroker({
             ...brokerOptions,

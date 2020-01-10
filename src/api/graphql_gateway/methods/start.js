@@ -91,9 +91,9 @@ module.exports = ({ appliances, broker }) => {
                         await introspectionCall(service);
                     }
                 },
-                "gateway.broadcast": (payload, service) => {
+                "gateway.broadcast": async (payload, service) => {
                     if (service !== broker.nodeID) {
-                        return broker.emit("gateway.throw", {
+                        await broker.emit("gateway.throw", {
                             reason: `one gateway per network.`
                         });
                     }

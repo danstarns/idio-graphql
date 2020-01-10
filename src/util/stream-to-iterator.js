@@ -13,6 +13,7 @@ async function* streamToIterator(stream) {
     });
 
     while (true) {
+        // eslint-disable-next-line no-await-in-loop
         await sleep();
 
         const [result, ...restOfBuffers] = buffers;
@@ -24,6 +25,7 @@ async function* streamToIterator(stream) {
         }
 
         if (!result) {
+            // eslint-disable-next-line no-continue
             continue;
         } else {
             yield JSON.parse(result.toString());

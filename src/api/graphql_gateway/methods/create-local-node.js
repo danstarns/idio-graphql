@@ -1,11 +1,6 @@
-/* eslint-disable no-restricted-syntax */
-const util = require("util");
 const IdioError = require("../../idio-error.js");
 
-const {
-    iteratorToStream,
-    streamToIterator
-} = require("../../../util/index.js");
+const { streamToIterator } = require("../../../util/index.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
@@ -54,7 +49,6 @@ function createLocalNode({ broker, GraphQLNode }) {
 
                                             return streamToIterator(response);
                                         } catch (error) {
-                                            console.error(error);
                                             throw new IdioError(
                                                 `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
                                             );
