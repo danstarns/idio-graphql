@@ -1,6 +1,9 @@
+const util = require("util");
 const { parseTypeDefs } = require("../util/index.js");
 const RESTRICTED_NAMES = require("../constants/restricted-names.js");
 const IdioError = require("./idio-error.js");
+
+const sleep = util.promisify(setTimeout);
 
 /**
  * @typedef {Object} IdioEnum
@@ -56,5 +59,79 @@ function IdioEnum({ name, typeDefs, resolver } = {}) {
 
     this.resolver = resolver;
 }
+
+async function serve(brokerOptions) {
+    this.name;
+    this.typeDefs;
+    this.resolver;
+
+    let moleculer = {};
+    let initialized = false;
+
+    if (!brokerOptions) {
+        throw new IdioError("brokerOptions required");
+    }
+
+    if (!brokerOptions.transporter) {
+        throw new IdioError("brokerOptions.transporter required");
+    }
+
+    try {
+        // eslint-disable-next-line global-require
+        moleculer = require("moleculer");
+    } catch (error) {
+        throw new IdioError(
+            `Cant find module: 'moleculer' install using npm install --save moleculer `
+        );
+    }
+
+    const { ServiceBroker } = moleculer;
+
+    const broker = new ServiceBroker({
+        ...brokerOptions,
+        nodeID: this.name
+    });
+
+    const introspection = {
+        name: this.name,
+        typeDefs: await this.typeDefs(),
+        resolver: this.resolver
+    };
+
+    broker.createService({
+        name: this.name,
+        actions: {
+            introspection: ({ params: { gateway } = {} } = {}) => {
+                initialized = true;
+
+                broker.logger.info(`Connected to GraphQLGateway: '${gateway}'`);
+
+                return introspection;
+            }
+        }
+    });
+
+    await broker.start();
+
+    const introspectionCall = async () => {
+        try {
+            await broker.emit(`introspection.request`, { type: "enum" });
+        } catch (e) {
+            e;
+        }
+
+        await sleep(2000);
+
+        if (!initialized) {
+            setImmediate(introspectionCall);
+        }
+    };
+
+    await introspectionCall();
+
+    return broker;
+}
+
+IdioEnum.prototype.serve = serve;
 
 module.exports = IdioEnum;

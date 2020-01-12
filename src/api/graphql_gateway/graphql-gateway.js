@@ -1,11 +1,11 @@
 const {
-    validateAppliances,
+    createConfig,
     createGatewayBroker,
     start
 } = require("./methods/index.js");
 
 /**
- * @typedef {import('./methods/validate-appliances.js').appliances} appliances
+ * @typedef {import('./methods/create-config.js').config} config
  * @typedef {import('./methods/start.js').Schema} Schema
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
@@ -19,25 +19,24 @@ const {
 
 /**
  *
- * @param {appliances} appliances
+ * @param {config} config
  * @param {BrokerOptions} brokerOptions
  *
  * @returns {GraphQLGateway}
  */
-function GraphQLGateway(appliances, brokerOptions) {
+function GraphQLGateway(config, brokerOptions) {
     const broker = createGatewayBroker(brokerOptions);
 
     /**
-     * @typedef {() => Schema} startMethod
+     * @property {() => Schema} start
      */
-    const startMethod = start({
-        appliances: validateAppliances(appliances),
-        broker
-    });
-
     return {
         broker,
-        start: startMethod
+        start: start({
+            brokerOptions,
+            config: createConfig(config),
+            broker
+        })
     };
 }
 

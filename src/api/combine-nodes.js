@@ -1,17 +1,17 @@
 const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
-const { isFunction, checkInstance } = require("../../util/index.js");
-const { resolveAppliance } = require("../../methods/index.js");
-const { loadNode } = require("../graphql_node/methods/index.js");
-const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
+const { isFunction, checkInstance } = require("../util/index.js");
+const { resolveAppliance } = require("../methods/index.js");
+const { loadNode } = require("./graphql_node/methods/index.js");
+const APPLIANCE_METADATA = require("../constants/appliance-metadata.js");
 
-const GraphQLNode = require("../graphql_node/graphql-node.js");
-const IdioError = require("../idio-error.js");
+const GraphQLNode = require("./graphql_node/graphql-node.js");
+const IdioError = require("./idio-error.js");
 
 /**
- * @typedef {import('../graphql_node/graphql-node.js')} GraphQLNode
- * @typedef {import('../idio-scalar.js')} IdioScalar
- * @typedef {import('../idio-enum.js')} IdioEnum
- * @typedef {import('../idio-directive.js')} IdioDirective
+ * @typedef {import('./graphql_node/graphql-node.js')} GraphQLNode
+ * @typedef {import('./idio-scalar.js')} IdioScalar
+ * @typedef {import('./idio-enum.js')} IdioEnum
+ * @typedef {import('./idio-directive.js')} IdioDirective
  */
 
 function reduceNode(result, node) {

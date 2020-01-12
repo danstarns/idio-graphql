@@ -15,7 +15,7 @@ module.exports = (GraphQLNode) => {
         this.nodes;
         this.injections;
 
-        this.initialized = false;
+        let initialized = false;
 
         if (!brokerOptions) {
             throw new IdioError("brokerOptions required");
@@ -29,9 +29,7 @@ module.exports = (GraphQLNode) => {
             name: this.name,
             typeDefs: await this.typeDefs(),
             resolvers: this.resolvers,
-            enums: this.enums,
-            injections: this.injections,
-            dependencies: this.dependencies
+            injections: this.injections
         });
 
         const { typeDefs, resolvers } = await loadNode(node, {
@@ -78,7 +76,7 @@ module.exports = (GraphQLNode) => {
             name: this.name,
             actions: {
                 introspection: ({ params: { gateway } = {} } = {}) => {
-                    this.initialized = true;
+                    initialized = true;
 
                     broker.logger.info(
                         `Connected to GraphQLGateway: '${gateway}'`
@@ -127,11 +125,21 @@ module.exports = (GraphQLNode) => {
             })
         );
 
+        if (this.enums && this.enums.length) {
+            await Promise.all(
+                this.enums.map((_enum) => _enum.serve(brokerOptions))
+            );
+        }
+
         if (this.nodes && this.nodes.length) {
             await Promise.all(this.nodes.map((n) => n.serve(brokerOptions)));
         }
 
         await broker.start();
+
+        if (this.enums && this.enums.length) {
+            await broker.waitForServices(this.enums.map((_enum) => _enum.name));
+        }
 
         if (this.nodes && this.nodes.length) {
             await broker.waitForServices(this.nodes.map((n) => n.name));
@@ -139,14 +147,14 @@ module.exports = (GraphQLNode) => {
 
         const introspectionCall = async () => {
             try {
-                await broker.emit(`introspection.request`);
+                await broker.emit(`introspection.request`, { type: "node" });
             } catch (e) {
                 e;
             }
 
             await sleep(2000);
 
-            if (!this.initialized) {
+            if (!initialized) {
                 setImmediate(introspectionCall);
             }
         };

@@ -1,15 +1,17 @@
 const util = require("util");
-const combineNodes = require("../../combine_nodes/combine-nodes.js");
+const combineNodes = require("../../combine-nodes.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 const IdioError = require("../../idio-error.js");
+const IdioEnum = require("../../idio-enum.js");
 
 const sleep = util.promisify(setTimeout);
 
 const createLocalNode = require("./create-local-node.js");
+const createLocalEnum = require("./create-local-enum.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('./validate-appliances.js').appliances} appliances
+ * @typedef {import('./validate-config.js').config} config
  */
 
 /**
@@ -25,10 +27,10 @@ const createLocalNode = require("./create-local-node.js");
 
 /**
  * @param {Object} curry
- * @param {appliances} curry.appliances
+ * @param {config} curry.config
  * @param {ServiceBroker} curry.broker
  */
-module.exports = ({ appliances, broker }) => {
+module.exports = ({ brokerOptions, config, broker }) => {
     /**
      * Builds & orchestrates a schema from multiple sources on the network.
      *
@@ -39,11 +41,69 @@ module.exports = ({ appliances, broker }) => {
     async function start() {
         let started = false;
 
-        const registeredServices = [];
+        const { services, locals } = config;
 
-        let waitingServices = [...(appliances.dependencies || [])];
+        const registeredServices = {
+            nodes: [],
+            enums: []
+        };
 
-        const introspectionCall = async (service) => {
+        let waitingServices = {
+            nodes: [...(services.nodes || [])],
+            enums: [...(services.enums || [])]
+        };
+
+        const resolveNodeIntrospection = (introspection) => {
+            if (
+                registeredServices.nodes
+                    .map((x) => x.name)
+                    .includes(introspection.name)
+            ) {
+                throw new IdioError(
+                    `Gateway: '${broker.nodeID}' already has a registered service called: '${introspection.name}'`
+                );
+            }
+
+            if (waitingServices.nodes.includes(introspection.name)) {
+                waitingServices.nodes = waitingServices.nodes.filter(
+                    (x) => x !== introspection.name
+                );
+            }
+
+            if (locals.nodes) {
+                locals.nodes.forEach((node) => {
+                    if (node.name === introspection.name) {
+                        throw new IdioError(
+                            `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
+                        );
+                    }
+                });
+            }
+
+            registeredServices.nodes.push(introspection);
+        };
+
+        const resolveEnumIntrospection = (introspection) => {
+            if (
+                registeredServices.enums
+                    .map((x) => x.name)
+                    .includes(introspection.name)
+            ) {
+                throw new IdioError(
+                    `Gateway: '${broker.nodeID}' already has a registered service called: '${introspection.name}'`
+                );
+            }
+
+            if (waitingServices.enums.includes(introspection.name)) {
+                waitingServices.enums = waitingServices.enums.filter(
+                    (x) => x !== introspection.name
+                );
+            }
+
+            registeredServices.enums.push(introspection);
+        };
+
+        const introspectionCall = async (service, type) => {
             let introspection;
 
             try {
@@ -54,41 +114,20 @@ module.exports = ({ appliances, broker }) => {
                 return;
             }
 
-            if (
-                registeredServices
-                    .map((x) => x.name)
-                    .includes(introspection.name)
-            ) {
-                throw new IdioError(
-                    `Gateway: '${broker.nodeID}' already has a registered service called: '${introspection.name}'`
-                );
+            if (type === "node") {
+                resolveNodeIntrospection(introspection);
             }
-
-            if (appliances.dependencies.includes(introspection.name)) {
-                waitingServices = waitingServices.filter(
-                    (x) => x !== introspection.name
-                );
+            if (type === "enum") {
+                resolveEnumIntrospection(introspection);
             }
-
-            if (appliances.nodes) {
-                appliances.nodes.forEach((node) => {
-                    if (node.name === introspection.name) {
-                        throw new IdioError(
-                            `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
-                        );
-                    }
-                });
-            }
-
-            registeredServices.push(introspection);
         };
 
         broker.createService({
             name: broker.nodeID,
             events: {
-                "introspection.request": async (payload, service) => {
+                "introspection.request": async ({ type }, service) => {
                     if (!started) {
-                        await introspectionCall(service);
+                        await introspectionCall(service, type);
                     }
                 },
                 "gateway.broadcast": async (payload, service) => {
@@ -114,17 +153,57 @@ module.exports = ({ appliances, broker }) => {
 
         await broker.start();
 
+        if (locals.nodes) {
+            await Promise.all(
+                locals.nodes.map((_node) => _node.serve(brokerOptions))
+            );
+        }
+
+        if (locals.enums) {
+            await Promise.all(
+                locals.enums.map((_enum) => _enum.serve(brokerOptions))
+            );
+        }
+
         await broker.emit("gateway.broadcast");
 
         const checkForServices = async (resolve, reject) => {
-            if (waitingServices.length) {
+            if (waitingServices.nodes.length) {
                 broker.logger.info(
-                    `Waiting for services: [${waitingServices.join(", ")}]`
+                    `Waiting for nodes services: [${waitingServices.nodes.join(
+                        ", "
+                    )}]`
                 );
 
                 await sleep(2000);
 
-                await Promise.all(waitingServices.map(introspectionCall));
+                await Promise.all(
+                    waitingServices.nodes.map((_node) =>
+                        introspectionCall(_node, {
+                            type: "node"
+                        })
+                    )
+                );
+
+                return setImmediate(checkForServices, resolve, reject);
+            }
+
+            if (waitingServices.enums.length) {
+                broker.logger.info(
+                    `Waiting for enums services: [${waitingServices.enums.join(
+                        ", "
+                    )}]`
+                );
+
+                await sleep(2000);
+
+                await Promise.all(
+                    waitingServices.enums.map((_enum) =>
+                        introspectionCall(_enum, {
+                            type: "enum"
+                        })
+                    )
+                );
 
                 return setImmediate(checkForServices, resolve, reject);
             }
@@ -134,15 +213,19 @@ module.exports = ({ appliances, broker }) => {
 
         await new Promise(checkForServices);
 
-        let nodes = registeredServices.map(
+        let nodes = registeredServices.nodes.map(
             createLocalNode({ broker, GraphQLNode })
         );
 
-        if (appliances.nodes) {
-            nodes = [...nodes, ...appliances.nodes];
+        const appliances = { ...locals };
+
+        if (registeredServices.enums.length) {
+            appliances.enums = registeredServices.enums.map(
+                createLocalEnum({ IdioEnum })
+            );
         }
 
-        const result = await combineNodes(nodes, { ...appliances });
+        const result = await combineNodes(nodes, appliances);
 
         started = true;
 

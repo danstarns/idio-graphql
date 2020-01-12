@@ -1,11 +1,13 @@
-const validateAppliances = require("./validate-appliances.js");
+const createConfig = require("./create-config.js");
 const createGatewayBroker = require("./create-gateway-broker.js");
 const createLocalNode = require("./create-local-node.js");
+const createLocalEnum = require("./create-local-enum.js");
 const start = require("./start.js");
 
 module.exports = {
     start,
-    validateAppliances,
+    createConfig,
     createGatewayBroker,
-    createLocalNode
+    createLocalNode,
+    createLocalEnum
 };
