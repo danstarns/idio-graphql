@@ -1,15 +1,22 @@
+const { GraphQLScalarType } = require("graphql");
 const RESTRICTED_NAMES = require("../constants/restricted-names.js");
 const IdioError = require("./idio-error.js");
+
+/**
+ * @typedef {import('graphql').GraphQLScalarType} GraphQLScalarType
+ */
 
 /**
  * @typedef {Object} IdioScalar
  * @property {string} name - The Scalar name.
  * @property {Promise<string>} typeDefs - Graphql typeDefs resolver..
- * @property {Object} resolver - The Scalar resolver.
+ * @property {GraphQLScalarType} resolver - The Scalar resolver.
  */
 
 /**
- * Creates a instance of IdioScalar.
+ * Creates a instance of IdioScalar. You can use IdioScalar to modularize a scalar ( ScalarTypeDefinition ),
+ * together with its resolver. You can only apply scalars 'top-level' at combineNodes.
+ * IdioScalar does not require typeDefs it uses the name to match up the resolver.
  *
  * @param {Object} config
  * @param {string} config.name - The Scalar name.
@@ -42,6 +49,18 @@ function IdioScalar({ name, resolver } = {}) {
 
     if (!resolver) {
         throw new IdioError(`${prefix}: '${name}' without resolver.`);
+    }
+
+    if (
+        !Object.prototype.isPrototypeOf.call(
+            GraphQLScalarType.prototype,
+            resolver
+        ) &&
+        !Object.prototype.isPrototypeOf.call(GraphQLScalarType, resolver)
+    ) {
+        throw new IdioError(
+            `${prefix}: '${name}'.resolver must be a instance of GraphQLScalarType.`
+        );
     }
 
     this.resolver = resolver;

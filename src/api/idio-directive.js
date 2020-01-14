@@ -1,6 +1,11 @@
 const { parseTypeDefs } = require(`../util/index.js`);
+const { SchemaDirectiveVisitor } = require("graphql-tools");
 const RESTRICTED_NAMES = require("../constants/restricted-names.js");
 const IdioError = require("./idio-error.js");
+
+/**
+ * @typedef {import('graphql-tools').SchemaDirectiveVisitor} SchemaDirectiveVisitor
+ */
 
 /**
  * @typedef {Object} IdioDirective
@@ -10,12 +15,13 @@ const IdioError = require("./idio-error.js");
  */
 
 /**
- * Creates a instance of a IdioDirective.
+ * Creates a instance of a IdioDirective. You can use IdioDirective to modularize a directive ( DirectiveDefinition ),
+ * together with its resolver. You can only apply directives 'top-level' at combineNodes.
  *
  * @param {Object} config
  * @param {string} config.name - The Directive name.
- * @param {string} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
- * @param {Object} config.resolver - The Directive resolver.
+ * @param {any} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
+ * @param {SchemaDirectiveVisitor} config.resolver - The Directive resolver.
  *
  * @returns IdioDirective
  */
@@ -52,6 +58,18 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
 
     if (!resolver) {
         throw new IdioError(`${prefix}: '${name}' without a resolver.`);
+    }
+
+    if (
+        !Object.prototype.isPrototypeOf.call(
+            SchemaDirectiveVisitor.prototype,
+            resolver
+        ) &&
+        !Object.prototype.isPrototypeOf.call(SchemaDirectiveVisitor, resolver)
+    ) {
+        throw new IdioError(
+            `${prefix}: '${name}'.resolver must be a instance of SchemaDirectiveVisitor.`
+        );
     }
 
     this.resolver = resolver;
