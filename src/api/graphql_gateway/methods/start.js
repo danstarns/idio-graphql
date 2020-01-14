@@ -11,7 +11,8 @@ const createLocalEnum = require("./create-local-enum.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('./validate-config.js').config} config
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('./create-config.js').config} config
  */
 
 /**
@@ -27,6 +28,7 @@ const createLocalEnum = require("./create-local-enum.js");
 
 /**
  * @param {Object} curry
+ * @param {BrokerOptions} curry.brokerOptions
  * @param {config} curry.config
  * @param {ServiceBroker} curry.broker
  */
@@ -53,56 +55,6 @@ module.exports = ({ brokerOptions, config, broker }) => {
             enums: [...(services.enums || [])]
         };
 
-        const resolveNodeIntrospection = (introspection) => {
-            if (
-                registeredServices.nodes
-                    .map((x) => x.name)
-                    .includes(introspection.name)
-            ) {
-                throw new IdioError(
-                    `Gateway: '${broker.nodeID}' already has a registered service called: '${introspection.name}'`
-                );
-            }
-
-            if (waitingServices.nodes.includes(introspection.name)) {
-                waitingServices.nodes = waitingServices.nodes.filter(
-                    (x) => x !== introspection.name
-                );
-            }
-
-            if (locals.nodes) {
-                locals.nodes.forEach((node) => {
-                    if (node.name === introspection.name) {
-                        throw new IdioError(
-                            `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
-                        );
-                    }
-                });
-            }
-
-            registeredServices.nodes.push(introspection);
-        };
-
-        const resolveEnumIntrospection = (introspection) => {
-            if (
-                registeredServices.enums
-                    .map((x) => x.name)
-                    .includes(introspection.name)
-            ) {
-                throw new IdioError(
-                    `Gateway: '${broker.nodeID}' already has a registered service called: '${introspection.name}'`
-                );
-            }
-
-            if (waitingServices.enums.includes(introspection.name)) {
-                waitingServices.enums = waitingServices.enums.filter(
-                    (x) => x !== introspection.name
-                );
-            }
-
-            registeredServices.enums.push(introspection);
-        };
-
         const introspectionCall = async (service, type) => {
             let introspection;
 
@@ -115,10 +67,51 @@ module.exports = ({ brokerOptions, config, broker }) => {
             }
 
             if (type === "node") {
-                resolveNodeIntrospection(introspection);
-            }
-            if (type === "enum") {
-                resolveEnumIntrospection(introspection);
+                if (
+                    registeredServices.nodes
+                        .map((x) => x.name)
+                        .includes(introspection.name)
+                ) {
+                    throw new IdioError(
+                        `Gateway: '${broker.nodeID}' already has a registered node service called: '${introspection.name}'.`
+                    );
+                }
+
+                if (waitingServices.nodes.includes(introspection.name)) {
+                    waitingServices.nodes = waitingServices.nodes.filter(
+                        (x) => x !== introspection.name
+                    );
+                }
+
+                if (locals.nodes) {
+                    locals.nodes.forEach((node) => {
+                        if (node.name === introspection.name) {
+                            throw new IdioError(
+                                `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
+                            );
+                        }
+                    });
+                }
+
+                registeredServices.nodes.push(introspection);
+            } else if (type === "enum") {
+                if (
+                    registeredServices.enums
+                        .map((x) => x.name)
+                        .includes(introspection.name)
+                ) {
+                    throw new IdioError(
+                        `Gateway: '${broker.nodeID}' already has a registered enum service called: '${introspection.name}'.`
+                    );
+                }
+
+                if (waitingServices.enums.includes(introspection.name)) {
+                    waitingServices.enums = waitingServices.enums.filter(
+                        (x) => x !== introspection.name
+                    );
+                }
+
+                registeredServices.enums.push(introspection);
             }
         };
 
@@ -133,7 +126,7 @@ module.exports = ({ brokerOptions, config, broker }) => {
                 "gateway.broadcast": async (payload, service) => {
                     if (service !== broker.nodeID) {
                         await broker.emit("gateway.throw", {
-                            reason: `one gateway per network.`
+                            reason: `One gateway per network.`
                         });
                     }
                 },
@@ -153,62 +146,53 @@ module.exports = ({ brokerOptions, config, broker }) => {
 
         await broker.start();
 
-        if (locals.nodes) {
-            await Promise.all(
-                locals.nodes.map((_node) => _node.serve(brokerOptions))
-            );
-        }
-
-        if (locals.enums) {
-            await Promise.all(
-                locals.enums.map((_enum) => _enum.serve(brokerOptions))
-            );
-        }
+        await Promise.all(
+            [...(locals.nodes || []), ...(locals.enums || [])].map((local) =>
+                local.serve(brokerOptions)
+            )
+        );
 
         await broker.emit("gateway.broadcast");
 
         const checkForServices = async (resolve, reject) => {
-            if (waitingServices.nodes.length) {
-                broker.logger.info(
-                    `Waiting for nodes services: [${waitingServices.nodes.join(
-                        ", "
-                    )}]`
-                );
+            if (
+                waitingServices.nodes.length > 0 ||
+                waitingServices.enums.length > 0
+            ) {
+                await sleep(1000);
 
-                await sleep(2000);
+                if (waitingServices.nodes.length) {
+                    broker.logger.info(
+                        `Waiting for node services: [${waitingServices.nodes.join(
+                            ", "
+                        )}]`
+                    );
 
-                await Promise.all(
-                    waitingServices.nodes.map((_node) =>
-                        introspectionCall(_node, {
-                            type: "node"
+                    await Promise.all(
+                        waitingServices.nodes.map((_node) => {
+                            return introspectionCall(_node, "node");
                         })
-                    )
-                );
+                    );
+                }
 
-                return setImmediate(checkForServices, resolve, reject);
+                if (waitingServices.enums.length) {
+                    broker.logger.info(
+                        `Waiting for enum services: [${waitingServices.enums.join(
+                            ", "
+                        )}]`
+                    );
+
+                    await Promise.all(
+                        waitingServices.enums.map((_enum) =>
+                            introspectionCall(_enum, "enum")
+                        )
+                    );
+                }
+
+                setImmediate(checkForServices, resolve, reject);
+            } else {
+                return resolve();
             }
-
-            if (waitingServices.enums.length) {
-                broker.logger.info(
-                    `Waiting for enums services: [${waitingServices.enums.join(
-                        ", "
-                    )}]`
-                );
-
-                await sleep(2000);
-
-                await Promise.all(
-                    waitingServices.enums.map((_enum) =>
-                        introspectionCall(_enum, {
-                            type: "enum"
-                        })
-                    )
-                );
-
-                return setImmediate(checkForServices, resolve, reject);
-            }
-
-            return resolve();
         };
 
         await new Promise(checkForServices);
