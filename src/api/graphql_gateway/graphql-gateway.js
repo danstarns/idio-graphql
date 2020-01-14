@@ -13,11 +13,13 @@ const {
 
 /**
  * @typedef {Object} GraphQLGateway
- * @property {() => Schema} start - starts the server
+ * @property {() => Schema} start - starts the server.
  * @property {ServiceBroker} broker - https://moleculer.services/docs.
  */
 
 /**
+ *
+ * You can use GraphQLGateway to build a distributed schema via multiple means of transport.
  *
  * @param {config} config
  * @param {BrokerOptions} brokerOptions

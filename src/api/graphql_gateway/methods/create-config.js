@@ -24,7 +24,7 @@ const { checkInstance } = require("../../../util/index.js");
  * @property {Array.<IdioScalar>} scalars
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioDirective>} directives
- * @property {any} schemaGlobals - an Array or a single instance of Graphql typeDefs, use filePath, string, or gql-tag.
+ * @property {any} schemaGlobals - an Array or a single instance of GraphQL typeDefs, use filePath, string, or gql-tag.
  */
 
 /**
@@ -128,7 +128,7 @@ function createConfig(config) {
 
     if (!services.nodes.length && !locals.nodes.length) {
         throw new IdioError(
-            `found no declared services, provide a list of local or remove services in the config object.`
+            `Found no declared services, provide a list of local or remote services in the config object.`
         );
     }
 

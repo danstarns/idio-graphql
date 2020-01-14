@@ -13,11 +13,12 @@ const sleep = util.promisify(setTimeout);
  */
 
 /**
- * Creates a instance of IdioEnum.
+ * Creates a instance of IdioEnum. You can use IdioEnum to modularize an enum ( EnumTypeDefinition ),
+ * together with its resolver. You can specify enums 'top-level' at combineNodes or at GraphQLNode level.
  *
  * @param {Object} config
  * @param {string} config.name - The Enum name.
- * @param {string} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
+ * @param {any} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
  * @param {Object} config.resolver - The Enum resolver.
  *
  * @returns IdioEnum
@@ -69,11 +70,11 @@ async function serve(brokerOptions) {
     let initialized = false;
 
     if (!brokerOptions) {
-        throw new IdioError("brokerOptions required");
+        throw new IdioError("brokerOptions required.");
     }
 
     if (!brokerOptions.transporter) {
-        throw new IdioError("brokerOptions.transporter required");
+        throw new IdioError("brokerOptions.transporter required.");
     }
 
     try {
@@ -81,7 +82,7 @@ async function serve(brokerOptions) {
         moleculer = require("moleculer");
     } catch (error) {
         throw new IdioError(
-            `Cant find module: 'moleculer' install using npm install --save moleculer `
+            `Cant find module: 'moleculer' install using npm install --save moleculer`
         );
     }
 
@@ -104,7 +105,9 @@ async function serve(brokerOptions) {
             introspection: ({ params: { gateway } = {} } = {}) => {
                 initialized = true;
 
-                broker.logger.info(`Connected to GraphQLGateway: '${gateway}'`);
+                broker.logger.info(
+                    `Connected to GraphQLGateway: '${gateway}'.`
+                );
 
                 return introspection;
             }
@@ -113,21 +116,23 @@ async function serve(brokerOptions) {
 
     await broker.start();
 
-    const introspectionCall = async () => {
+    const introspectionCall = async (resolve, reject) => {
         try {
             await broker.emit(`introspection.request`, { type: "enum" });
         } catch (e) {
             e;
         }
 
-        await sleep(2000);
+        await sleep(1000);
 
         if (!initialized) {
-            setImmediate(introspectionCall);
+            setImmediate(introspectionCall, resolve, reject);
+        } else {
+            return resolve();
         }
     };
 
-    await introspectionCall();
+    await new Promise(introspectionCall);
 
     return broker;
 }
