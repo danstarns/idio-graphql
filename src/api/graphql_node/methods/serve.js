@@ -18,11 +18,11 @@ module.exports = (GraphQLNode) => {
         let initialized = false;
 
         if (!brokerOptions) {
-            throw new IdioError("brokerOptions required");
+            throw new IdioError("brokerOptions required.");
         }
 
         if (!brokerOptions.transporter) {
-            throw new IdioError("brokerOptions.transporter required");
+            throw new IdioError("brokerOptions.transporter required.");
         }
 
         const node = new GraphQLNode({
@@ -145,21 +145,23 @@ module.exports = (GraphQLNode) => {
             await broker.waitForServices(this.nodes.map((n) => n.name));
         }
 
-        const introspectionCall = async () => {
+        const introspectionCall = async (resolve, reject) => {
             try {
                 await broker.emit(`introspection.request`, { type: "node" });
             } catch (e) {
                 e;
             }
 
-            await sleep(2000);
+            await sleep(1000);
 
             if (!initialized) {
-                setImmediate(introspectionCall);
+                setImmediate(introspectionCall, resolve, reject);
+            } else {
+                return resolve();
             }
         };
 
-        await introspectionCall();
+        await new Promise(introspectionCall);
 
         return broker;
     };
