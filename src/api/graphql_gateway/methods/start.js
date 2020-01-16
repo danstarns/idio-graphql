@@ -2,12 +2,11 @@ const util = require("util");
 const combineNodes = require("../../combine-nodes.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 const IdioError = require("../../idio-error.js");
-const IdioEnum = require("../../idio-enum.js");
 
 const sleep = util.promisify(setTimeout);
 
-const createLocalNode = require("./create-local-node.js");
-const createLocalEnum = require("./create-local-enum.js");
+const { createLocalNode } = require("../../graphql_node/methods/index.js");
+const { createLocalAppliance } = require("../../appliances/methods/index.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
@@ -47,12 +46,16 @@ module.exports = ({ brokerOptions, config, broker }) => {
 
         const registeredServices = {
             nodes: [],
-            enums: []
+            enums: [],
+            interfaces: [],
+            unions: []
         };
 
         let waitingServices = {
             nodes: [...(services.nodes || [])],
-            enums: [...(services.enums || [])]
+            enums: [...(services.enums || [])],
+            interfaces: [...(services.interfaces || [])],
+            unions: [...(services.unions || [])]
         };
 
         const introspectionCall = async (service, type) => {
@@ -112,6 +115,42 @@ module.exports = ({ brokerOptions, config, broker }) => {
                 }
 
                 registeredServices.enums.push(introspection);
+            } else if (type === "union") {
+                if (
+                    registeredServices.unions
+                        .map((x) => x.name)
+                        .includes(introspection.name)
+                ) {
+                    throw new IdioError(
+                        `Gateway: '${broker.nodeID}' already has a registered union service called: '${introspection.name}'.`
+                    );
+                }
+
+                if (waitingServices.unions.includes(introspection.name)) {
+                    waitingServices.unions = waitingServices.unions.filter(
+                        (x) => x !== introspection.name
+                    );
+                }
+
+                registeredServices.unions.push(introspection);
+            } else if (type === "interface") {
+                if (
+                    registeredServices.interfaces
+                        .map((x) => x.name)
+                        .includes(introspection.name)
+                ) {
+                    throw new IdioError(
+                        `Gateway: '${broker.nodeID}' already has a registered interface service called: '${introspection.name}'.`
+                    );
+                }
+
+                if (waitingServices.interfaces.includes(introspection.name)) {
+                    waitingServices.interfaces = waitingServices.interfaces.filter(
+                        (x) => x !== introspection.name
+                    );
+                }
+
+                registeredServices.interfaces.push(introspection);
             }
         };
 
@@ -147,9 +186,12 @@ module.exports = ({ brokerOptions, config, broker }) => {
         await broker.start();
 
         await Promise.all(
-            [...(locals.nodes || []), ...(locals.enums || [])].map((local) =>
-                local.serve(brokerOptions)
-            )
+            [
+                ...(locals.nodes || []),
+                ...(locals.enums || []),
+                ...(locals.unions || []),
+                ...(locals.interfaces || [])
+            ].map((local) => local.serve(brokerOptions))
         );
 
         await broker.emit("gateway.broadcast");
@@ -157,7 +199,9 @@ module.exports = ({ brokerOptions, config, broker }) => {
         const checkForServices = async (resolve, reject) => {
             if (
                 waitingServices.nodes.length > 0 ||
-                waitingServices.enums.length > 0
+                waitingServices.enums.length > 0 ||
+                waitingServices.unions.length > 0 ||
+                waitingServices.interfaces.length > 0
             ) {
                 await sleep(1000);
 
@@ -189,6 +233,34 @@ module.exports = ({ brokerOptions, config, broker }) => {
                     );
                 }
 
+                if (waitingServices.unions.length) {
+                    broker.logger.info(
+                        `Waiting for union services: [${waitingServices.unions.join(
+                            ", "
+                        )}]`
+                    );
+
+                    await Promise.all(
+                        waitingServices.unions.map((_union) =>
+                            introspectionCall(_union, "union")
+                        )
+                    );
+                }
+
+                if (waitingServices.interfaces.length) {
+                    broker.logger.info(
+                        `Waiting for interface services: [${waitingServices.interfaces.join(
+                            ", "
+                        )}]`
+                    );
+
+                    await Promise.all(
+                        waitingServices.interfaces.map((_interface) =>
+                            introspectionCall(_interface, "interface")
+                        )
+                    );
+                }
+
                 setImmediate(checkForServices, resolve, reject);
             } else {
                 return resolve();
@@ -201,13 +273,23 @@ module.exports = ({ brokerOptions, config, broker }) => {
             createLocalNode({ broker, GraphQLNode })
         );
 
-        const appliances = { ...locals };
-
-        if (registeredServices.enums.length) {
-            appliances.enums = registeredServices.enums.map(
-                createLocalEnum({ IdioEnum })
-            );
-        }
+        const appliances = {
+            ...locals,
+            ...Object.entries(registeredServices)
+                .filter(([key]) => key !== "nodes")
+                .reduce(
+                    (result, [key, values]) => ({
+                        ...result,
+                        [key]: values.map(
+                            createLocalAppliance({
+                                type: key,
+                                broker
+                            })
+                        )
+                    }),
+                    {}
+                )
+        };
 
         const result = await combineNodes(nodes, appliances);
 

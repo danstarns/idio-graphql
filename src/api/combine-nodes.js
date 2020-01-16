@@ -1,6 +1,6 @@
 const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
 const { isFunction, checkInstance } = require("../util/index.js");
-const { resolveAppliance } = require("../methods/index.js");
+const { resolveAppliance } = require("./appliances/methods/index.js");
 const { loadNode } = require("./graphql_node/methods/index.js");
 const APPLIANCE_METADATA = require("../constants/appliance-metadata.js");
 
@@ -9,9 +9,11 @@ const IdioError = require("./idio-error.js");
 
 /**
  * @typedef {import('./graphql_node/graphql-node.js')} GraphQLNode
- * @typedef {import('./idio-scalar.js')} IdioScalar
- * @typedef {import('./idio-enum.js')} IdioEnum
- * @typedef {import('./idio-directive.js')} IdioDirective
+ * @typedef {import('./appliances/idio-scalar.js')} IdioScalar
+ * @typedef {import('./appliances/idio-enum.js')} IdioEnum
+ * @typedef {import('./appliances/idio-directive.js')} IdioDirective
+ * @typedef {import('./appliances/idio-interface')} IdioInterface
+ * @typedef {import('./appliances/idio-union.js')} IdioUnion
  */
 
 function reduceNode(result, node) {
@@ -28,6 +30,20 @@ function reduceNode(result, node) {
         result.resolvers = {
             ...result.resolvers,
             ...node.enumResolvers
+        };
+    }
+
+    if (node.interfaceResolvers) {
+        result.resolvers = {
+            ...result.resolvers,
+            ...node.interfaceResolvers
+        };
+    }
+
+    if (node.unionResolvers) {
+        result.resolvers = {
+            ...result.resolvers,
+            ...node.unionResolvers
         };
     }
 
@@ -63,6 +79,8 @@ function reduceNode(result, node) {
  * @property {Array.<IdioScalar>} scalars
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioDirective>} directives
+ * @property {Array.<IdioInterface>} interfaces
+ * @property {Array.<IdioUnion>} unions
  * @property {any} schemaGlobals - an Array or a single instance of Graphql typeDefs, use filePath, string, or gql-tag.
  */
 
@@ -146,11 +164,11 @@ async function combineNodes(nodes, appliances = {}) {
 
     Object.keys(resolvers).forEach(deleteEmptyResolver);
 
-    return Object.freeze({
-        typeDefs: printWithComments(mergeTypeDefs(typeDefs)),
+    return {
+        typeDefs: printWithComments(mergeTypeDefs([typeDefs.join("\n")])),
         resolvers,
         schemaDirectives
-    });
+    };
 }
 
 module.exports = combineNodes;

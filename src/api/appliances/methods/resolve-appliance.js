@@ -1,8 +1,8 @@
 const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
 const { parse } = require("graphql/language");
-const { parseTypeDefs, checkInstance } = require("../util/index.js");
+const { parseTypeDefs, checkInstance } = require("../../../util/index.js");
 
-const IdioError = require("../api/idio-error.js");
+const IdioError = require("../../idio-error.js");
 
 async function resolveAppliance({
     name,

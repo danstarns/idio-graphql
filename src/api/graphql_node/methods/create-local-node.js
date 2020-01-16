@@ -4,7 +4,7 @@ const { streamToIterator } = require("../../../util/index.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
+ * @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode
  */
 
 /**

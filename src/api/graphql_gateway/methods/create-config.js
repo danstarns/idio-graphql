@@ -1,15 +1,18 @@
 const IdioError = require("../../idio-error.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
-const IdioScalar = require("../../idio-scalar.js");
-const IdioEnum = require("../../idio-enum.js");
-const IdioDirective = require("../../idio-directive.js");
 const { checkInstance } = require("../../../util/index.js");
+
+const {
+    IdioScalar,
+    IdioEnum,
+    IdioDirective
+} = require("../../appliances/index.js");
 
 /**
  * @typedef {import('../../graphql_node/graphql-node.js')} GraphQLNode
- * @typedef {import('../../idio-scalar.js')} IdioScalar
- * @typedef {import('../../idio-enum.js')} IdioEnum
- * @typedef {import('../../idio-directive.js')} IdioDirective
+ * @typedef {import('../../appliances/idio-scalar.js')} IdioScalar
+ * @typedef {import('../../appliances/idio-enum.js')} IdioEnum
+ * @typedef {import('../../appliances/idio-directive.js')} IdioDirective
  */
 
 /**

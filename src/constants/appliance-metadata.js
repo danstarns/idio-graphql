@@ -1,6 +1,10 @@
-const IdioScalar = require("../api/idio-scalar.js");
-const IdioEnum = require("../api/idio-enum.js");
-const IdioDirective = require("../api/idio-directive.js");
+const {
+    IdioScalar,
+    IdioEnum,
+    IdioDirective,
+    IdioUnion,
+    IdioInterface
+} = require("../api/appliances/index.js");
 
 const APPLIANCE_METADATA = [
     {
@@ -24,6 +28,18 @@ const APPLIANCE_METADATA = [
     {
         plural: "schemaGlobal",
         name: "schemaGlobals"
+    },
+    {
+        applianceConstructor: IdioUnion,
+        kind: "UnionTypeDefinition",
+        plural: "union",
+        name: "unions"
+    },
+    {
+        applianceConstructor: IdioInterface,
+        kind: "InterfaceTypeDefinition",
+        plural: "interface",
+        name: "interfaces"
     }
 ];
 

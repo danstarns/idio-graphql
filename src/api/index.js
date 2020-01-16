@@ -1,9 +1,13 @@
 const GraphQLNode = require("./graphql_node/graphql-node.js");
 const combineNodes = require("./combine-nodes.js");
 const GraphQLGateway = require("./graphql_gateway/graphql-gateway.js");
-const IdioEnum = require("./idio-enum.js");
-const IdioScalar = require("./idio-scalar.js");
-const IdioDirective = require("./idio-directive.js");
+const {
+    IdioEnum,
+    IdioScalar,
+    IdioDirective,
+    IdioUnion,
+    IdioInterface
+} = require("./appliances/index.js");
 
 module.exports = {
     GraphQLNode,
@@ -11,5 +15,7 @@ module.exports = {
     GraphQLGateway,
     IdioEnum,
     IdioScalar,
-    IdioDirective
+    IdioDirective,
+    IdioUnion,
+    IdioInterface
 };

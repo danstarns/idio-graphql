@@ -11,8 +11,10 @@ module.exports = (GraphQLNode) => {
         this.name;
         this.typeDefs;
         this.resolvers;
-        this.enums;
         this.nodes;
+        this.enums;
+        this.unions;
+        this.interfaces;
         this.injections;
 
         let initialized = false;
@@ -29,12 +31,18 @@ module.exports = (GraphQLNode) => {
             name: this.name,
             typeDefs: await this.typeDefs(),
             resolvers: this.resolvers,
-            injections: this.injections
+            injections: this.injections,
+            nodes: this.nodes,
+            enums: this.enums,
+            unions: this.unions,
+            interfaces: this.interfaces
         });
 
-        const { typeDefs, resolvers } = await loadNode(node, {
+        const INTERNALS = {
             REGISTERED_NAMES: {}
-        });
+        };
+
+        const { typeDefs, resolvers } = await loadNode(node, { INTERNALS });
 
         this.typeDefs = typeDefs;
 
@@ -131,18 +139,43 @@ module.exports = (GraphQLNode) => {
             );
         }
 
+        if (this.unions && this.unions.length) {
+            await Promise.all(
+                this.unions.map((_union) => _union.serve(brokerOptions))
+            );
+        }
+
+        if (this.interfaces && this.interfaces.length) {
+            await Promise.all(
+                this.interfaces.map((_interface) =>
+                    _interface.serve(brokerOptions)
+                )
+            );
+        }
+
         if (this.nodes && this.nodes.length) {
             await Promise.all(this.nodes.map((n) => n.serve(brokerOptions)));
         }
 
         await broker.start();
+        if (this.nodes && this.nodes.length) {
+            await broker.waitForServices(this.nodes.map((n) => n.name));
+        }
+
+        if (this.interfaces && this.interfaces.length) {
+            await broker.waitForServices(
+                this.interfaces.map((_interface) => _interface.name)
+            );
+        }
+
+        if (this.unions && this.unions.length) {
+            await broker.waitForServices(
+                this.unions.map((_union) => _union.name)
+            );
+        }
 
         if (this.enums && this.enums.length) {
             await broker.waitForServices(this.enums.map((_enum) => _enum.name));
-        }
-
-        if (this.nodes && this.nodes.length) {
-            await broker.waitForServices(this.nodes.map((n) => n.name));
         }
 
         const introspectionCall = async (resolve, reject) => {

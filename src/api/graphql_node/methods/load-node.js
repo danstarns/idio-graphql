@@ -2,7 +2,7 @@
 const { parse } = require("graphql/language");
 const { wrappedResolver, isFunction } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
-const resolveAppliance = require("../../../methods/resolve-appliance.js");
+const resolveAppliance = require("../../appliances/methods/resolve-appliance.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
@@ -34,6 +34,30 @@ async function loadNode(n, { INTERNALS }) {
         node.typeDefs += `\n${loadedEnums.typeDefs}\n`;
 
         node.enumResolvers = loadedEnums.resolvers;
+    }
+
+    if (node.interfaces) {
+        const loadedInterfaces = await resolveAppliance({
+            ...APPLIANCE_METADATA.find(({ name }) => name === "interfaces"),
+            appliance: node.interfaces,
+            INTERNALS
+        });
+
+        node.typeDefs += `\n${loadedInterfaces.typeDefs}\n`;
+
+        node.interfaceResolvers = loadedInterfaces.resolvers;
+    }
+
+    if (node.unions) {
+        const loadedUnions = await resolveAppliance({
+            ...APPLIANCE_METADATA.find(({ name }) => name === "unions"),
+            appliance: node.unions,
+            INTERNALS
+        });
+
+        node.typeDefs += `\n${loadedUnions.typeDefs}\n`;
+
+        node.unionResolvers = loadedUnions.resolvers;
     }
 
     let ast;

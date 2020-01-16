@@ -1,9 +1,20 @@
-const IdioEnum = require("../idio-enum.js");
 const { parseTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
 
 const serve = require("./methods/serve.js");
+
+const {
+    IdioEnum,
+    IdioInterface,
+    IdioUnion
+} = require("../appliances/index.js");
+
+/**
+ * @typedef {import('../appliances/index.js')} IdioEnum
+ * @typedef {import('../idio-interface')} IdioInterface
+ * @typedef {import('../idio-union.js')} IdioUnion
+ */
 
 /**
  * @callback PreHook
@@ -54,16 +65,14 @@ const serve = require("./methods/serve.js");
  */
 
 /**
- * @typedef {import('../idio-enum.js')} IdioEnum
- */
-
-/**
  * @typedef {Object} GraphQLNode
  * @property {string} name - The nodes name.
  * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
  * @property {ResolverType} resolvers - Graphql resolvers
  * @property {Array.<IdioEnum>} enums - The nodes enums.
  * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
+ * @property {Array.<IdioInterface>} interfaces - The nodes interfaces.
+ * @property {Array.<IdioUnion>} unions - The nodes unions.
  * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
  * @property {Array.<string>} dependencies - Used for microspace dependency coordination, specify what services (by name) to depend on.
  */
@@ -75,6 +84,8 @@ const serve = require("./methods/serve.js");
  * @property {ResolverType} resolvers - The nodes resolvers.
  * @property {Array.<IdioEnum>} enums - The nodes enums.
  * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
+ * @property {Array.<IdioInterface>} interfaces - The nodes interfaces.
+ * @property {Array.<IdioUnion>} unions - The nodes unions.
  * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
  */
 
@@ -91,6 +102,8 @@ function GraphQLNode({
     resolvers,
     enums,
     nodes,
+    interfaces,
+    unions,
     injections
 } = {}) {
     const prefix = "constructing GraphQLNode";
@@ -100,6 +113,8 @@ function GraphQLNode({
     this.resolvers;
     this.enums;
     this.nodes;
+    this.interfaces;
+    this.unions;
     this.injections;
     this.serve;
 
@@ -189,6 +204,54 @@ function GraphQLNode({
         enums.forEach(checkInstanceOfEnum);
 
         this.enums = enums;
+    }
+
+    if (interfaces) {
+        if (!Array.isArray(interfaces)) {
+            throw new IdioError(
+                `${prefix}: '${name}' interfaces must be of type 'array'.`
+            );
+        }
+
+        function checkInstanceOfInterface(_interface) {
+            if (!(_interface instanceof IdioInterface)) {
+                throw new IdioError(
+                    `${prefix}: '${name}' expected interface to be instance of IdioInterface, received ${JSON.stringify(
+                        _interface,
+                        undefined,
+                        2
+                    )}.`
+                );
+            }
+        }
+
+        interfaces.forEach(checkInstanceOfInterface);
+
+        this.interfaces = interfaces;
+    }
+
+    if (unions) {
+        if (!Array.isArray(unions)) {
+            throw new IdioError(
+                `${prefix}: '${name}' unions must be of type 'array'.`
+            );
+        }
+
+        function checkInstanceOfUnion(_union) {
+            if (!(_union instanceof IdioUnion)) {
+                throw new IdioError(
+                    `${prefix}: '${name}' expected interface to be instance of IdioUnion, received ${JSON.stringify(
+                        _union,
+                        undefined,
+                        2
+                    )}.`
+                );
+            }
+        }
+
+        unions.forEach(checkInstanceOfUnion);
+
+        this.unions = unions;
     }
 
     if (nodes) {

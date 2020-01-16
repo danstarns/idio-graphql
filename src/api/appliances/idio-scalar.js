@@ -1,6 +1,6 @@
 const { GraphQLScalarType } = require("graphql");
-const RESTRICTED_NAMES = require("../constants/restricted-names.js");
-const IdioError = require("./idio-error.js");
+const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
+const IdioError = require("../idio-error.js");
 
 /**
  * @typedef {import('graphql').GraphQLScalarType} GraphQLScalarType
