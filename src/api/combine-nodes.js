@@ -66,12 +66,12 @@ function reduceNode(result, node) {
 
 /**
  * @typedef {Object} Schema
- * @property {string} typeDefs - GraphQL typeDefs.
- * @property {Object} resolvers - GraphQL resolvers.
- * @property {Object} resolvers.Query - GraphQL resolvers.Query.
- * @property {Object} resolvers.Mutation - GraphQL resolvers.Mutation.
- * @property {Object} resolvers.Subscription - GraphQL resolvers.Subscription.
- * @property {Object} schemaDirectives - GraphQL schemaDirectives resolvers.
+ * @property {string} typeDefs
+ * @property {Object} resolvers
+ * @property {Object} resolvers.Query
+ * @property {Object} resolvers.Mutation
+ * @property {Object} resolvers.Subscription
+ * @property {Object} schemaDirectives
  */
 
 /**
@@ -85,11 +85,11 @@ function reduceNode(result, node) {
  */
 
 /**
- * Combines and returns the combined typeDefs and resolvers, ready to be passed into apollo-server, graphQL-yoga & makeExecutableSchema.
+ * You can use combineNodes to snap GraphQLNode's & Schema Appliances together into a single Schema.
  *
- * @param {Array.<GraphQLNode>} nodes - Array of type GraphQLNode.
+ * @param {Array.<GraphQLNode>} nodes
  * @param {appliances} appliances
- * @returns Schema
+ * @returns {Schema}
  */
 async function combineNodes(nodes, appliances = {}) {
     let schemaDirectives = {};

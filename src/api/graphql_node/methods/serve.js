@@ -93,12 +93,8 @@ module.exports = (GraphQLNode) => {
         broker.createService({
             name: this.name,
             actions: {
-                introspection: ({ params: { gateway } = {} } = {}) => {
+                introspection: () => {
                     initialized = true;
-
-                    broker.logger.info(
-                        `Connected to GraphQLGateway: '${gateway}'.`
-                    );
 
                     return introspection;
                 }

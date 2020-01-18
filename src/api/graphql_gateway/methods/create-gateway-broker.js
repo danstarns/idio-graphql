@@ -8,6 +8,7 @@ const IdioError = require("../../idio-error.js");
 /**
  *
  * @param {BrokerOptions} brokerOptions
+ * @returns {BrokerOptions}
  */
 function validateBrokerOptions(brokerOptions) {
     if (!brokerOptions) {
@@ -32,7 +33,7 @@ function validateBrokerOptions(brokerOptions) {
 /**
  *
  * @param {BrokerOptions} brokerOptions
- * @returns ServiceBroker
+ * @returns {ServiceBroker}
  */
 function createGatewayBroker(brokerOptions) {
     validateBrokerOptions(brokerOptions);

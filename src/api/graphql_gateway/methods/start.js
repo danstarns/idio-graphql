@@ -2,6 +2,7 @@ const util = require("util");
 const combineNodes = require("../../combine-nodes.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 const IdioError = require("../../idio-error.js");
+const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 
 const sleep = util.promisify(setTimeout);
 
@@ -11,18 +12,8 @@ const { createLocalAppliance } = require("../../appliances/methods/index.js");
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
- * @typedef {import('./create-config.js').config} config
- */
-
-/**
- * @typedef {Object} Schema
- * @property {string} typeDefs - GraphQL typeDefs.
- * @property {Object} resolvers - GraphQL resolvers.
- * @property {Object} resolvers.Query - GraphQL resolvers.Query.
- * @property {Object} resolvers.Mutation - GraphQL resolvers.Mutation.
- * @property {Object} resolvers.Subscription - GraphQL resolvers.Subscription.
- * @property {Object} schemaDirectives - GraphQL schemaDirectives resolvers.
- * @property {ServiceBroker} broker - Broker.
+ * @typedef {import('../graphql-gateway.js').config} config
+ * @typedef {import('../graphql-gateway.js').Schema} Schema
  */
 
 /**
@@ -36,7 +27,7 @@ module.exports = ({ brokerOptions, config, broker }) => {
      * Builds & orchestrates a schema from multiple sources on the network.
      *
      *
-     * @returns Schema
+     * @returns {Schema}
      */
 
     async function start() {
@@ -62,96 +53,40 @@ module.exports = ({ brokerOptions, config, broker }) => {
             let introspection;
 
             try {
-                introspection = await broker.call(`${service}.introspection`, {
-                    gateway: broker.nodeID
-                });
+                introspection = await broker.call(`${service}.introspection`);
             } catch (error) {
                 return;
             }
 
-            if (type === "node") {
-                if (
-                    registeredServices.nodes
-                        .map((x) => x.name)
-                        .includes(introspection.name)
-                ) {
-                    throw new IdioError(
-                        `Gateway: '${broker.nodeID}' already has a registered node service called: '${introspection.name}'.`
-                    );
-                }
+            const { name } = APPLIANCE_METADATA.find((x) => x.plural === type);
 
-                if (waitingServices.nodes.includes(introspection.name)) {
-                    waitingServices.nodes = waitingServices.nodes.filter(
-                        (x) => x !== introspection.name
-                    );
-                }
-
-                if (locals.nodes) {
-                    locals.nodes.forEach((node) => {
-                        if (node.name === introspection.name) {
-                            throw new IdioError(
-                                `Gateway receiving a introspection request from node: '${introspection}' that is registered as a local node.`
-                            );
-                        }
-                    });
-                }
-
-                registeredServices.nodes.push(introspection);
-            } else if (type === "enum") {
-                if (
-                    registeredServices.enums
-                        .map((x) => x.name)
-                        .includes(introspection.name)
-                ) {
-                    throw new IdioError(
-                        `Gateway: '${broker.nodeID}' already has a registered enum service called: '${introspection.name}'.`
-                    );
-                }
-
-                if (waitingServices.enums.includes(introspection.name)) {
-                    waitingServices.enums = waitingServices.enums.filter(
-                        (x) => x !== introspection.name
-                    );
-                }
-
-                registeredServices.enums.push(introspection);
-            } else if (type === "union") {
-                if (
-                    registeredServices.unions
-                        .map((x) => x.name)
-                        .includes(introspection.name)
-                ) {
-                    throw new IdioError(
-                        `Gateway: '${broker.nodeID}' already has a registered union service called: '${introspection.name}'.`
-                    );
-                }
-
-                if (waitingServices.unions.includes(introspection.name)) {
-                    waitingServices.unions = waitingServices.unions.filter(
-                        (x) => x !== introspection.name
-                    );
-                }
-
-                registeredServices.unions.push(introspection);
-            } else if (type === "interface") {
-                if (
-                    registeredServices.interfaces
-                        .map((x) => x.name)
-                        .includes(introspection.name)
-                ) {
-                    throw new IdioError(
-                        `Gateway: '${broker.nodeID}' already has a registered interface service called: '${introspection.name}'.`
-                    );
-                }
-
-                if (waitingServices.interfaces.includes(introspection.name)) {
-                    waitingServices.interfaces = waitingServices.interfaces.filter(
-                        (x) => x !== introspection.name
-                    );
-                }
-
-                registeredServices.interfaces.push(introspection);
+            if (
+                registeredServices[name]
+                    .map((x) => x.name)
+                    .includes(introspection.name)
+            ) {
+                throw new IdioError(
+                    `Gateway: '${broker.nodeID}' already has a registered ${type} service called: '${introspection.name}'.`
+                );
             }
+
+            if (waitingServices[name].includes(introspection.name)) {
+                waitingServices[name] = waitingServices[name].filter(
+                    (x) => x !== introspection.name
+                );
+            }
+
+            if (locals[name]) {
+                locals[name].forEach((node) => {
+                    if (node.name === introspection.name) {
+                        throw new IdioError(
+                            `Gateway receiving a introspection request from ${type}: '${introspection}' that is registered as a local ${type}.`
+                        );
+                    }
+                });
+            }
+
+            registeredServices[name].push(introspection);
         };
 
         broker.createService({
@@ -160,24 +95,6 @@ module.exports = ({ brokerOptions, config, broker }) => {
                 "introspection.request": async ({ type }, service) => {
                     if (!started) {
                         await introspectionCall(service, type);
-                    }
-                },
-                "gateway.broadcast": async (payload, service) => {
-                    if (service !== broker.nodeID) {
-                        await broker.emit("gateway.throw", {
-                            reason: `One gateway per network.`
-                        });
-                    }
-                },
-                "gateway.throw": ({ reason } = {}, sender) => {
-                    if (sender !== broker.nodeID) {
-                        console.error(
-                            new IdioError(
-                                `Received request to shutdown from sender: '${sender}'. Reason: ${reason}`
-                            )
-                        );
-
-                        process.exit(1);
                     }
                 }
             }
@@ -197,69 +114,30 @@ module.exports = ({ brokerOptions, config, broker }) => {
         await broker.emit("gateway.broadcast");
 
         const checkForServices = async (resolve, reject) => {
-            if (
-                waitingServices.nodes.length > 0 ||
-                waitingServices.enums.length > 0 ||
-                waitingServices.unions.length > 0 ||
-                waitingServices.interfaces.length > 0
-            ) {
+            const waiting = Object.entries(
+                waitingServices
+            ).filter(([, _services]) => Boolean(_services.length));
+
+            if (waiting.length) {
+                await Promise.all(
+                    waiting.flatMap(async ([key, _services]) => {
+                        const { plural } = APPLIANCE_METADATA.find(
+                            (x) => x.name === key
+                        );
+
+                        broker.logger.info(
+                            `Waiting for ${plural} services: [ ${_services.join(
+                                ", "
+                            )} ]`
+                        );
+
+                        return _services.map((service) =>
+                            introspectionCall(service, plural)
+                        );
+                    })
+                );
+
                 await sleep(1000);
-
-                if (waitingServices.nodes.length) {
-                    broker.logger.info(
-                        `Waiting for node services: [${waitingServices.nodes.join(
-                            ", "
-                        )}]`
-                    );
-
-                    await Promise.all(
-                        waitingServices.nodes.map((_node) => {
-                            return introspectionCall(_node, "node");
-                        })
-                    );
-                }
-
-                if (waitingServices.enums.length) {
-                    broker.logger.info(
-                        `Waiting for enum services: [${waitingServices.enums.join(
-                            ", "
-                        )}]`
-                    );
-
-                    await Promise.all(
-                        waitingServices.enums.map((_enum) =>
-                            introspectionCall(_enum, "enum")
-                        )
-                    );
-                }
-
-                if (waitingServices.unions.length) {
-                    broker.logger.info(
-                        `Waiting for union services: [${waitingServices.unions.join(
-                            ", "
-                        )}]`
-                    );
-
-                    await Promise.all(
-                        waitingServices.unions.map((_union) =>
-                            introspectionCall(_union, "union")
-                        )
-                    );
-                }
-
-                if (waitingServices.interfaces.length) {
-                    broker.logger.info(
-                        `Waiting for interface services: [${waitingServices.interfaces.join(
-                            ", "
-                        )}]`
-                    );
-
-                    await Promise.all(
-                        waitingServices.interfaces.map((_interface) =>
-                            introspectionCall(_interface, "interface")
-                        )
-                    );
-                }
 
                 setImmediate(checkForServices, resolve, reject);
             } else {
@@ -295,7 +173,7 @@ module.exports = ({ brokerOptions, config, broker }) => {
 
         started = true;
 
-        return Object.freeze({ ...result, broker });
+        return { ...result, broker };
     }
 
     return start;

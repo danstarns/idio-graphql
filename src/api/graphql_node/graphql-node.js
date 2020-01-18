@@ -132,6 +132,12 @@ function GraphQLNode(config) {
         );
     }
 
+    if (!Object.keys(resolvers).length) {
+        throw new IdioError(
+            `${prefix}: '${name}' at least one resolver required. Consider using 'schemaGlobals' if '${name}' does not require a resolver.`
+        );
+    }
+
     const allowedResolvers = ["Query", "Mutation", "Subscription", "Fields"];
 
     const notAllowedResolvers = Object.keys(resolvers).filter(
