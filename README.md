@@ -7,7 +7,7 @@ $ npm install idio-graphql
 ```
 
 # Docs 
-http://www.mydocs.com/docs
+https://danstarns.github.io/idio-graphql
 
 ## Quick Start
 `$ npm install idio-graphql apollo-server graphql-tag`
