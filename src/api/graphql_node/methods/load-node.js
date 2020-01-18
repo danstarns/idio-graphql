@@ -24,41 +24,30 @@ async function loadNode(n, { INTERNALS }) {
         throw new IdioError(`${prefix} failed executing injections\n${error}`);
     }
 
-    if (node.enums) {
-        const loadedEnums = await resolveAppliance({
-            ...APPLIANCE_METADATA.find(({ name }) => name === "enums"),
-            appliance: node.enums,
-            INTERNALS
-        });
+    await Promise.all(
+        Object.entries({
+            enums: node.enums,
+            interfaces: node.interfaces,
+            unions: node.unions
+        })
+            .filter(([, value]) => Boolean(value))
+            .map(async ([key, values]) => {
+                const metadata = APPLIANCE_METADATA.find(
+                    ({ name }) => name === key
+                );
 
-        node.typeDefs += `\n${loadedEnums.typeDefs}\n`;
+                const resolvedAppliance = await resolveAppliance({
+                    ...metadata,
+                    appliance: values,
+                    INTERNALS
+                });
 
-        node.enumResolvers = loadedEnums.resolvers;
-    }
+                node.typeDefs += `\n${resolvedAppliance.typeDefs}\n`;
 
-    if (node.interfaces) {
-        const loadedInterfaces = await resolveAppliance({
-            ...APPLIANCE_METADATA.find(({ name }) => name === "interfaces"),
-            appliance: node.interfaces,
-            INTERNALS
-        });
-
-        node.typeDefs += `\n${loadedInterfaces.typeDefs}\n`;
-
-        node.interfaceResolvers = loadedInterfaces.resolvers;
-    }
-
-    if (node.unions) {
-        const loadedUnions = await resolveAppliance({
-            ...APPLIANCE_METADATA.find(({ name }) => name === "unions"),
-            appliance: node.unions,
-            INTERNALS
-        });
-
-        node.typeDefs += `\n${loadedUnions.typeDefs}\n`;
-
-        node.unionResolvers = loadedUnions.resolvers;
-    }
+                node[`${metadata.plural}Resolvers`] =
+                    resolvedAppliance.resolvers;
+            })
+    );
 
     let ast;
 
@@ -147,9 +136,14 @@ async function loadNode(n, { INTERNALS }) {
                             ...method,
                             async *subscribe(...args) {
                                 try {
+                                    if (!args[CONTEXT_INDEX]) {
+                                        args[CONTEXT_INDEX] = {};
+                                    }
+
                                     args[CONTEXT_INDEX].injections = {
-                                        ...args[CONTEXT_INDEX].injections,
-                                        ...node.injections
+                                        ...(args[CONTEXT_INDEX].injections ||
+                                            {}),
+                                        ...(node.injections || {})
                                     };
 
                                     const iterator = await method.subscribe(
@@ -160,7 +154,9 @@ async function loadNode(n, { INTERNALS }) {
                                         yield chunk;
                                     }
                                 } catch (error) {
-                                    throw new IdioError(`resolver: fix me`);
+                                    throw new IdioError(
+                                        `${prefix} resolvers.${type}.${name} failed:\n${error}`
+                                    );
                                 }
                             }
                         };
@@ -169,21 +165,20 @@ async function loadNode(n, { INTERNALS }) {
                     }
 
                     if (Object.keys(method).includes("resolve")) {
-                        resolvers[type][name] = wrappedResolver(
-                            method.resolve,
-                            {
-                                pre: method.pre,
-                                post: method.post,
-                                name: `${node.name}.resolvers.${type}.${name}`,
-                                injections: node.injections
-                            }
-                        );
+                        const { pre, resolve, post } = method;
+
+                        resolvers[type][name] = wrappedResolver(resolve, {
+                            pre,
+                            post,
+                            name: `${node.name}.resolvers.${type}.${name}`,
+                            injections: node.injections
+                        });
 
                         return;
                     }
 
                     throw new IdioError(
-                        `${prefix} has resolver.${type}.${name} that requires a 'resolve' method`
+                        `${prefix} has resolver.${type}.${name} that requires a 'resolve' method.`
                     );
                 });
             }

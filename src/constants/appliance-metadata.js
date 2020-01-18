@@ -5,6 +5,7 @@ const {
     IdioUnion,
     IdioInterface
 } = require("../api/appliances/index.js");
+const GraphQLNode = require("../api/graphql_node/graphql-node.js");
 
 const APPLIANCE_METADATA = [
     {
@@ -40,6 +41,12 @@ const APPLIANCE_METADATA = [
         kind: "InterfaceTypeDefinition",
         plural: "interface",
         name: "interfaces"
+    },
+    {
+        applianceConstructor: GraphQLNode,
+        kind: "ObjectTypeDefinition",
+        plural: "node",
+        name: "nodes"
     }
 ];
 

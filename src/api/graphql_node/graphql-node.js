@@ -1,49 +1,25 @@
 const { parseTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
+const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
 const IdioError = require("../idio-error.js");
 
 const serve = require("./methods/serve.js");
 
-const {
-    IdioEnum,
-    IdioInterface,
-    IdioUnion
-} = require("../appliances/index.js");
-
 /**
- * @typedef {import('../appliances/index.js')} IdioEnum
- * @typedef {import('../idio-interface')} IdioInterface
- * @typedef {import('../idio-union.js')} IdioUnion
+ * @typedef {import('../appliances/idio-enum.js')} IdioEnum
+ * @typedef {import('../appliances/idio-interface.js')} IdioInterface
+ * @typedef {import('../appliances/idio-union.js')} IdioUnion
+ *
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ *
+ * @typedef {import('../../util/wrapped-resolver.js').PreUnion} PreUnion
+ * @typedef {import('../../util/wrapped-resolver.js').PostUnion} PostUnion
  */
 
 /**
- * @callback PreHook
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl info argument.
- */
-
-/**
- * @callback PostHook
- * @param {any}    resolve - The outcome of the resolve method.
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl info argument.
- */
-
-/**
- * @typedef {(PostHook|Array.<PostHook>)} PreUnion
- */
-
-/**
- * @typedef {(PreHook|Array.<PreHook>)} PostUnion
- */
-
-/**
- * @typedef {Object} ResolverObjectInput
- * @property {Function} resolve - The resolver function.
+ * @typedef ResolverObjectInput
+ * @property {Function} resolve
  * @property {PreUnion} pre - Function(s) to call pre the resolve method.
  * @property {PostUnion} post - Function(s) to call post the resolve method.
  */
@@ -53,69 +29,69 @@ const {
  */
 
 /**
- * @typedef {Object} ResolverType
- * @property {ResolverUnion} Query
- * @property {ResolverUnion} Mutation
- * @property {ResolverUnion} Subscription
- * @property {ResolverUnion} Fields
+ * @typedef ResolverType
+ * @property {Object.<string, ResolverUnion>} Query
+ * @property {Object.<string, ResolverUnion>} Mutation
+ * @property {Object.<string, {subscribe: Function}>} Subscription
+ * @property {Object.<string, ResolverUnion>} Fields
  */
 
 /**
- * @typedef {(Function|any)} Injections
+ * @typedef GraphQLNode
+ * @property {string} name
+ * @property {Promise<string>} typeDefs
+ * @property {ResolverType} resolvers
+ * @property {Array.<GraphQLNode>} nodes
+ * @property {any} injections
+ * @property {Array.<IdioEnum>} enums
+ * @property {Array.<IdioInterface>} interfaces
+ * @property {Array.<IdioUnion>} unions
+ * @property {(brokerOptions: BrokerOptions) => ServiceBroker} serve
  */
 
 /**
- * @typedef {Object} GraphQLNode
- * @property {string} name - The nodes name.
- * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
- * @property {ResolverType} resolvers - Graphql resolvers
- * @property {Array.<IdioEnum>} enums - The nodes enums.
- * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
- * @property {Array.<IdioInterface>} interfaces - The nodes interfaces.
- * @property {Array.<IdioUnion>} unions - The nodes unions.
- * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
- * @property {Array.<string>} dependencies - Used for microspace dependency coordination, specify what services (by name) to depend on.
+ * @typedef GraphQLNodeInput
+ * @property {string} name
+ * @property {any} typeDefs - gql-tag, string or filePath.
+ * @property {ResolverType} resolvers
+ * @property {Array.<GraphQLNode>} nodes
+ * @property {any} injections
+ * @property {Array.<IdioEnum>} enums
+ * @property {Array.<IdioInterface>} interfaces
+ * @property {Array.<IdioUnion>} unions
  */
 
 /**
- * @typedef {Object} GraphQLNodeConfig
- * @property {string} name - The nodes name.
- * @property {string} typeDefs - Graphql typeDefs, use filePath, string, or gql-tag
- * @property {ResolverType} resolvers - The nodes resolvers.
- * @property {Array.<IdioEnum>} enums - The nodes enums.
- * @property {Array.<GraphQLNode>} nodes - The nodes nested nodes.
- * @property {Array.<IdioInterface>} interfaces - The nodes interfaces.
- * @property {Array.<IdioUnion>} unions - The nodes unions.
- * @property {Injections} injections - Function/any to be passed as the last argument to each resolver.
- */
-
-/**
- * Creates a instance of a GraphQLNode.
+ * You can use GraphQLNode to modularize an ObjectTypeDefinition together with its related resolvers & properties.
  *
- * @param {GraphQLNodeConfig} config - An object.
+ * @param {GraphQLNodeInput} config
  *
- * @returns GraphQLNode
+ * @returns {GraphQLNode}
  */
-function GraphQLNode({
-    name,
-    typeDefs,
-    resolvers,
-    enums,
-    nodes,
-    interfaces,
-    unions,
-    injections
-} = {}) {
+function GraphQLNode(config) {
+    const {
+        name,
+        typeDefs,
+        resolvers,
+        nodes,
+        injections,
+        enums,
+        interfaces,
+        unions
+    } = config;
+
     const prefix = "constructing GraphQLNode";
 
     this.name;
     this.typeDefs;
     this.resolvers;
-    this.enums;
     this.nodes;
+    this.injections;
+
+    this.enums;
     this.interfaces;
     this.unions;
-    this.injections;
+
     this.serve;
 
     if (!name) {
@@ -182,101 +158,36 @@ function GraphQLNode({
 
     this.resolvers = resolvers;
 
-    if (enums) {
-        if (!Array.isArray(enums)) {
-            throw new IdioError(
-                `${prefix}: '${name}' enums must be of type 'array'.`
-            );
-        }
-
-        function checkInstanceOfEnum(_enum) {
-            if (!(_enum instanceof IdioEnum)) {
+    Object.entries({
+        enums,
+        interfaces,
+        unions,
+        nodes
+    }).forEach(([key, appliances]) => {
+        if (appliances) {
+            if (!Array.isArray(appliances)) {
                 throw new IdioError(
-                    `${prefix}: '${name}' expected enum to be instance of IdioEnum, received ${JSON.stringify(
-                        _enum,
-                        undefined,
-                        2
-                    )}.`
+                    `${prefix}: '${name}' ${key} must be of type 'array'.`
                 );
             }
-        }
 
-        enums.forEach(checkInstanceOfEnum);
-
-        this.enums = enums;
-    }
-
-    if (interfaces) {
-        if (!Array.isArray(interfaces)) {
-            throw new IdioError(
-                `${prefix}: '${name}' interfaces must be of type 'array'.`
+            const { plural, applianceConstructor } = APPLIANCE_METADATA.find(
+                (x) => x.name === key
             );
-        }
 
-        function checkInstanceOfInterface(_interface) {
-            if (!(_interface instanceof IdioInterface)) {
-                throw new IdioError(
-                    `${prefix}: '${name}' expected interface to be instance of IdioInterface, received ${JSON.stringify(
-                        _interface,
-                        undefined,
-                        2
-                    )}.`
-                );
+            function checkInstanceOfAppliance(appliance) {
+                if (!(appliance instanceof applianceConstructor)) {
+                    throw new IdioError(
+                        `${prefix}: '${name}' expected ${plural} to be instance of '${applianceConstructor.name}'.`
+                    );
+                }
             }
+
+            appliances.forEach(checkInstanceOfAppliance);
+
+            this[key] = appliances;
         }
-
-        interfaces.forEach(checkInstanceOfInterface);
-
-        this.interfaces = interfaces;
-    }
-
-    if (unions) {
-        if (!Array.isArray(unions)) {
-            throw new IdioError(
-                `${prefix}: '${name}' unions must be of type 'array'.`
-            );
-        }
-
-        function checkInstanceOfUnion(_union) {
-            if (!(_union instanceof IdioUnion)) {
-                throw new IdioError(
-                    `${prefix}: '${name}' expected interface to be instance of IdioUnion, received ${JSON.stringify(
-                        _union,
-                        undefined,
-                        2
-                    )}.`
-                );
-            }
-        }
-
-        unions.forEach(checkInstanceOfUnion);
-
-        this.unions = unions;
-    }
-
-    if (nodes) {
-        if (!Array.isArray(nodes)) {
-            throw new IdioError(
-                `${prefix}: '${name}' nodes must be of type 'array'.`
-            );
-        }
-
-        function checkInstanceOfThis(node) {
-            if (!(node instanceof GraphQLNode)) {
-                throw new IdioError(
-                    `${prefix}: '${name}' expected node to be instance of GraphQLNode, received: '${JSON.stringify(
-                        node,
-                        undefined,
-                        2
-                    )}'.`
-                );
-            }
-        }
-
-        nodes.forEach(checkInstanceOfThis);
-
-        this.nodes = nodes;
-    }
+    });
 
     if (injections) {
         this.injections = injections;

@@ -3,7 +3,16 @@ const util = require("util");
 const IdioError = require("../../idio-error.js");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
+/**
+ * @typedef {import("moleculer").BrokerOptions} brokerOptions
+ */
+
 const sleep = util.promisify(setTimeout);
+
+/**
+ *
+ * @param {brokerOptions} brokerOptions
+ */
 async function serveEnum(brokerOptions) {
     this.name;
     this.typeDefs;
@@ -87,6 +96,10 @@ const serveAppliance = (type) => {
         type = "interface";
     }
 
+    /**
+     *
+     * @param {brokerOptions} brokerOptions
+     */
     return async function _serveAppliance(brokerOptions) {
         this.name;
         this.typeDefs;

@@ -21,21 +21,6 @@ function createLocalNode({ broker, GraphQLNode }) {
                 (result, [type, methods]) => ({
                     ...result,
                     [type]: methods.reduce((res, resolver) => {
-                        async function localResolver(...graphQLArgs) {
-                            try {
-                                const response = await broker.call(
-                                    `${introspection.name}:${type}.${resolver}`,
-                                    { graphQLArgs }
-                                );
-
-                                return response;
-                            } catch (error) {
-                                throw new IdioError(
-                                    `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
-                                );
-                            }
-                        }
-
                         if (type === "Subscription") {
                             return {
                                 ...res,
@@ -60,7 +45,20 @@ function createLocalNode({ broker, GraphQLNode }) {
 
                         return {
                             ...res,
-                            [resolver]: localResolver
+                            [resolver]: async (...graphQLArgs) => {
+                                try {
+                                    const response = await broker.call(
+                                        `${introspection.name}:${type}.${resolver}`,
+                                        { graphQLArgs }
+                                    );
+
+                                    return response;
+                                } catch (error) {
+                                    throw new IdioError(
+                                        `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
+                                    );
+                                }
+                            }
                         };
                     }, {})
                 }),

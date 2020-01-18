@@ -35,24 +35,24 @@ async function resultFunction(input, { direction, name, args }) {
 }
 
 /**
- * @callback PreHook
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl Info argument.
+ * @typedef {Function} PreHook
+ * @param {any}    root
+ * @param {Object} args
+ * @param {Object} context
+ * @param {Object} info
  */
 
 /**
- * @typedef {(PreHook|Array.<PreHook>)} PreHook
+ * @typedef {(PreHook|Array.<PreHook>)} PreUnion
  */
 
 /**
- * @callback PostHook
+ * @typedef {Function} PostHook
  * @param {any}    resolve - The outcome of the resolve method.
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl Info argument.
+ * @param {any}    root
+ * @param {Object} args
+ * @param {Object} context
+ * @param {Object} info
  */
 
 /**
@@ -61,15 +61,15 @@ async function resultFunction(input, { direction, name, args }) {
 
 /**
  * 1. Executes the pre functions(...args)
- * 2. Executes resolve function
- * 3. Executes the post functions(resolve, ...args)
+ * 2. Executes 'resolve' function
+ * 3. Executes the post functions('resolve', ...args)
  *
  * @param {Function} resolver
  * @param {Object} options
  * @param {PreUnion} options.pre
  * @param {PostUnion} options.post
  * @param {String} options.name
- * @param {{(Function|any)}} options.injections
+ * @param {any} options.injections
  *
  * @returns {Promise}
  */

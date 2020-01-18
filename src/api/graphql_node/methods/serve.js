@@ -6,16 +6,25 @@ const { iteratorToStream } = require("../../../util/index.js");
 
 const sleep = util.promisify(setTimeout);
 
+/**
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ */
+
 module.exports = (GraphQLNode) => {
-    return async function serve(brokerOptions = {}) {
+    /**
+     * @returns {Promise.<ServiceBroker>}
+     */
+    return async function serve(/** @type {BrokerOptions} */ brokerOptions) {
         this.name;
         this.typeDefs;
         this.resolvers;
         this.nodes;
-        this.enums;
-        this.unions;
-        this.interfaces;
         this.injections;
+        this.enums;
+        this.interfaces;
+        this.unions;
+        this.serve;
 
         let initialized = false;
 
@@ -57,12 +66,13 @@ module.exports = (GraphQLNode) => {
             moleculer = require("moleculer");
         } catch (error) {
             throw new IdioError(
-                `Cant find module: 'moleculer' install using npm install --save moleculer `
+                `Cant find module: 'moleculer' install using npm install --save moleculer`
             );
         }
 
         const { ServiceBroker } = moleculer;
 
+        /** @type {ServiceBroker} */
         const broker = new ServiceBroker({
             ...brokerOptions,
             nodeID: this.name
@@ -87,7 +97,7 @@ module.exports = (GraphQLNode) => {
                     initialized = true;
 
                     broker.logger.info(
-                        `Connected to GraphQLGateway: '${gateway}'`
+                        `Connected to GraphQLGateway: '${gateway}'.`
                     );
 
                     return introspection;
@@ -104,14 +114,14 @@ module.exports = (GraphQLNode) => {
                             return {
                                 ...result,
                                 [name]: (ctx) => {
-                                    ctx.params.graphQLArgs[
-                                        CONTEXT_INDEX
-                                    ].broker = broker;
+                                    const {
+                                        params: { graphQLArgs = [] } = {}
+                                    } = ctx;
+
+                                    graphQLArgs[CONTEXT_INDEX].broker = broker;
 
                                     return iteratorToStream(
-                                        method.subscribe(
-                                            ...ctx.params.graphQLArgs
-                                        )
+                                        method.subscribe(...graphQLArgs)
                                     );
                                 }
                             };
@@ -120,11 +130,13 @@ module.exports = (GraphQLNode) => {
                         return {
                             ...result,
                             [name]: (ctx) => {
-                                ctx.params.graphQLArgs[
-                                    CONTEXT_INDEX
-                                ].broker = broker;
+                                const {
+                                    params: { graphQLArgs = [] } = {}
+                                } = ctx;
 
-                                return method(...ctx.params.graphQLArgs);
+                                graphQLArgs[CONTEXT_INDEX].broker = broker;
+
+                                return method(...graphQLArgs);
                             }
                         };
                     },
@@ -133,50 +145,25 @@ module.exports = (GraphQLNode) => {
             })
         );
 
-        if (this.enums && this.enums.length) {
-            await Promise.all(
-                this.enums.map((_enum) => _enum.serve(brokerOptions))
-            );
-        }
-
-        if (this.unions && this.unions.length) {
-            await Promise.all(
-                this.unions.map((_union) => _union.serve(brokerOptions))
-            );
-        }
-
-        if (this.interfaces && this.interfaces.length) {
-            await Promise.all(
-                this.interfaces.map((_interface) =>
-                    _interface.serve(brokerOptions)
+        await Promise.all(
+            [this.enums, this.unions, this.interfaces, this.nodes]
+                .filter(Boolean)
+                .flatMap((appliances) =>
+                    appliances.map((appliance) =>
+                        appliance.serve(brokerOptions)
+                    )
                 )
-            );
-        }
-
-        if (this.nodes && this.nodes.length) {
-            await Promise.all(this.nodes.map((n) => n.serve(brokerOptions)));
-        }
+        );
 
         await broker.start();
-        if (this.nodes && this.nodes.length) {
-            await broker.waitForServices(this.nodes.map((n) => n.name));
-        }
 
-        if (this.interfaces && this.interfaces.length) {
-            await broker.waitForServices(
-                this.interfaces.map((_interface) => _interface.name)
-            );
-        }
-
-        if (this.unions && this.unions.length) {
-            await broker.waitForServices(
-                this.unions.map((_union) => _union.name)
-            );
-        }
-
-        if (this.enums && this.enums.length) {
-            await broker.waitForServices(this.enums.map((_enum) => _enum.name));
-        }
+        await broker.waitForServices(
+            [this.enums, this.unions, this.interfaces, this.nodes]
+                .filter(Boolean)
+                .flatMap((appliances) =>
+                    appliances.map((appliance) => appliance.name)
+                )
+        );
 
         const introspectionCall = async (resolve, reject) => {
             try {
