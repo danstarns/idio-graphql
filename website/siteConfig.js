@@ -1,22 +1,23 @@
 const siteConfig = {
-  title: 'idio-graphql',
-  tagline: 'Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
-  projectName: 'idio-graphql',
+  title: "idio-graphql",
+  tagline:
+    "Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.",
+  url: "https://your-docusaurus-test-site.com",
+  baseUrl: "/",
+  projectName: "idio-graphql",
   repoUrl: "https://github.com/danstarns/idio-graphql",
-  organizationName: 'idio-graphql',
+  organizationName: "idio-graphql",
   headerLinks: [
-    { doc: 'getting-started', label: 'Guides' },
-    { doc: 'index', label: 'API' },
+    { doc: "getting-started", label: "Guides" },
+    { doc: "index", label: "API" }
   ],
   colors: {
-    primaryColor: '#191341',
-    secondaryColor: '#110d2d',
+    primaryColor: "#191341",
+    secondaryColor: "#110d2d"
   },
   copyright: `MIT`,
   highlight: {
-    theme: 'vs2015',
+    theme: "vs2015",
     hljs: (highlightJsInstance) => {
       highlightJsInstance.registerLanguage("graphql", () => {
         return {
@@ -42,7 +43,12 @@ const siteConfig = {
               end: "\\W",
               excludeEnd: true
             },
-            { className: "variable", begin: "\\$", end: "\\W", excludeEnd: true },
+            {
+              className: "variable",
+              begin: "\\$",
+              end: "\\W",
+              excludeEnd: true
+            },
             {
               className: "keyword",
               begin: "[.]{2}",
@@ -56,12 +62,12 @@ const siteConfig = {
             }
           ],
           illegal: /([;<']|BEGIN)/
-        }
+        };
       });
     }
   },
-  scripts: ['https://buttons.github.io/buttons.js'],
-  onPageNav: 'separate',
+  scripts: ["https://buttons.github.io/buttons.js"],
+  onPageNav: "separate",
   cleanUrl: true,
   enableUpdateTime: true,
   defaultVersionShown: "2.0.3"
