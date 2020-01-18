@@ -47,9 +47,7 @@
     "core-js": "^3.6.0",
     "cross-env": "^6.0.3",
     "graphql": "^14.5.8",
-    "graphql-auth-directives": "^2.1.0",
     "graphql-toolkit": "^0.7.4",
-    "graphql-tools": "^4.0.6",
-    "graphql-type-json": "^0.3.1"
+    "graphql-tools": "^4.0.6"
   }
 }
