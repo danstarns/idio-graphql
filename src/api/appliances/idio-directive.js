@@ -8,22 +8,23 @@ const IdioError = require("../idio-error.js");
  */
 
 /**
- * @typedef {Object} IdioDirective
- * @property {string} name - The Directive name.
- * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
- * @property {Object} resolver - The Directive resolver.
+ * @typedef IdioDirective
+ * @property {string} name
+ * @property {Promise<string>} typeDefs
+ * @property {Object} resolver
  */
 
 /**
- * Creates a instance of a IdioDirective. You can use IdioDirective to modularize a directive ( DirectiveDefinition ),
- * together with its resolver. You can only apply directives 'top-level' at combineNodes.
+ * You can use IdioDirective to modularize an DirectiveDefinition, together with its resolver.
+ *
+ * You can only specify directives 'top-level' at combineNodes.
  *
  * @param {Object} config
- * @param {string} config.name - The Directive name.
- * @param {any} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
- * @param {SchemaDirectiveVisitor} config.resolver - The Directive resolver.
+ * @param {string} config.name
+ * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {SchemaDirectiveVisitor} config.resolver
  *
- * @returns IdioDirective
+ * @returns {IdioDirective}
  */
 function IdioDirective({ name, typeDefs, resolver } = {}) {
     const prefix = `constructing IdioDirective`;

@@ -4,22 +4,28 @@ const { parseTypeDefs } = require("../../util/index.js");
 const serveAppliance = require("./methods/serve-appliance.js");
 
 /**
- * @typedef {Object} IdioUnion
- * @property {string} name - The Union name.
- * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
- * @property {{__resolveType: () => string}} resolver - The Union resolver.
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
 
 /**
- * Creates a instance of IdioUnion. You can use IdioUnion to modularize a union ( UnionTypeDefinition ),
- * together with its resolver. You can specify unions 'top-level' at combineNodes or at GraphQLNode level.
+ * @typedef IdioUnion
+ * @property {string} name
+ * @property {Promise.<string>} typeDefs
+ * @property {{__resolveType: () => string}} resolver
+ * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ */
+
+/**
+ * You can use IdioUnion to modularize an UnionTypeDefinition, together with its resolver.
+ * You can specify unions 'top-level' at combineNodes or at an GraphQLNode level.
  *
  * @param {Object} config
- * @param {string} config.name - The Union name.
- * @param {any} config.typeDefs - The Union typeDefs.
- * @param {{__resolveType: () => string}} config.resolver - The Union resolver.
+ * @param {string} config.name
+ * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {{__resolveType: () => string}} config.resolver
  *
- * @returns IdioUnion
+ * @returns {IdioUnion}
  */
 function IdioUnion({ name, resolver, typeDefs } = {}) {
     const prefix = "constructing IdioUnion";

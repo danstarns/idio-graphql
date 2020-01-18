@@ -4,22 +4,28 @@ const { parseTypeDefs } = require("../../util/index.js");
 const serveAppliance = require("./methods/serve-appliance.js");
 
 /**
- * @typedef {Object} IdioInterface
- * @property {string} name - The Interface name.
- * @property {Promise<string>} typeDefs - Graphql typeDefs resolver..
- * @property {{__resolveType: () => string}} resolver - The Interface resolver.
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
 
 /**
- * Creates a instance of IdioInterface. You can use IdioInterface to modularize a interface ( InterfaceTypeDefinition ),
- * together with its resolver. You can specify interfaces 'top-level' at combineNodes or at GraphQLNode level.
+ * @typedef IdioInterface
+ * @property {string} name
+ * @property {Promise<string>} typeDefs
+ * @property {{__resolveType: () => string}} resolver
+ * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ */
+
+/**
+ * You can use IdioInterface to modularize an InterfaceTypeDefinition, together with its resolver.
+ * You can specify interfaces 'top-level' at combineNodes or at an GraphQLNode level.
  *
  * @param {Object} config
- * @param {string} config.name - The Interface name.
- * @param {any} config.typeDefs - The Interface typeDefs.
- * @param {{__resolveType: () => string}} config.resolver - The Interface resolver.
+ * @param {string} config.name
+ * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {{__resolveType: () => string}} config.resolver
  *
- * @returns IdioInterface
+ * @returns {IdioInterface}
  */
 function IdioInterface({ name, resolver, typeDefs } = {}) {
     const prefix = "constructing IdioInterface";

@@ -7,22 +7,23 @@ const IdioError = require("../idio-error.js");
  */
 
 /**
- * @typedef {Object} IdioScalar
- * @property {string} name - The Scalar name.
- * @property {Promise<string>} typeDefs - Graphql typeDefs resolver..
- * @property {GraphQLScalarType} resolver - The Scalar resolver.
+ * @typedef IdioScalar
+ * @property {string} name
+ * @property {GraphQLScalarType} resolver
  */
 
 /**
- * Creates a instance of IdioScalar. You can use IdioScalar to modularize a scalar ( ScalarTypeDefinition ),
- * together with its resolver. You can only apply scalars 'top-level' at combineNodes.
- * IdioScalar does not require typeDefs it uses the name to match up the resolver.
+ * You can use IdioScalar to modularize an ( ScalarTypeDefinition ), together with its resolver.
+ *
+ * You can only specify scalars 'top-level' at combineNodes.
+ *
+ * IdioScalar does not require typeDefs, it uses the name to match up the resolver.
  *
  * @param {Object} config
- * @param {string} config.name - The Scalar name.
- * @param {Object} config.resolver - The Scalar resolver.
+ * @param {string} config.name
+ * @param {Object} config.resolver
  *
- * @returns IdioScalar
+ * @returns {IdioScalar}
  */
 function IdioScalar({ name, resolver } = {}) {
     const prefix = "constructing IdioScalar";

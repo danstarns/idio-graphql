@@ -8,7 +8,9 @@ const {
     GraphQLGateway,
     IdioEnum,
     IdioScalar,
-    IdioDirective
+    IdioDirective,
+    IdioInterface,
+    IdioUnion
 } = require("./api/index.js");
 
 module.exports = {
@@ -17,5 +19,7 @@ module.exports = {
     IdioScalar,
     IdioEnum,
     IdioDirective,
-    GraphQLGateway
+    GraphQLGateway,
+    IdioInterface,
+    IdioUnion
 };

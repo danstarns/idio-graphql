@@ -4,22 +4,28 @@ const IdioError = require("../idio-error.js");
 const serveAppliance = require("./methods/serve-appliance.js");
 
 /**
- * @typedef {Object} IdioEnum
- * @property {string} name - The Enum name.
- * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
- * @property {Object} resolver - The Enum resolver.
+ * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
 
 /**
- * Creates a instance of IdioEnum. You can use IdioEnum to modularize an enum ( EnumTypeDefinition ),
- * together with its resolver. You can specify enums 'top-level' at combineNodes or at GraphQLNode level.
+ * @typedef IdioEnum
+ * @property {string} name
+ * @property {Promise.<string>} typeDefs
+ * @property {Object} resolver
+ * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ */
+
+/**
+ * You can use IdioEnum to modularize an EnumTypeDefinition, together with its resolver.
+ * You can specify enums 'top-level' at combineNodes or at an GraphQLNode level.
  *
  * @param {Object} config
- * @param {string} config.name - The Enum name.
- * @param {any} config.typeDefs - Graphql typeDefs, use filePath, string, or gql-tag.
- * @param {Object} config.resolver - The Enum resolver.
+ * @param {string} config.name
+ * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {Object} config.resolver
  *
- * @returns IdioEnum
+ * @returns {IdioEnum}
  */
 function IdioEnum({ name, typeDefs, resolver } = {}) {
     const prefix = "constructing IdioEnum";
