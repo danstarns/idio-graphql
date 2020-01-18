@@ -7,7 +7,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  * @typedef {Object} IdioInterface
  * @property {string} name - The Interface name.
  * @property {Promise<string>} typeDefs - Graphql typeDefs resolver..
- * @property {{__resolveType: () => void}} resolver - The Interface resolver.
+ * @property {{__resolveType: () => string}} resolver - The Interface resolver.
  */
 
 /**
@@ -17,7 +17,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  * @param {Object} config
  * @param {string} config.name - The Interface name.
  * @param {any} config.typeDefs - The Interface typeDefs.
- * @param {{__resolveType: () => void}} config.resolver - The Interface resolver.
+ * @param {{__resolveType: () => string}} config.resolver - The Interface resolver.
  *
  * @returns IdioInterface
  */

@@ -7,7 +7,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  * @typedef {Object} IdioUnion
  * @property {string} name - The Union name.
  * @property {Promise<string>} typeDefs - Graphql typeDefs resolver.
- * @property {{__resolveType: () => void}} resolver - The Union resolver.
+ * @property {{__resolveType: () => string}} resolver - The Union resolver.
  */
 
 /**
@@ -17,7 +17,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  * @param {Object} config
  * @param {string} config.name - The Union name.
  * @param {any} config.typeDefs - The Union typeDefs.
- * @param {{__resolveType: () => void}} config.resolver - The Union resolver.
+ * @param {{__resolveType: () => string}} config.resolver - The Union resolver.
  *
  * @returns IdioUnion
  */
