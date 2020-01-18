@@ -17,7 +17,8 @@
     "modules",
     "structure",
     "modularize",
-    "node"
+    "node",
+    "molecular"
   ],
   "engines": {
     "node": ">=8.16.0"
