@@ -1,0 +1,23 @@
+{
+  "docs": {
+    "API": [
+      "index",
+      "graphql-node",
+      "combine-nodes",
+      "graphql-gateway",
+      "idio-enum",
+      "idio-scalar",
+      "idio-directive",
+      "idio-interface",
+      "idio-union"
+    ],
+    "Guides": [
+      "getting-started",
+      "creating-nodes",
+      "combine-nodes-guide",
+      "schema-appliances",
+      "resolver-hooks",
+      "distributed-nodes"
+    ]
+  }
+}
