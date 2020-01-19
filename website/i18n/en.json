@@ -17,9 +17,6 @@
       "creating-nodes": {
         "title": "Creating Nodes"
       },
-      "distributed-nodes": {
-        "title": "Distributed Nodes"
-      },
       "getting-started": {
         "title": "Getting Started"
       },
@@ -44,6 +41,9 @@
       "idio-union": {
         "title": "IdioUnion"
       },
+      "microservices": {
+        "title": "Microservices"
+      },
       "resolver-hooks": {
         "title": "Resolver Hooks"
       },
@@ -52,7 +52,7 @@
       }
     },
     "links": {
-      "Guides": "Guides",
+      "Get Started": "Get Started",
       "API": "API"
     },
     "categories": {

@@ -12,7 +12,7 @@ title: Schema Appliances
 4. [`schemaGlobals`](#schemaGlobals)
 
 
-## enums
+## Enums
 If you need to apply enums to your schema you can pass `enums`, an array of **[IdioEnum](idio-enum)**. 
 
 ```javascript
@@ -58,7 +58,7 @@ async function main(){
 main()
 ```
 
-## scalars
+## Scalars
 If you need to apply scalars to your schema you can pass `scalars`, an array of **[IdioScalar](idio-scalar)**.  The scalar does not require `typeDefs` it uses the scalar name to match up the resolver.
 
 _example uses **[graphql-type-json](https://github.com/taion/graphql-type-json)**_.
@@ -96,7 +96,7 @@ async function main(){
 main()
 ```
 
-## directives
+## Directives
 If you need to apply directives to your schema you can pass `directives`, an array of **[IdioDirective](idio-directive)**.
 
 _example uses **[graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)**_
@@ -141,8 +141,111 @@ async function main(){
 main()
 ```
 
+## Interfaces
+If you need to apply interfaces to your schema you can pass `interfaces`, an array of **[IdioInterface](idio-interface)**.
 
-## schemaGlobals
+```javascript
+const { IdioInterface, combineNodes, GraphQLNode } = require("idio-graphql");
+
+const PersonInterface = new IdioInterface({
+    name: "PersonInterface",
+    typeDefs: `
+    interface PersonInterface {
+        eyeColor: String
+        hairColor: String
+    }`,
+    resolver: {
+        __resolveType(obj) {
+            if (obj.name) {
+                return "User";
+            }
+        }
+    }
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User implements PersonInterface {
+            eyeColor: String
+            hairColor: String
+            name: String
+            age: Int
+        }
+
+        type Query {
+            getUser: PersonInterface
+        }
+    `, 
+    ...
+});
+
+async function main(){
+    const { typeDefs, resolvers } = await combineNodes(
+        [ User ], 
+        { interfaces: [ PersonInterface ] }
+    );
+}
+
+main()
+```
+
+
+## Unions
+If you need to apply unions to your schema you can pass `unions`, an array of **[IdioUnion](idio-union)**.
+
+```javascript
+const { IdioUnion, combineNodes, GraphQLNode } = require("idio-graphql");
+
+const UserUnion = new IdioUnion({
+    name: "UserUnion",
+    typeDefs: `union UserUnion = User | Admin`,
+    resolver: {
+        __resolveType(obj) {
+            if (obj.admin) {
+                return "Admin";
+            }
+        }
+    }
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            name: String
+            age: Int
+        }
+
+        type Query {
+            getUser: UserUnion
+        }
+    `, 
+    ...
+});
+
+async function main(){
+    const { typeDefs, resolvers } = await combineNodes(
+        [ User ], 
+        { 
+            unions: [ UserUnion ],
+            schemaGlobals: `
+                type Admin {
+                    name: String
+                    age: Int
+                    roles: [String]
+                }
+            `
+        }
+    );
+}
+
+main()
+```
+
+## SchemaGlobals
 If you have type definition's that are generic to multiple Node's, you can provide a string or an array of strings to `schemaGlobals` where they will combine into the resulting `typeDefs`.
 
 ```javascript

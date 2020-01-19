@@ -29,7 +29,7 @@ const ErrorInterFace = new IdioInterface({
             }
         }
     }
-})
+});
 ```
 
 

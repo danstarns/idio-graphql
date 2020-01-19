@@ -34,8 +34,6 @@ SDL can be referred to as `typeDefs`.
 > You can use filePaths, strings & even an **[AST](https://github.com/apollographql/graphql-tag)** when specifying `typeDefs`.
 
 ```javascript
-const { GraphQLNode } = require("idio-graphql");
-
 const User = new GraphQLNode({
     name: "User",
     typeDefs: `
@@ -52,14 +50,14 @@ const User = new GraphQLNode({
 ```
 
 ## Resolvers
-A Node allows you to specify the following properties;
+A Node allows you to specify the following resolvers;
 
 1. `Query`
 2. `Mutation`
 3. `Subscription`
 4. `Fields`
 
-Let's implement the `Query` resolver, called `getUser`, defined in the `typeDefs`.
+Let's implement the `Query` resolver, called `getUser`, defined in our `typeDefs`.
 
 ### Query
 
@@ -79,11 +77,11 @@ const User = new GraphQLNode({
         }
     }
 });
-```
+``` 
 
 ### Mutation
 ```javascript
-resolvers: {
+{
     typeDefs: `
         type User ...
 
@@ -91,15 +89,17 @@ resolvers: {
             likeUser: User
         }
     `,
-    Mutation: {
-        likeUser: (root, args, ctx) => { ... }
+    resolvers: {
+        Mutation: {
+           likeUser: (root, args, ctx) => { ... }
+        }
     }
 }
-
 ```
 ### Fields
+
 ```javascript
-resolvers: {
+{
     typeDefs: `
         type User {
             name: String
@@ -108,8 +108,10 @@ resolvers: {
 
         ...
     `,
-    Fields: {
-        posts: (root, args, ctx) => { ... }
+    resolvers: {
+        Fields: {
+            posts: (root, args, ctx) => { ... }
+        }
     }
 }
 ```
@@ -118,17 +120,19 @@ resolvers: {
 > Subscriptions must return a 'subscribe' property that resolves to an async iterator!
 
 ```javascript
-resolvers: {
+{
     typeDefs: `
-        type User {
-            name: String
-            posts: [Post]
+        type User ...
+
+        type Subscription {
+            userUpdate: User
         }
-        ...
     `,
-    Subscription: {
-        userUpdate: {
-            subscribe: (root, args, ctx) => asyncIterator()
+    resolvers: {
+        Subscription: {
+            userUpdate: {
+                subscribe: (root, args, ctx) => asyncIterator()
+            }
         }
     }
 }
@@ -152,7 +156,7 @@ new GraphQLNode({
 ```
 
 ```javascript
-const UserModel = require("./UserModel.js");
+const UserModel = require(...);
 
 const User = new GraphQLNode({
     name: "User",
@@ -176,9 +180,6 @@ const User = new GraphQLNode({
 You can encapsulate enums within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioEnum](idio-enum)**.
 
 ```javascript
-const { GraphQLNode, IdioEnum } = require("idio-graphql");
-const UserModel = require("./UserModel.js");
-
 const StatusEnum = new IdioEnum({
     name: "StatusEnum",
     typeDefs: `
@@ -205,15 +206,9 @@ const User = new GraphQLNode({
             status: StatusEnum
         }
 
-        type Query {
-            getUser: User
-        }
+        ...
     `,
-    resolvers: {
-        Query: {
-            getUser: () => { ... }
-        }
-    },
+    resolvers: { ... },
     enums: [ StatusEnum ]
 });
 ```
@@ -222,9 +217,6 @@ const User = new GraphQLNode({
 You can encapsulate unions within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioUnion](idio-union)**.
 
 ```javascript
-const { GraphQLNode, IdioUnion } = require("idio-graphql");
-const UserModel = require("./UserModel.js");
-
 const AOrB = new IdioUnion({
     name: "AOrB",
     typeDefs: `union AOrB = A | B`,
@@ -244,19 +236,12 @@ const User = new GraphQLNode({
         type User {
             name: String
             age: Int
-            status: StatusEnum
             letter: AOrB
         }
 
-        type Query {
-            getUser: User
-        }
+        ...
     `,
-    resolvers: {
-        Query: {
-            getUser: () => { ... }
-        }
-    },
+    resolvers: { ... },
     unions: [ AOrB ]
 });
 ```
@@ -270,47 +255,27 @@ const Comment = new GraphQLNode({
     name: "Comment",
     typeDefs: gql`
         type Comment {
-            id: ID
             content: String
             user: User
         }
 
-        type Query {
-            comment(id: ID!): Comment
-        }
+        ...
     `,
-    resolvers: {
-        Query: {
-            comment: () => { ... }
-        },
-        Fields: {
-            user: () => { ... }
-        }
-    }
+    resolvers: { ... }
 });
 
 const Post = new GraphQLNode({
     name: "Post",
     typeDefs: gql`
         type Post {
-            id: ID
             title: String
             content: String
             comments: [Comment]
         }
 
-        type Query {
-            post(id: ID!): Post
-        }
+        ...
     `,
-    resolvers: {
-        Query: {
-            post: () => { ... }
-        },
-        Fields: {
-            comments: () => { ... }
-        }
-    },
+    resolvers: { ... },
     nodes: [ Comment ]
 });
 
@@ -323,18 +288,9 @@ const User = new GraphQLNode({
             posts: [Post]
         }
 
-        type Query {
-            user: User
-        }
+        ...
     `,
-    resolvers: {
-        Query: {
-            user: () => { ... }
-        },
-        Fields: {
-            posts: () => { ... }
-        }
-    },
+    resolvers: { ... },
     nodes: [ Post ]
 });
 ```

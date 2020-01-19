@@ -2,12 +2,12 @@ const siteConfig = {
     title: "idio-graphql",
     tagline: `Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.`,
     url: "https://danstarns.github.io",
-    baseUrl: "/idio-graphql",
+    baseUrl: "/idio-graphql/",
     projectName: "idio-graphql",
     repoUrl: "https://github.com/danstarns/idio-graphql",
     organizationName: "idio-graphql",
     headerLinks: [
-        { doc: "getting-started", label: "Guides" },
+        { doc: "getting-started", label: "Get Started" },
         { doc: "index", label: "API" }
     ],
     colors: {

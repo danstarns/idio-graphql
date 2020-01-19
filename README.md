@@ -2,6 +2,9 @@
 [![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/idio-graphql)
 
 
+Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.
+
+
 ```
 $ npm install idio-graphql
 ```

@@ -59,6 +59,6 @@ main();
 2. [**Combine Nodes**](combine-nodes-guide)
 4. [**Schema Appliances**](schema-appliances)
 4. [**Resolver Hooks**](resolver-hooks)
-3. [**Distributed Nodes**](distributed-nodes)
+3. [**Microservices**](microservices)
 
 The Guides are designed chronologically, Click the next button to start reading.
