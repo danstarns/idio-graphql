@@ -3,8 +3,7 @@ id: resolver-hooks
 title: Resolver Hooks
 ---
 
-Sometimes you might need to run function(s), `pre` or `post` your resolver. You could use **[Schema Directives](schema-appliances#directives)** with **[IdioDirectives](idio-directive)**
-for this. Resolver hooks allow you to achieve similar heights.
+Sometimes you might need to run function(s), `pre` or `post` your resolver. You could use **[Schema Directives](schema-appliances#directives)** with **[IdioDirectives](idio-directive)**. Resolver hooks allow you to achieve similar heights.
 
 > Hooks are available on any **[GraphQLNode](graphql-node)** resolver  **exempt from Subscriptions**.
 
@@ -33,7 +32,7 @@ new GraphQLNode({
 ```
 
 ## Multiple hooks
-An array of functions that will be resolved sequentiality. 
+An array of functions to be resolved sequentiality. 
 
 ```javascript
 Query: {

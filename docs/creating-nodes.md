@@ -172,76 +172,6 @@ const User = new GraphQLNode({
 });
 ```
 
-## Enums
-You can encapsulate enums within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioEnum](idio-enum)**.
-
-```javascript
-const StatusEnum = new IdioEnum({
-    name: "StatusEnum",
-    typeDefs: `
-        enum StatusEnum {
-            ONLINE
-            OFFLINE
-            INACTIVE
-        }
-    `,
-    resolver: {
-        ONLINE: "online",
-        OFFLINE: "offline",
-        INACTIVE: "inactive"
-    }
-});
-
-
-const User = new GraphQLNode({
-    name: "User",
-    typeDefs: `
-        type User {
-            name: String
-            age: Int
-            status: StatusEnum
-        }
-
-        ...
-    `,
-    resolvers: { ... },
-    enums: [ StatusEnum ]
-});
-```
-
-## Unions
-You can encapsulate unions within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioUnion](idio-union)**.
-
-```javascript
-const AOrB = new IdioUnion({
-    name: "AOrB",
-    typeDefs: `union AOrB = A | B`,
-    resolver: {
-        __resolveType() {
-            const x = ["A", "B"];
-
-            return x[Math.ceil(Math.random())];
-        }
-    }
-});
-
-
-const User = new GraphQLNode({
-    name: "User",
-    typeDefs: `
-        type User {
-            name: String
-            age: Int
-            letter: AOrB
-        }
-
-        ...
-    `,
-    resolvers: { ... },
-    unions: [ AOrB ]
-});
-```
-
 ## Nodes
 You can recursively nest nodes to reflect domains & work with architectural constraints.
 
@@ -249,44 +179,68 @@ You can recursively nest nodes to reflect domains & work with architectural cons
 ```javascript
 const Comment = new GraphQLNode({
     name: "Comment",
-    typeDefs: gql`
-        type Comment {
-            content: String
-            user: User
-        }
-
-        ...
-    `,
-    resolvers: { ... }
+    ...
 });
 
 const Post = new GraphQLNode({
     name: "Post",
-    typeDefs: gql`
-        type Post {
-            title: String
-            content: String
-            comments: [Comment]
-        }
-
-        ...
-    `,
-    resolvers: { ... },
-    nodes: [ Comment ]
+    nodes: [ Comment ],
+    ...
 });
 
 const User = new GraphQLNode({
     name: "User",
-    typeDefs: gql`
-         type User {
-            name: String
-            age: Int
-            posts: [Post]
-        }
-
-        ...
-    `,
-    resolvers: { ... },
     nodes: [ Post ]
+    ...
+});
+```
+
+## Enums
+You can encapsulate enums within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioEnum](idio-enum)**.
+
+```javascript
+const StatusEnum = new IdioEnum({
+    name: "StatusEnum",
+    ...
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    enums: [ StatusEnum ],
+    ...
+});
+```
+## Interfaces
+You can encapsulate interfaces within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioInterface](idio-interface)**.
+
+```javascript
+const PersonInterface = new IdioInterface({
+    name: "PersonInterface",
+    ...
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    interfaces: [ PersonInterface ],
+    ...
+});
+```
+
+## Unions
+You can encapsulate unions within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioUnion](idio-union)**.
+
+```javascript
+const UserUnion = new IdioUnion({
+    name: "UserUnion",
+    ...
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    unions: [ UserUnion ],
+    ...
 });
 ```

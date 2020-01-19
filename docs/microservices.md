@@ -14,7 +14,7 @@ idio-graphql builds on the foundations created by [**Moleculer**](https://molecu
 
 ## Getting Started
 
-idio-graphql ships with the code to work with [**Moleculer**](https://moleculer.services/) but, **Moleculer** is an optional dependency.
+idio-graphql ships with the code to work with [**Moleculer**](https://moleculer.services/) but, it is an optional dependency.
 
 `npm install moleculer`
 
@@ -79,21 +79,6 @@ main();
 ```
 On successful start, you receive resolvers that are mapped to [**Moleculer**](https://moleculer.services/) service calls.
 
-## Utilizing The Service Broker
-To harness the real power of an microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the context parameter.
-
-
-```javascript
-const broker = await User.serve({ transporter: "NATS" });
-```
-
-```javascript
-resolvers: { 
-    Query: {
-        getUser: (root, args, { broker }) => { ... }
-    }
-}
-```
 
 ## Gradual Adoption
 
@@ -124,11 +109,26 @@ async function main() {
 main();
 ```
 
+## Utilizing The Service Broker
+To harness the real power of an microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the context parameter.
+
+
+```javascript
+const broker = await User.serve({ transporter: "NATS" });
+```
+
+```javascript
+resolvers: { 
+    Query: {
+        getUser: (root, args, { broker }) => { ... }
+    }
+}
+```
+
+> 'Local Services' are initialized as an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**.
+
 ## Preserving Parameters
 [**GraphQLGateway**](graphql-gateway) will forward the GraphQL arguments onto the relevant Node. 
-
-> Its not recommended to place large or circular objects in the `root` & or the `context` parameters. Due to the implications/stress it can have on the chosen transport layer. 
-
 
 ```javascript
 const User = new GraphQLNode({
@@ -149,14 +149,6 @@ const User = new GraphQLNode({
         }
     }
 });
-
-async function main() {
-    await User.serve({ transporter: "NATS" });
-
-    console.log(`User service online`);
-}
-
-main();
 ```
 
 
@@ -167,10 +159,7 @@ const gateway = GraphQLGateway(
             nodes: [ "User" ]
         }
     },
-    {
-        transporter: "NATS",
-        nodeID: "gateway"
-    }
+    ...
 );
 
 async function main() {

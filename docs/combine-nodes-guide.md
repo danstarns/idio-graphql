@@ -5,7 +5,7 @@ title: Combine Nodes
 
 ## Intro
 
-Once you have created your **[GraphQLNodes](graphql-node)** you will need to combine them to produce 1 single GraphQL schema.
+Once you have created your **[GraphQLNodes](graphql-node)** you will need to combine them to produce a single GraphQL schema.
 
 ## Nodes
 You should provide an array of Node's that are required in the schema. 
