@@ -18,7 +18,9 @@
     "structure",
     "modularize",
     "node",
-    "molecular"
+    "molecular",
+    "microservices",
+    "gateway"
   ],
   "engines": {
     "node": ">=8.16.0"
@@ -41,12 +43,12 @@
     "nyc": "^14.1.1",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1",
-    "docusaurus": "^1.14.3"
+    "docusaurus": "^1.14.3",
+    "cross-env": "^6.0.3"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.7",
     "core-js": "^3.6.0",
-    "cross-env": "^6.0.3",
     "graphql": "^14.5.8",
     "graphql-toolkit": "^0.7.4",
     "graphql-tools": "^4.0.6",
