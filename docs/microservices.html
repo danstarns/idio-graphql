@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Microservices · idio-graphql</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Intro"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Microservices · idio-graphql"/><meta property="og:type" content="website"/><meta property="og:url" content="https://danstarns.github.io/idio-graphql/"/><meta property="og:description" content="## Intro"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/idio-graphql/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/idio-graphql/js/scrollSpy.js"></script><link rel="stylesheet" href="/idio-graphql/css/main.css"/><script src="/idio-graphql/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/idio-graphql/"><h2 class="headerTitle">idio-graphql</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/idio-graphql/docs/getting-started" target="_self">Get Started</a></li><li class="siteNavGroupActive"><a href="/idio-graphql/docs/" target="_self">API</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Guides</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/">Index</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-node">GraphQLNode</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes">combineNodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-gateway">GraphQLGateway</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-enum">IdioEnum</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-scalar">IdioScalar</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-directive">IdioDirective</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-interface">IdioInterface</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-union">IdioUnion</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Guides</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/creating-nodes">Creating Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes-guide">Combine Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/schema-appliances">Schema Appliances</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/resolver-hooks">Resolver Hooks</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/idio-graphql/docs/microservices">Microservices</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Microservices</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="intro"></a><a href="#intro" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Intro</h2>
+<blockquote>
+<p><strong><a href="https://moleculer.services/">https://moleculer.services/</a></strong></p>
+</blockquote>
+<p>idio-graphql builds on the foundations created by <a href="https://moleculer.services/"><strong>Moleculer</strong></a> &amp; enables developer's to distribute parts of their GraphQL schema over various communication channels. idio-graphql enables developers to serve <a href="graphql-node"><strong>GraphQLNode's</strong></a> &amp; selected <strong>Schema Appliances</strong> through a <strong><a href="https://moleculer.services/docs/0.13/api/service-broker.html">Service Broker</a></strong>.</p>
+<blockquote>
+<p>It's recommended to read the <a href="getting-started"><strong>previous guides</strong></a>, grasp the fundamentals of idio-graphql, before reading.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="getting-started"></a><a href="#getting-started" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Getting Started</h2>
+<p>idio-graphql ships with the code to work with <a href="https://moleculer.services/"><strong>Moleculer</strong></a> but, it is an optional dependency.</p>
+<p><code>npm install moleculer</code></p>
+<p>You will need to choose &amp; launch your own <a href="https://moleculer.services/docs/0.13/networking.html"><strong>transport layer</strong></a>, these docs will use <a href="https://nats.io/"><strong>NATS</strong></a>. Once you have this, lets precede and serve your first Node!</p>
+<h2><a class="anchor" aria-hidden="true" id="serving-your-first-node"></a><a href="#serving-your-first-node" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Serving Your First Node</h2>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-keyword">new</span> GraphQLNode({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"User"</span>,
+    <span class="hljs-attr">typeDefs</span>: <span class="hljs-string">`
+        type User {
+            name: String
+            age: String
+        }
+
+        type Query {
+            getUser: User
+        }
+    `</span>,
+    <span class="hljs-attr">resolvers</span>: { 
+        <span class="hljs-attr">Query</span>: {
+            <span class="hljs-attr">getUser</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> { ... }
+        }
+    }
+});
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">await</span> User.serve({ <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span> });
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`User service online`</span>);
+}
+
+main();
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="your-first-gateway"></a><a href="#your-first-gateway" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Your First Gateway</h2>
+<p><a href="graphql-gateway"><strong>GraphQLGateway</strong></a> sits at the core of your services, the gateway will introspect each service specified and build a distributed GraphQL schema.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> gateway = GraphQLGateway(
+    {
+        <span class="hljs-attr">services</span>: { 
+            <span class="hljs-attr">nodes</span>: [ <span class="hljs-string">"User"</span> ]
+        }
+    },
+    {
+        <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span>,
+        <span class="hljs-attr">nodeID</span>: <span class="hljs-string">"gateway"</span>
+    }
+);
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> { typeDefs, resolvers, broker } = <span class="hljs-keyword">await</span> gateway.start();
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`gateway service online`</span>);
+}
+
+main();
+</code></pre>
+<p>On successful start, you receive resolvers that are mapped to <a href="https://moleculer.services/"><strong>Moleculer</strong></a> service calls.</p>
+<h2><a class="anchor" aria-hidden="true" id="gradual-adoption"></a><a href="#gradual-adoption" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Gradual Adoption</h2>
+<p>You may not need or want to distribute all your Nodes. You can use <a href="graphql-gateway"><strong>GraphQLGateway</strong></a> to gradually adopt a microservices architecure.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> gateway = GraphQLGateway(
+    {
+        <span class="hljs-attr">services</span>: { 
+            <span class="hljs-attr">nodes</span>: [ <span class="hljs-string">"User"</span> ]
+        },
+        <span class="hljs-attr">locals</span>: {
+            <span class="hljs-attr">nodes</span>: [ PostNode ]
+        }
+    },
+    {
+        <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span>,
+        <span class="hljs-attr">nodeID</span>: <span class="hljs-string">"gateway"</span>
+    }
+);
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> { typeDefs, resolvers, broker } = <span class="hljs-keyword">await</span> gateway.start();
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`gateway service online`</span>);
+}
+
+main();
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="utilizing-the-service-broker"></a><a href="#utilizing-the-service-broker" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Utilizing The Service Broker</h2>
+<p>To harness the real power of an microservices architecture you should take advantage of the <strong><a href="https://moleculer.services/docs/0.13/api/service-broker.html">Service Broker</a></strong>, initializing <a href="https://moleculer.services/"><strong>Moleculer</strong></a> microservices outside the bounds of GraphQL, to offload long running business logic. <a href="graphql-node#serve"><strong><code>GraphQLNode.serve()</code></strong></a> will return an <strong><a href="https://moleculer.services/docs/0.13/api/service-broker.html">Service Broker</a></strong>, you also have access to an <strong><a href="https://moleculer.services/docs/0.13/api/service-broker.html">Service Broker</a></strong> inside each resolver through the context parameter.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> broker = <span class="hljs-keyword">await</span> User.serve({ <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span> });
+</code></pre>
+<pre><code class="hljs css language-javascript">resolvers: { 
+    <span class="hljs-attr">Query</span>: {
+        <span class="hljs-attr">getUser</span>: <span class="hljs-function">(<span class="hljs-params">root, args, { broker }</span>) =&gt;</span> { ... }
+    }
+}
+</code></pre>
+<blockquote>
+<p>'Local Services' are initialized as an <strong><a href="https://moleculer.services/docs/0.13/api/service-broker.html">Service Broker</a></strong>.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="preserving-parameters"></a><a href="#preserving-parameters" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Preserving Parameters</h2>
+<p><a href="graphql-gateway"><strong>GraphQLGateway</strong></a> will forward the GraphQL arguments onto the relevant Node.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-keyword">new</span> GraphQLNode({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"User"</span>,
+    <span class="hljs-attr">typeDefs</span>: <span class="hljs-string">`
+        type User ...
+
+        type Query {
+            getUser: User
+        }
+    `</span>,
+    <span class="hljs-attr">resolvers</span>: { 
+        <span class="hljs-attr">Query</span>: {
+            <span class="hljs-attr">getUser</span>: <span class="hljs-function">(<span class="hljs-params">root, args, { abc }</span>) =&gt;</span> { 
+                abc <span class="hljs-comment">// 123</span>
+                ...
+             }
+        }
+    }
+});
+</code></pre>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> gateway = GraphQLGateway(
+    {
+        <span class="hljs-attr">services</span>: { 
+            <span class="hljs-attr">nodes</span>: [ <span class="hljs-string">"User"</span> ]
+        }
+    },
+    ...
+);
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> { typeDefs, resolvers, broker } = <span class="hljs-keyword">await</span> gateway.start();
+
+
+    <span class="hljs-keyword">const</span> apolloServer = <span class="hljs-keyword">new</span> ApolloServer({
+        typeDefs, 
+        resolvers,
+        <span class="hljs-attr">context</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            <span class="hljs-keyword">return</span> {
+                <span class="hljs-attr">abc</span>: <span class="hljs-string">"123"</span>
+            }
+        }
+    });
+
+    ...
+}
+
+main();
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="subscriptions"></a><a href="#subscriptions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Subscriptions</h2>
+<p>GraphQL Subscriptions through your chosen transport layer will work out the box with <a href="graphql-node"><strong>GraphQLNode's</strong></a>. Ensure you return an async iterator from your <code>subscribe</code> method!</p>
+<blockquote>
+<p>When utilizing Subscriptions you should prefer a native streaming implementation, such as <a href="https://moleculer.services/docs/0.13/networking.html#NATS-Streaming-STAN-Transporter"><strong>NATS Streaming</strong></a>, for your transport layer.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="schema-appliances"></a><a href="#schema-appliances" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Schema Appliances</h2>
+<p><a href="graphql-gateway"><strong>GraphQLGateway</strong></a> supports <a href="schema-appliances"><strong>Schema Appliances</strong></a>.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> gateway = GraphQLGateway(
+    {
+        <span class="hljs-attr">services</span>: { ... },
+        <span class="hljs-attr">locals</span>: {
+            enums, 
+            scalars, 
+            directives, 
+            interfaces,
+            unions,
+            schemaGlobals
+        }
+    },
+    {
+        <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span>,
+        <span class="hljs-attr">nodeID</span>: <span class="hljs-string">"gateway"</span>
+    }
+);
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/19/2020</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/idio-graphql/docs/resolver-hooks"><span class="arrow-prev">← </span><span>Resolver Hooks</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#intro">Intro</a></li><li><a href="#getting-started">Getting Started</a></li><li><a href="#serving-your-first-node">Serving Your First Node</a></li><li><a href="#your-first-gateway">Your First Gateway</a></li><li><a href="#gradual-adoption">Gradual Adoption</a></li><li><a href="#utilizing-the-service-broker">Utilizing The Service Broker</a></li><li><a href="#preserving-parameters">Preserving Parameters</a></li><li><a href="#subscriptions">Subscriptions</a></li><li><a href="#schema-appliances">Schema Appliances</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap center"><div><h5>Docs</h5><a href="/idio-graphql/docs/en/getting-started.html">Getting Started</a><a href="/idio-graphql/docs/en/index.html">API</a></div><div><h5>Community</h5><a href="https://spectrum.chat/idio-graphql?tab=posts">Project Chat</a></div><div><h5>More</h5><a href="https://github.com/danstarns/idio-graphql">GitHub</a><a class="github-button" href="https://github.com/danstarns/idio-graphql" data-icon="octicon-star" data-count-href="/danstarns/idio-graphql/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">MIT</section></footer></div></body></html>

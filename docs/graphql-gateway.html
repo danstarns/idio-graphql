@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>GraphQLGateway · idio-graphql</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="```javascript"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="GraphQLGateway · idio-graphql"/><meta property="og:type" content="website"/><meta property="og:url" content="https://danstarns.github.io/idio-graphql/"/><meta property="og:description" content="```javascript"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/idio-graphql/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/idio-graphql/js/scrollSpy.js"></script><link rel="stylesheet" href="/idio-graphql/css/main.css"/><script src="/idio-graphql/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/idio-graphql/"><h2 class="headerTitle">idio-graphql</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/idio-graphql/docs/getting-started" target="_self">Get Started</a></li><li class="siteNavGroupActive"><a href="/idio-graphql/docs/" target="_self">API</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>API</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/">Index</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-node">GraphQLNode</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes">combineNodes</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/idio-graphql/docs/graphql-gateway">GraphQLGateway</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-enum">IdioEnum</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-scalar">IdioScalar</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-directive">IdioDirective</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-interface">IdioInterface</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-union">IdioUnion</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Guides</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/getting-started">Getting Started</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/creating-nodes">Creating Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes-guide">Combine Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/schema-appliances">Schema Appliances</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/resolver-hooks">Resolver Hooks</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/microservices">Microservices</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">GraphQLGateway</h1></header><article><div><span><pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> { GraphQLGateway } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"idio-graphql"</span>);
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="intro"></a><a href="#intro" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Intro</h2>
+<p>You can use  <strong>GraphQLGateway</strong> to orchestrate a collection of <a href="graphql-node"><strong>GraphQLNode's</strong></a> &amp; <a href="schema-appliances"><strong>Schema Appliances</strong></a> exposed over a network.</p>
+<h2><a class="anchor" aria-hidden="true" id="example"></a><a href="#example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example</h2>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> gateway = GraphQLGateway(
+    {
+        <span class="hljs-attr">services</span>: { 
+            nodes,
+            enums,
+            interfaces,
+            unions
+        },
+        <span class="hljs-attr">locals</span>: { 
+            nodes,
+            enums,
+            scalars,
+            directives,
+            interfaces,
+            unions,
+            schemaGlobals
+         }
+    },
+    {
+        <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span>,
+        <span class="hljs-attr">nodeID</span>: <span class="hljs-string">"gateway"</span>
+    }
+);
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="definitions"></a><a href="#definitions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Definitions</h2>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@typedef <span class="hljs-variable">services</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;string&gt;}</span> <span class="hljs-variable">nodes</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;string&gt;}</span> <span class="hljs-variable">enums</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;string&gt;}</span> <span class="hljs-variable">interfaces</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;string&gt;}</span> <span class="hljs-variable">unions</span></span>
+ *
+ *
+ * <span class="hljs-doctag">@typedef <span class="hljs-variable">locals</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;GraphQLNode&gt;}</span> <span class="hljs-variable">nodes</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;IdioEnum&gt;}</span> <span class="hljs-variable">enums</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;IdioScalar&gt;}</span> <span class="hljs-variable">scalars</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;IdioDirective&gt;}</span> <span class="hljs-variable">directives</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;IdioInterface&gt;}</span> <span class="hljs-variable">interfaces</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Array.&lt;IdioUnion&gt;}</span> <span class="hljs-variable">unions</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{any}</span> <span class="hljs-variable">schemaGlobals</span></span> - an Array or a single instance of GraphQL typeDefs, use filePath, string, or gql-tag.
+ *
+ *
+ * <span class="hljs-doctag">@typedef <span class="hljs-type">{Object}</span> <span class="hljs-variable">config</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{services}</span> <span class="hljs-variable">services</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{locals}</span> <span class="hljs-variable">locals</span></span>
+ *
+ *
+ * <span class="hljs-doctag">@typedef <span class="hljs-variable">Schema</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{string}</span> <span class="hljs-variable">typeDefs</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Object}</span> <span class="hljs-variable">resolvers</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Object}</span> </span>resolvers.Query
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Object}</span> </span>resolvers.Mutation
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Object}</span> </span>resolvers.Subscription
+ * <span class="hljs-doctag">@property <span class="hljs-type">{Object}</span> <span class="hljs-variable">schemaDirectives</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{ServiceBroker}</span> <span class="hljs-variable">broker</span></span>
+ */</span>
+
+<span class="hljs-comment">/**
+ * <span class="hljs-doctag">@typedef <span class="hljs-type">{Object}</span> <span class="hljs-variable">GraphQLGateway</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{() =&gt; Promise.&lt;Schema&gt;}</span> <span class="hljs-variable">start</span></span>
+ * <span class="hljs-doctag">@property <span class="hljs-type">{ServiceBroker}</span> <span class="hljs-variable">broker</span></span>
+ */</span>
+
+<span class="hljs-comment">/**
+ *
+ * You can use GraphQLGateway to orchestrate a collection of GraphQLNode's &amp; Schema Appliances exposed over a network.
+ *
+ * <span class="hljs-doctag">@param <span class="hljs-type">{config}</span> <span class="hljs-variable">config</span></span>
+ * <span class="hljs-doctag">@param <span class="hljs-type">{BrokerOptions}</span> <span class="hljs-variable">brokerOptions</span></span>
+ *
+ * <span class="hljs-doctag">@returns <span class="hljs-type">{GraphQLGateway}</span></span>
+ */</span>
+</code></pre>
+<pre><code class="hljs css language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">GraphQLGateway</span>(<span class="hljs-params">config: config, brokerOptions: BrokerOptions</span>);
+</span></code></pre>
+<h2><a class="anchor" aria-hidden="true" id="methods"></a><a href="#methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h2>
+<ol>
+<li><a href="#serve"><strong>serve</strong></a></li>
+</ol>
+<h3><a class="anchor" aria-hidden="true" id="serve"></a><a href="#serve" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Serve</h3>
+<blockquote>
+<p><strong><a href="https://moleculer.services/docs/0.12/broker.html">https://moleculer.services/docs/0.12/broker.html</a></strong></p>
+</blockquote>
+<h4><a class="anchor" aria-hidden="true" id="example-1"></a><a href="#example-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example</h4>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> { typeDefs, resolvers, schemaDirectives, broker } = <span class="hljs-keyword">await</span> gateway.start();
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="definitions-1"></a><a href="#definitions-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Definitions</h4>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@function <span class="hljs-variable">start</span></span>
+ * <span class="hljs-doctag">@returns <span class="hljs-type">{() =&gt; Promise.&lt;Schema&gt;}</span></span>
+*/</span>
+</code></pre>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">start</span>(<span class="hljs-params"></span>);
+</span></code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/18/2020</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/idio-graphql/docs/combine-nodes"><span class="arrow-prev">← </span><span class="function-name-prevnext">combineNodes</span></a><a class="docs-next button" href="/idio-graphql/docs/idio-enum"><span class="function-name-prevnext">IdioEnum</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#intro">Intro</a></li><li><a href="#example">Example</a></li><li><a href="#definitions">Definitions</a></li><li><a href="#methods">Methods</a><ul class="toc-headings"><li><a href="#serve">Serve</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap center"><div><h5>Docs</h5><a href="/idio-graphql/docs/en/getting-started.html">Getting Started</a><a href="/idio-graphql/docs/en/index.html">API</a></div><div><h5>Community</h5><a href="https://spectrum.chat/idio-graphql?tab=posts">Project Chat</a></div><div><h5>More</h5><a href="https://github.com/danstarns/idio-graphql">GitHub</a><a class="github-button" href="https://github.com/danstarns/idio-graphql" data-icon="octicon-star" data-count-href="/danstarns/idio-graphql/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">MIT</section></footer></div></body></html>
