@@ -5,7 +5,7 @@ const siteConfig = {
     baseUrl: "/idio-graphql/",
     projectName: "idio-graphql",
     repoUrl: "https://github.com/danstarns/idio-graphql",
-    organizationName: "idio-graphql",
+    organizationName: "danstarns",
     headerLinks: [
         { doc: "getting-started", label: "Get Started" },
         { doc: "index", label: "API" }

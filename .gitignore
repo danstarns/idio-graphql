@@ -5,3 +5,5 @@ example
 .cache
 test-bench
 package-temp.json
+build
+dist
