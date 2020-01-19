@@ -122,14 +122,16 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
         });
     }
 
-    async function newResolver(...args) {
+    async function newResolver(...graphQLArgs) {
         if (injections) {
-            if (!(typeof args[CONTEXT_INDEX] === "object")) {
-                args[CONTEXT_INDEX] = Object(args[CONTEXT_INDEX] || {});
+            if (!(typeof graphQLArgs[CONTEXT_INDEX] === "object")) {
+                graphQLArgs[CONTEXT_INDEX] = Object(
+                    graphQLArgs[CONTEXT_INDEX] || {}
+                );
             }
 
-            args[CONTEXT_INDEX].injections = {
-                ...(args[CONTEXT_INDEX].injections || {}),
+            graphQLArgs[CONTEXT_INDEX].injections = {
+                ...(graphQLArgs[CONTEXT_INDEX].injections || {}),
                 ...injections
             };
         }
@@ -138,19 +140,19 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
             await resultFunction(pre, {
                 direction: "pre",
                 name,
-                args
+                args: graphQLArgs
             });
         }
 
-        const resolve = await resolver(...args);
+        const resolve = await resolver(...graphQLArgs);
 
-        args = [resolve, ...args];
+        graphQLArgs = [resolve, ...graphQLArgs];
 
         if (post) {
             await resultFunction(post, {
                 direction: "post",
                 name,
-                args
+                args: graphQLArgs
             });
         }
 

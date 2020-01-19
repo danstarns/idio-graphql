@@ -111,13 +111,23 @@ module.exports = (GraphQLNode) => {
                                 ...result,
                                 [name]: (ctx) => {
                                     const {
-                                        params: { graphQLArgs = [] } = {}
+                                        params: {
+                                            graphQLArgs = JSON.stringify([])
+                                        } = {}
                                     } = ctx;
 
-                                    graphQLArgs[CONTEXT_INDEX].broker = broker;
+                                    const decodedArgs = JSON.parse(graphQLArgs);
+
+                                    const context = decodedArgs[CONTEXT_INDEX];
+
+                                    if (!context) {
+                                        decodedArgs[CONTEXT_INDEX] = {};
+                                    }
+
+                                    decodedArgs[CONTEXT_INDEX].broker = broker;
 
                                     return iteratorToStream(
-                                        method.subscribe(...graphQLArgs)
+                                        method.subscribe(...decodedArgs)
                                     );
                                 }
                             };
@@ -127,12 +137,22 @@ module.exports = (GraphQLNode) => {
                             ...result,
                             [name]: (ctx) => {
                                 const {
-                                    params: { graphQLArgs = [] } = {}
+                                    params: {
+                                        graphQLArgs = JSON.stringify([])
+                                    } = {}
                                 } = ctx;
 
-                                graphQLArgs[CONTEXT_INDEX].broker = broker;
+                                const decodedArgs = JSON.parse(graphQLArgs);
 
-                                return method(...graphQLArgs);
+                                const context = decodedArgs[CONTEXT_INDEX];
+
+                                if (!context) {
+                                    decodedArgs[CONTEXT_INDEX] = {};
+                                }
+
+                                decodedArgs[CONTEXT_INDEX].broker = broker;
+
+                                return method(...decodedArgs);
                             }
                         };
                     },

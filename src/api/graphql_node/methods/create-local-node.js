@@ -1,3 +1,4 @@
+const safeJsonStringify = require("safe-json-stringify");
 const IdioError = require("../../idio-error.js");
 
 const { streamToIterator } = require("../../../util/index.js");
@@ -29,7 +30,11 @@ function createLocalNode({ broker, GraphQLNode }) {
                                         try {
                                             const response = await broker.call(
                                                 `${introspection.name}:${type}.${resolver}`,
-                                                { graphQLArgs }
+                                                {
+                                                    graphQLArgs: safeJsonStringify(
+                                                        graphQLArgs
+                                                    )
+                                                }
                                             );
 
                                             return streamToIterator(response);
@@ -49,7 +54,11 @@ function createLocalNode({ broker, GraphQLNode }) {
                                 try {
                                     const response = await broker.call(
                                         `${introspection.name}:${type}.${resolver}`,
-                                        { graphQLArgs }
+                                        {
+                                            graphQLArgs: safeJsonStringify(
+                                                graphQLArgs
+                                            )
+                                        }
                                     );
 
                                     return response;

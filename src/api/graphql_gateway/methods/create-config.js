@@ -19,42 +19,41 @@ const {
  * @param {services} services
  * @returns {services}
  */
-function validateServices(services) {
-    if (!services) {
-        return false;
-    }
-
+function validateServices(services = {}) {
     if (!(typeof services === "object")) {
         throw new IdioError("services must be of type object.");
     }
 
-    if (!Object.keys(services).length) {
-        return false;
+    const { nodes, enums, interfaces, unions, directives, scalars } = services;
+
+    if (directives) {
+        throw new IdioError(`services.directives not supported`);
     }
 
-    const { nodes, enums, interfaces, unions } = services;
+    if (scalars) {
+        throw new IdioError(`services.scalars not supported`);
+    }
 
-    Object.entries({ nodes, enums, interfaces, unions }).forEach(
-        ([key, values]) => {
-            if (values) {
-                if (!Array.isArray(values)) {
+    return Object.entries({ nodes, enums, interfaces, unions }).reduce(
+        (result, [key, values = []]) => {
+            if (!Array.isArray(values)) {
+                throw new IdioError(
+                    `services.${key} must be of type Array.<string>.`
+                );
+            }
+
+            values.forEach((value, index) => {
+                if (!(typeof value === "string")) {
                     throw new IdioError(
-                        `services.${key} must be of type Array.<string>.`
+                        `services.${key}[${index}] must be of type string.`
                     );
                 }
+            });
 
-                values.forEach((value, index) => {
-                    if (!(typeof value === "string")) {
-                        throw new IdioError(
-                            `services.${key}[${index}] must be of type string.`
-                        );
-                    }
-                });
-            }
-        }
+            return { ...result, [key]: values };
+        },
+        {}
     );
-
-    return services;
 }
 
 /**
@@ -62,30 +61,31 @@ function validateServices(services) {
  * @param {locals} locals
  * @returns {locals}
  */
-function validateLocals(locals) {
-    if (!locals) {
-        return false;
-    }
-
+function validateLocals(locals = {}) {
     if (!(typeof locals === "object")) {
         throw new IdioError("locals must be of type object.");
     }
 
-    if (!Object.keys(locals).length) {
-        return false;
-    }
+    const {
+        nodes,
+        enums,
+        scalars,
+        directives,
+        interfaces,
+        unions,
+        schemaGlobals = ""
+    } = locals;
 
-    const { nodes, enums, scalars, directives, interfaces, unions } = locals;
-
-    Object.entries({
-        nodes: { instances: nodes, of: GraphQLNode },
-        enums: { instances: enums, of: IdioEnum },
-        scalars: { instances: scalars, of: IdioScalar },
-        directives: { instances: directives, of: IdioDirective },
-        interfaces: { instances: interfaces, of: IdioInterface },
-        unions: { instances: unions, of: IdioUnion }
-    }).forEach(([key, { instances, of }]) => {
-        if (instances) {
+    return {
+        schemaGlobals,
+        ...Object.entries({
+            nodes: { instances: nodes, of: GraphQLNode },
+            enums: { instances: enums, of: IdioEnum },
+            scalars: { instances: scalars, of: IdioScalar },
+            directives: { instances: directives, of: IdioDirective },
+            interfaces: { instances: interfaces, of: IdioInterface },
+            unions: { instances: unions, of: IdioUnion }
+        }).reduce((result, [key, { instances = [], of }]) => {
             if (!Array.isArray(instances)) {
                 throw new IdioError(`locals.${key} must be of type array.`);
             }
@@ -97,10 +97,13 @@ function validateLocals(locals) {
                     name: `locals.${key}[${index}]`
                 })
             );
-        }
-    });
 
-    return locals;
+            return {
+                ...result,
+                [key]: instances
+            };
+        }, {})
+    };
 }
 
 /**
@@ -115,21 +118,9 @@ function createConfig(config) {
         throw new IdioError("config must be of type object.");
     }
 
-    let services = validateServices(config.services) || {
-        nodes: [],
-        enums: [],
-        interfaces: [],
-        unions: []
-    };
+    const services = validateServices(config.services);
 
-    let locals = validateLocals(config.locals) || {
-        nodes: [],
-        enums: [],
-        scalars: [],
-        directives: [],
-        interfaces: [],
-        unions: []
-    };
+    const locals = validateLocals(config.locals);
 
     if (!services.nodes.length && !locals.nodes.length) {
         throw new IdioError(

@@ -87,27 +87,6 @@ module.exports = ({ brokerOptions, config, broker }) => {
             registeredServices[name].push(introspection);
         };
 
-        broker.createService({
-            name: broker.nodeID,
-            events: {
-                "introspection.request": async ({ type }, service) => {
-                    if (!started) {
-                        await introspectionCall(service, type);
-                    }
-                }
-            }
-        });
-
-        await broker.start();
-
-        await Promise.all(
-            Object.entries(locals)
-                .flatMap(([, value]) => value)
-                .map((local) => local.serve(brokerOptions))
-        );
-
-        await broker.emit("gateway.broadcast");
-
         const checkForServices = async (resolve, reject) => {
             const waiting = Object.entries(
                 waitingServices
@@ -146,6 +125,33 @@ module.exports = ({ brokerOptions, config, broker }) => {
             }
         };
 
+        broker.createService({
+            name: broker.nodeID,
+            events: {
+                "introspection.request": async ({ type }, service) => {
+                    if (!started) {
+                        await introspectionCall(service, type);
+                    }
+                }
+            }
+        });
+
+        await broker.start();
+
+        await Promise.all(
+            Object.entries(locals)
+                .filter(
+                    ([name]) =>
+                        !["scalars", "directives", "schemaGlobals"].includes(
+                            name
+                        )
+                )
+                .flatMap(([, value]) => value)
+                .map((local) => local.serve(brokerOptions))
+        );
+
+        await broker.emit("gateway.broadcast");
+
         await new Promise(checkForServices);
 
         let nodes = registeredServices.nodes.map(
@@ -153,7 +159,9 @@ module.exports = ({ brokerOptions, config, broker }) => {
         );
 
         const appliances = {
-            ...locals,
+            scalars: locals.scalars || [],
+            directives: locals.directives || [],
+            schemaGlobals: locals.schemaGlobals,
             ...Object.entries(registeredServices)
                 .filter(([key]) => key !== "nodes")
                 .reduce(

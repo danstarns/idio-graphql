@@ -1,49 +1,50 @@
-/* eslint-disable consistent-return */
-/* eslint-disable default-case */
+const safeJsonStringify = require("safe-json-stringify");
 const IdioEnum = require("../idio-enum.js");
 const IdioUnion = require("../idio-union.js");
 const IdioInterface = require("../idio-interface.js");
-
-function createLocalEnum() {
-    return (introspection) => {
-        return new IdioEnum({
-            ...introspection
-        });
-    };
-}
+const IdioError = require("../../idio-error.js");
 
 /**
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ *
  * @param {Object} options
  * @param {string} options.type
+ * @param {ServiceBroker} options.broker
  */
 function createLocalAppliance({ type, broker }) {
-    switch (type) {
-        case "enums":
-            return createLocalEnum();
-        case "unions":
-        case "interfaces":
-            return function _createLocalAppliance(introspection) {
-                let _constructor;
+    return function _createLocalAppliance(introspection) {
+        if (type === "enums") {
+            return new IdioEnum({
+                ...introspection
+            });
+        }
 
-                if (type === "unions") {
-                    _constructor = IdioUnion;
-                } else if (type === "interfaces") {
-                    _constructor = IdioInterface;
-                }
-
-                return new _constructor({
-                    ...introspection,
-                    resolver: {
-                        __resolveType: (...args) => {
-                            return broker.call(
-                                `${introspection.name}.__resolveType`,
-                                { graphQLArgs: args }
-                            );
-                        }
-                    }
+        function __resolveType(...graphQLArgs) {
+            try {
+                return broker.call(`${introspection.name}.__resolveType`, {
+                    graphQLArgs: safeJsonStringify(graphQLArgs)
                 });
-            };
-    }
+            } catch (error) {
+                throw new IdioError(
+                    `${introspection.name}.__resolveType failed: Error:\n${error}`
+                );
+            }
+        }
+
+        if (type === "unions") {
+            return new IdioUnion({
+                ...introspection,
+                resolver: { __resolveType }
+            });
+        }
+
+        if (type === "interfaces") {
+            return new IdioInterface({
+                ...introspection,
+                resolver: { __resolveType }
+            });
+        }
+    };
 }
 
 module.exports = createLocalAppliance;

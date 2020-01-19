@@ -98,11 +98,21 @@ module.exports = ({ type }) => {
                         return introspection;
                     },
                     __resolveType: (ctx) => {
-                        const { params: { graphQLArgs = [] } = {} } = ctx;
+                        const {
+                            params: { graphQLArgs = JSON.stringify([]) } = {}
+                        } = ctx;
 
-                        graphQLArgs[CONTEXT_INDEX - 1].broker = broker;
+                        const decodedArgs = JSON.parse(graphQLArgs);
 
-                        return this.resolver.__resolveType(...graphQLArgs);
+                        const context = decodedArgs[CONTEXT_INDEX - 1];
+
+                        if (!context) {
+                            decodedArgs[CONTEXT_INDEX - 1] = {};
+                        }
+
+                        decodedArgs[CONTEXT_INDEX - 1].broker = broker;
+
+                        return this.resolver.__resolveType(...decodedArgs);
                     }
                 }
             });

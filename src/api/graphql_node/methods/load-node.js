@@ -134,20 +134,20 @@ async function loadNode(n, { INTERNALS }) {
                     if (Object.keys(method).includes("subscribe")) {
                         resolvers[type][name] = {
                             ...method,
-                            async *subscribe(...args) {
+                            async *subscribe(...graphQLArgs) {
                                 try {
-                                    if (!args[CONTEXT_INDEX]) {
-                                        args[CONTEXT_INDEX] = {};
+                                    if (!graphQLArgs[CONTEXT_INDEX]) {
+                                        graphQLArgs[CONTEXT_INDEX] = {};
                                     }
 
-                                    args[CONTEXT_INDEX].injections = {
-                                        ...(args[CONTEXT_INDEX].injections ||
-                                            {}),
+                                    graphQLArgs[CONTEXT_INDEX].injections = {
+                                        ...(graphQLArgs[CONTEXT_INDEX]
+                                            .injections || {}),
                                         ...(node.injections || {})
                                     };
 
                                     const iterator = await method.subscribe(
-                                        ...args
+                                        ...graphQLArgs
                                     );
 
                                     for await (const chunk of iterator) {
