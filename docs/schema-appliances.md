@@ -48,14 +48,10 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        { enums: [ StatusEnum ] }
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    { enums: [ StatusEnum ] }
+)
 ```
 
 You can encapsulate **[IdioEnums](idio-enum)** in a [**GraphQLNode**](graphql-node).
@@ -104,14 +100,10 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        { scalars: [ JSONScalar ] }
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    { scalars: [ JSONScalar ] }
+);
 ```
 
 ## Directives
@@ -145,14 +137,10 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        { directives: [ hasScopeDirective ] }
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    { directives: [ hasScopeDirective ] }
+);
 ```
 
 ## Interfaces
@@ -193,14 +181,10 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        { interfaces: [ PersonInterface ] }
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    { interfaces: [ PersonInterface ] }
+);
 ```
 
 You can encapsulate **[IdioInterfaces](idio-interface)** in a [**GraphQLNode**](graphql-node).
@@ -251,23 +235,19 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        { 
-            unions: [ UserUnion ],
-            schemaGlobals: `
-                type Admin {
-                    name: String
-                    age: Int
-                    roles: [String]
-                }
-            `
-        }
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    { 
+        unions: [ UserUnion ],
+        schemaGlobals: `
+            type Admin {
+                name: String
+                age: Int
+                roles: [ String ]
+            }
+        `
+    }
+);
 ```
 
 You can encapsulate **[IdioUnions](idio-union)** in a [**GraphQLNode**](graphql-node).
@@ -309,21 +289,19 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        { schemaGlobals: [ 
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    { 
+        schemaGlobals: [ 
             `
             type TimeStamp {
                 updatedAt: String
                 createdAt: String
             }
             ` 
-        ] }
-    );
-}
-
-main()
+        ] 
+    }
+);
 ```
 
 

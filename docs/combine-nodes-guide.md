@@ -5,41 +5,21 @@ title: Combine Nodes
 
 ## Intro
 
-Once you have created your **[GraphQLNodes](graphql-node)** you will need to combine them to produce a single GraphQL schema.
+Once you have created your **[GraphQLNode's](graphql-node)** you will need to combine them to produce a single GraphQL schema.
 
 ## Nodes
 You should provide an array of Node's that are required in the schema. 
 
 ```javascript
-const { GraphQLNode, combineNodes } = require("idio-graphql");
-
 const User = new GraphQLNode({
     name: "User",
-    typeDefs: gql`
-         type User {
-            name: String
-            age: Int
-        }
-
-        type Query {
-            user: User
-        }
-    `,
-    resolvers: {
-        Query: {
-            user: () => { ... }
-        }
-    }
+    ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        schemaAppliances
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ], 
+    schemaAppliances
+);
 ```
 
 >The nodes should only be top level, if you take the **[nodes example](creating-nodes#nodes)** from the last page. You should only provide the `User` Node. 
@@ -62,32 +42,24 @@ const User = new GraphQLNode({
     ...
 });
 
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ]
-        schemaAppliances
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    [ User ]
+    schemaAppliances
+);
 ```
 
 ## Schema Appliances
 ```javascript
-async function main(){
-    const { typeDefs, resolvers } = await combineNodes(
-        [ User ], 
-        {
-            enums, 
-            scalars, 
-            directives, 
-            interfaces,
-            unions,
-            schemaGlobals
-        }
-    );
-}
-
-main()
+const { typeDefs, resolvers } = await combineNodes(
+    nodes, 
+    {
+        enums, 
+        scalars, 
+        directives, 
+        interfaces,
+        unions,
+        schemaGlobals
+    }
+);
 ```
 Continue reading to learn more about **[Schema Appliances](schema-appliances)**.

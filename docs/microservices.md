@@ -69,13 +69,7 @@ const gateway = GraphQLGateway(
     }
 );
 
-async function main() {
-    const { typeDefs, resolvers, broker } = await gateway.start();
-
-    console.log(`gateway service online`);
-}
-
-main();
+const { typeDefs, resolvers, broker } = await gateway.start();
 ```
 On successful start, you receive resolvers that are mapped to [**Moleculer**](https://moleculer.services/) service calls.
 
@@ -99,14 +93,6 @@ const gateway = GraphQLGateway(
         nodeID: "gateway"
     }
 );
-
-async function main() {
-    const { typeDefs, resolvers, broker } = await gateway.start();
-
-    console.log(`gateway service online`);
-}
-
-main();
 ```
 
 ## Utilizing The Service Broker
@@ -164,7 +150,6 @@ const gateway = GraphQLGateway(
 
 async function main() {
     const { typeDefs, resolvers, broker } = await gateway.start();
-
 
     const apolloServer = new ApolloServer({
         typeDefs, 
