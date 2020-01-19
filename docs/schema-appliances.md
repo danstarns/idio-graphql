@@ -270,9 +270,9 @@ const User = new GraphQLNode({
 ```
 
 ## Schema Globals
-If you have type definition's that are generic to multiple Node's, you can provide a string or an array of strings to [**combineNodes**](combine-nodes) where they will injected into the resulting `typeDefs`.
+If you have type definition's that are generic to multiple Node's, you can provide a string or an array of strings to [**combineNodes**](combine-nodes) where they will be injected into the resulting `typeDefs`.
 
-> If your Schema Global requires a resolver, you should prefer creating a [**GraphQLNode**](#graphql-node).
+> If your Schema Global requires a resolver, you should prefer creating a [**GraphQLNode**](graphql-node).
 
 ```javascript
 const User = new GraphQLNode({

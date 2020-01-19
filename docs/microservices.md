@@ -43,13 +43,7 @@ const User = new GraphQLNode({
     }
 });
 
-async function main() {
-    await User.serve({ transporter: "NATS" });
-
-    console.log(`User service online`);
-}
-
-main();
+await User.serve({ transporter: "NATS" });
 ```
 
 ## Your First Gateway
@@ -71,7 +65,7 @@ const gateway = GraphQLGateway(
 
 const { typeDefs, resolvers, broker } = await gateway.start();
 ```
-On successful start, you receive resolvers that are mapped to [**Moleculer**](https://moleculer.services/) service calls.
+On successful start, you receive merged typeDefs & resolvers, that are mapped to [**Moleculer**](https://moleculer.services/) service calls.
 
 
 ## Gradual Adoption
@@ -96,7 +90,7 @@ const gateway = GraphQLGateway(
 ```
 
 ## Utilizing The Service Broker
-To harness the real power of an microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the context parameter.
+To harness the real power of an microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the context parameter.
 
 
 ```javascript
@@ -148,27 +142,21 @@ const gateway = GraphQLGateway(
     ...
 );
 
-async function main() {
-    const { typeDefs, resolvers, broker } = await gateway.start();
+const { typeDefs, resolvers } = await gateway.start();
 
-    const apolloServer = new ApolloServer({
-        typeDefs, 
-        resolvers,
-        context: () => {
-            return {
-                abc: "123"
-            }
+const apolloServer = new ApolloServer({
+    typeDefs, 
+    resolvers,
+    context: () => {
+        return {
+            abc: "123"
         }
-    });
-
-    ...
-}
-
-main();
+    }
+});
 ```
 
 ## Subscriptions
-GraphQL Subscriptions through your chosen transport layer will work out the box with [**GraphQLNode's**](graphql-node). Ensure you return an async iterator from your `subscribe` method! 
+GraphQL Subscriptions, through your chosen transport layer, will work out the box with [**GraphQLNode's**](graphql-node). Ensure you return an async iterator from your `subscribe` method! 
 
 > When utilizing Subscriptions you should prefer a native streaming implementation, such as [**NATS Streaming**](https://moleculer.services/docs/0.13/networking.html#NATS-Streaming-STAN-Transporter), for your transport layer.
 
