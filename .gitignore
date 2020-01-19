@@ -4,3 +4,4 @@ example
 .vscode
 .cache
 test-bench
+package-temp.json
