@@ -20,9 +20,6 @@ You can use **IdioScalar** to modularize an **[`ScalarTypeDefinition`](http://sp
 _Example uses **[graphql-type-json](https://github.com/taion/graphql-type-json)**_.
 
 ```javascript
-const { GraphQLJSON } = require("graphql-type-json");
-const { IdioScalar } = require("idio-graphql");
-
 const JSONScalar = new IdioScalar({
     name: "JSON",
     resolver: GraphQLJSON

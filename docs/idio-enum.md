@@ -13,8 +13,6 @@ You can use **IdioEnum** to modularize an **[`EnumTypeDefinition`](http://spec.g
 ## Example
 
 ```javascript
-const { IdioEnum } = require("idio-graphql");
-
 const StatusEnum = new IdioEnum({
     name: "StatusEnum",
     typeDefs: `

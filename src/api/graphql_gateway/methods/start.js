@@ -58,7 +58,15 @@ module.exports = ({ brokerOptions, config, broker }) => {
                 return;
             }
 
-            const { name } = APPLIANCE_METADATA.find((x) => x.plural === type);
+            const { name } = [
+                ...APPLIANCE_METADATA,
+                {
+                    applianceConstructor: GraphQLNode,
+                    kind: "ObjectTypeDefinition",
+                    plural: "node",
+                    name: "nodes"
+                }
+            ].find((x) => x.plural === type);
 
             if (
                 registeredServices[name]
@@ -74,16 +82,6 @@ module.exports = ({ brokerOptions, config, broker }) => {
                 waitingServices[name] = waitingServices[name].filter(
                     (x) => x !== introspection.name
                 );
-            }
-
-            if (locals[name]) {
-                locals[name].forEach((node) => {
-                    if (node.name === introspection.name) {
-                        throw new IdioError(
-                            `Gateway receiving a introspection request from ${type}: '${introspection}' that is registered as a local ${type}.`
-                        );
-                    }
-                });
             }
 
             registeredServices[name].push(introspection);
@@ -103,12 +101,9 @@ module.exports = ({ brokerOptions, config, broker }) => {
         await broker.start();
 
         await Promise.all(
-            [
-                ...(locals.nodes || []),
-                ...(locals.enums || []),
-                ...(locals.unions || []),
-                ...(locals.interfaces || [])
-            ].map((local) => local.serve(brokerOptions))
+            Object.entries(locals)
+                .flatMap(([, value]) => value)
+                .map((local) => local.serve(brokerOptions))
         );
 
         await broker.emit("gateway.broadcast");
@@ -121,9 +116,15 @@ module.exports = ({ brokerOptions, config, broker }) => {
             if (waiting.length) {
                 await Promise.all(
                     waiting.flatMap(async ([key, _services]) => {
-                        const { plural } = APPLIANCE_METADATA.find(
-                            (x) => x.name === key
-                        );
+                        const { plural } = [
+                            ...APPLIANCE_METADATA,
+                            {
+                                applianceConstructor: GraphQLNode,
+                                kind: "ObjectTypeDefinition",
+                                plural: "node",
+                                name: "nodes"
+                            }
+                        ].find((x) => x.name === key);
 
                         broker.logger.info(
                             `Waiting for ${plural} services: [ ${_services.join(

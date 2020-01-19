@@ -177,9 +177,15 @@ function GraphQLNode(config) {
                 );
             }
 
-            const { plural, applianceConstructor } = APPLIANCE_METADATA.find(
-                (x) => x.name === key
-            );
+            const { plural, applianceConstructor } = [
+                ...APPLIANCE_METADATA,
+                {
+                    applianceConstructor: GraphQLNode,
+                    kind: "ObjectTypeDefinition",
+                    plural: "node",
+                    name: "nodes"
+                }
+            ].find((x) => x.name === key);
 
             function checkInstanceOfAppliance(appliance) {
                 if (!(appliance instanceof applianceConstructor)) {

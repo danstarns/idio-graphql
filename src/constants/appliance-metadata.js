@@ -41,12 +41,6 @@ const APPLIANCE_METADATA = [
         kind: "InterfaceTypeDefinition",
         plural: "interface",
         name: "interfaces"
-    },
-    {
-        applianceConstructor: GraphQLNode,
-        kind: "ObjectTypeDefinition",
-        plural: "node",
-        name: "nodes"
     }
 ];
 

@@ -56,26 +56,36 @@ Query: {
 }
 ```
 
-## pre
+## Pre Hook
 ```javascript
 /**
  * @function PreHook
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl info argument.
+ * @param {any}    root
+ * @param {Object} args 
+ * @param {Object} context 
+ * @param {Object} info 
  */
 ```
 
-## post
+## Resolve Hook
+```javascript
+/**
+ * @function PreHook
+ * @param {any}    root
+ * @param {Object} args 
+ * @param {Object} context 
+ * @param {Object} info 
+ */
+```
+
+## Post Hook
 ```javascript
 /**
  * @function PostHook
  * @param {any}    resolve - The outcome of the resolve method.
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl info argument.
+ * @param {any}    root 
+ * @param {Object} args 
+ * @param {Object} context 
+ * @param {Object} info 
  */
-
 ```

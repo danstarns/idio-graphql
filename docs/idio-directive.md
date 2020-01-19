@@ -17,9 +17,6 @@ You can use **IdioDirective** to modularize an **[`DirectiveDefinition`](http://
 _Example uses **[graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)**_
 
 ```javascript
-const { HasScopeDirective } = require("graphql-auth-directives");
-const { IdioDirective } = require("idio-graphql");
-
 const hasScopeDirective = new IdioDirective({
     name: "hasScope",
     typeDefs: `

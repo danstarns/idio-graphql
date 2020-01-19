@@ -8,8 +8,6 @@ title: Creating Nodes
 A "Node" **[GraphQLNode](graphql-node)** is designed to encapsulate a **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. Lets create a `User` Node.
 
 ```javascript
-const { GraphQLNode } = require("idio-graphql");
-
 const User = new GraphQLNode({
     name: "User"
 });
@@ -156,8 +154,6 @@ new GraphQLNode({
 ```
 
 ```javascript
-const UserModel = require(...);
-
 const User = new GraphQLNode({
     name: "User",
     typeDefs: "./User.gql",

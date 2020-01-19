@@ -4,20 +4,20 @@ title: Schema Appliances
 ---
 
 ## Intro
-**Schema Appliances** or 'schema extras' are parts of the GraphQL schema that is not a Node. This includes; 
+**Schema Appliances** or 'schema extras' are parts of the GraphQL schema that is not a Node. This includes;  
 
-1. [`enums`](#enums)
-2. [`scalars`](#scalars)
-3. [`directives`](#directives)
-4. [`schemaGlobals`](#schemaGlobals)
-
+1. [**Enums**](#enums)
+2. [**Scalars**](#scalars)
+3. [**Directives**](#directives)
+3. [**Interfaces**](#interfaces)
+3. [**Unions**](#unions)
+4. [**Schema Globals**](#schema-globals)
 
 ## Enums
-If you need to apply enums to your schema you can pass `enums`, an array of **[IdioEnum](idio-enum)**. 
+You can use **[IdioEnums](idio-enum)** to apply **[Enumeration types](https://graphql.org/learn/schema/#enumeration-types)** to your GraphQL schema.
+
 
 ```javascript
-const { IdioEnum, combineNodes, GraphQLNode } = require("idio-graphql");
-
 const StatusEnum = new IdioEnum({
     name: "StatusEnum",
     typeDefs: `
@@ -58,15 +58,33 @@ async function main(){
 main()
 ```
 
+You can encapsulate **[IdioEnums](idio-enum)** in a [**GraphQLNode**](graphql-node).
+
+```javascript
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            name: String
+            age: Int
+            status: StatusEnum
+        }
+
+        ...
+    `, 
+    enums: [ StatusEnum ],
+    ...
+});
+```
+
 ## Scalars
-If you need to apply scalars to your schema you can pass `scalars`, an array of **[IdioScalar](idio-scalar)**.  The scalar does not require `typeDefs` it uses the scalar name to match up the resolver.
+You can use **[IdioScalars](idio-scalar)** to apply **[Scalar types](https://graphql.org/learn/schema/#scalar-types)** to your GraphQL schema. A scalar does not require `typeDefs`.
+
+> You can only specify scalars at [**combineNodes**](combine-nodes).
 
 _example uses **[graphql-type-json](https://github.com/taion/graphql-type-json)**_.
 
 ```javascript
-const { IdioScalar, combineNodes, GraphQLNode } = require("idio-graphql");
-const { GraphQLJSON } = require("graphql-type-json");
-
 const JSONScalar = new IdioScalar({
     name: "JSON",
     resolver: GraphQLJSON
@@ -97,14 +115,13 @@ main()
 ```
 
 ## Directives
-If you need to apply directives to your schema you can pass `directives`, an array of **[IdioDirective](idio-directive)**.
+You can use **[IdioDirectives](idio-directive)** to apply **[Directives](https://graphql.org/learn/queries/#directives)** to your GraphQL schema. 
 
-_example uses **[graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)**_
+> Ensure your GraphQL implementation supports Directives. 
+
+_example uses **[graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)**._
 
 ```javascript
-const { IdioDirective, combineNodes, GraphQLNode } = require("idio-graphql");
-const { HasScopeDirective } = require("graphql-auth-directives");
-
 const hasScopeDirective = new IdioDirective({
     name: "hasScope",
     typeDefs: `
@@ -119,13 +136,10 @@ const hasScopeDirective = new IdioDirective({
 const User = new GraphQLNode({
     name: "User",
     typeDefs: `
-        type User {
-            name: String
-            age: Int
-        }
+        type User ...
 
         type Query {
-            getUser: User @hasScope(scopes: [ admin ])
+            getUser: User @hasScope(scopes: [ "admin" ])
         }
     `, 
     ...
@@ -142,11 +156,9 @@ main()
 ```
 
 ## Interfaces
-If you need to apply interfaces to your schema you can pass `interfaces`, an array of **[IdioInterface](idio-interface)**.
+You can use **[IdioInterfaces](idio-interface)** to apply **[Interface types](https://graphql.org/learn/schema/#interfaces)** to your GraphQL schema.
 
 ```javascript
-const { IdioInterface, combineNodes, GraphQLNode } = require("idio-graphql");
-
 const PersonInterface = new IdioInterface({
     name: "PersonInterface",
     typeDefs: `
@@ -191,13 +203,29 @@ async function main(){
 main()
 ```
 
-
-## Unions
-If you need to apply unions to your schema you can pass `unions`, an array of **[IdioUnion](idio-union)**.
+You can encapsulate **[IdioInterfaces](idio-interface)** in a [**GraphQLNode**](graphql-node).
 
 ```javascript
-const { IdioUnion, combineNodes, GraphQLNode } = require("idio-graphql");
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            name: String
+            age: Int
+            status: StatusEnum
+        }
 
+        ...
+    `, 
+    interfaces: [ PersonInterface ],
+    ...
+});
+```
+
+## Unions
+You can use **[IdioUnions](idio-union)** to apply **[Union types](https://graphql.org/learn/schema/#union-types)** to your GraphQL schema.
+
+```javascript
 const UserUnion = new IdioUnion({
     name: "UserUnion",
     typeDefs: `union UserUnion = User | Admin`,
@@ -214,10 +242,7 @@ const UserUnion = new IdioUnion({
 const User = new GraphQLNode({
     name: "User",
     typeDefs: `
-        type User {
-            name: String
-            age: Int
-        }
+        type User ...
 
         type Query {
             getUser: UserUnion
@@ -245,12 +270,31 @@ async function main(){
 main()
 ```
 
-## SchemaGlobals
-If you have type definition's that are generic to multiple Node's, you can provide a string or an array of strings to `schemaGlobals` where they will combine into the resulting `typeDefs`.
+You can encapsulate **[IdioUnions](idio-union)** in a [**GraphQLNode**](graphql-node).
 
 ```javascript
-const { combineNodes, GraphQLNode } = require("idio-graphql");
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            name: String
+            age: Int
+            status: StatusEnum
+        }
 
+        ...
+    `, 
+    unions: [ UserUnion ],
+    ...
+});
+```
+
+## Schema Globals
+If you have type definition's that are generic to multiple Node's, you can provide a string or an array of strings to [**combineNodes**](combine-nodes) where they will injected into the resulting `typeDefs`.
+
+> If your Schema Global requires a resolver, you should prefer creating a [**GraphQLNode**](#graphql-node).
+
+```javascript
 const User = new GraphQLNode({
     name: "User",
     typeDefs: `

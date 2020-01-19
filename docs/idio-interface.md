@@ -13,8 +13,6 @@ You can use **IdioInterface** to modularize an **[`InterfaceTypeDefinition`](htt
 ## Example
 
 ```javascript
-const { IdioInterface } = require("idio-graphql");
-
 const ErrorInterFace = new IdioInterface({
     name: "ErrorInterface",
     typeDefs: `

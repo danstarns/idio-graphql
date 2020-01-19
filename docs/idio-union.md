@@ -14,8 +14,6 @@ together with its resolver. You can specify unions 'top-level' at **[combineNode
 ## Example
 
 ```javascript
-const { IdioUnion } = require("idio-graphql");
-
 const AOrB = new IdioUnion({
     name: "AOrB",
     typeDefs: `union AOrB = A | B`,

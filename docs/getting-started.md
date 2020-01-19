@@ -61,4 +61,4 @@ main();
 4. [**Resolver Hooks**](resolver-hooks)
 3. [**Microservices**](microservices)
 
-The Guides are designed chronologically, Click the next button to start reading.
+The guides are designed chronologically, Click the next button to start reading.

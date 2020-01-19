@@ -7,7 +7,7 @@ title: Combine Nodes
 
 Once you have created your **[GraphQLNodes](graphql-node)** you will need to combine them to produce 1 single GraphQL schema.
 
-## nodes
+## Nodes
 You should provide an array of Node's that are required in the schema. 
 
 ```javascript
@@ -72,7 +72,7 @@ async function main(){
 main()
 ```
 
-## schemaAppliances
+## Schema Appliances
 ```javascript
 async function main(){
     const { typeDefs, resolvers } = await combineNodes(
@@ -81,6 +81,8 @@ async function main(){
             enums, 
             scalars, 
             directives, 
+            interfaces,
+            unions,
             schemaGlobals
         }
     );
