@@ -14,11 +14,15 @@ async function resolveAppliance({
 }) {
     if (name === "schemaGlobals") {
         if (Array.isArray(appliance)) {
-            const loadedTypeDefs = await Promise.all(
-                appliance.map((def) => parseTypeDefs(def)())
-            );
-
-            return { typeDefs: mergeTypeDefs(loadedTypeDefs) };
+            return {
+                typeDefs: printWithComments(
+                    mergeTypeDefs(
+                        await Promise.all(
+                            appliance.map(async (def) => parseTypeDefs(def)())
+                        )
+                    )
+                )
+            };
         }
 
         return { typeDefs: await parseTypeDefs(appliance)() };

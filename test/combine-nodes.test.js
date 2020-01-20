@@ -1,5 +1,9 @@
 const { expect } = require("chai");
 const path = require("path");
+const { GraphQLScalarType } = require("graphql");
+const { GraphQLJSON } = require("graphql-type-json");
+const { AuthDirective } = require("graphql-directive-auth");
+const { SchemaDirectiveVisitor } = require("graphql-tools");
 
 const {
     combineNodes,
@@ -637,7 +641,7 @@ describe("combineNodes", () => {
     it("should combine 1 node & a global scalar and return typeDefs and resolvers", async () => {
         const JSONScalar = new IdioScalar({
             name: "JSON",
-            resolver: async () => true
+            resolver: GraphQLJSON
         });
 
         const UserNode = new GraphQLNode({
@@ -682,7 +686,7 @@ describe("combineNodes", () => {
         expect(resolvers)
             .to.be.an("object")
             .to.have.property("JSON")
-            .to.be.a("function");
+            .to.be.instanceOf(GraphQLScalarType);
     });
 
     it("should throw expected directives to be an array", async () => {
@@ -761,9 +765,11 @@ describe("combineNodes", () => {
     });
 
     it("should combine 1 node & a global directive and return typeDefs and resolvers & schemaDirectives", async () => {
+        const { isAuthenticated } = AuthDirective();
+
         const hasPermissionDirective = new IdioDirective({
             name: "hasPermission",
-            resolver: () => true,
+            resolver: isAuthenticated,
             typeDefs: `
             input permissionInput {
                 resource: String!
