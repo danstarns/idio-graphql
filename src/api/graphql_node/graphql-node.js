@@ -68,7 +68,7 @@ const serve = require("./methods/serve.js");
  *
  * @returns {GraphQLNode}
  */
-function GraphQLNode(config) {
+function GraphQLNode(config = {}) {
     const {
         name,
         typeDefs,

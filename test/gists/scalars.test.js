@@ -1,12 +1,13 @@
 const { expect } = require("chai");
 
+const { GraphQLJSON } = require("graphql-type-json");
 const { GraphQLNode, combineNodes, IdioScalar } = require("../../src");
 
 describe("gists/idio-scalar", async () => {
     it("should verify idio-scalar", async () => {
         const JSONScalar = new IdioScalar({
             name: "JSON",
-            resolver: () => true
+            resolver: GraphQLJSON
         });
 
         const User = new GraphQLNode({

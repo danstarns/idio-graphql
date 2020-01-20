@@ -3,7 +3,7 @@ const { expect } = require("chai");
 const { GraphQLNode, combineNodes } = require("../../src");
 
 describe("gists/idio-scalar", async () => {
-    it("should verify idio-scalar", async () => {
+    it("should schema globals", async () => {
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `

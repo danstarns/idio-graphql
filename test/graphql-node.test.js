@@ -4,7 +4,7 @@ const { expect } = require("chai");
 const { GraphQLNode, IdioEnum } = require("../src");
 
 describe("GraphQLNode ", () => {
-    it("should name required", () => {
+    it("should throw name required", () => {
         try {
             const node = new GraphQLNode();
 
@@ -244,7 +244,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `constructing GraphQLNode: 'User' expected enum to be instance of IdioEnum`
+                `constructing GraphQLNode: 'User' expected enum to be instance of 'IdioEnum'`
             );
         }
     });
@@ -376,7 +376,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `constructing GraphQLNode: 'User' expected node to be instance of GraphQLNode`
+                `constructing GraphQLNode: 'User' expected node to be instance of 'GraphQLNode'`
             );
         }
     });
@@ -384,7 +384,11 @@ describe("GraphQLNode ", () => {
     it("should create and return a instance of GraphQLNode with nodes", () => {
         const Post = new GraphQLNode({
             name: "Post",
-            resolvers: {},
+            resolvers: {
+                Query: {
+                    post: () => true
+                }
+            },
             typeDefs: `
             type Post {
                 title: String

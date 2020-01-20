@@ -3,7 +3,6 @@ const path = require("path");
 const { GraphQLScalarType } = require("graphql");
 const { GraphQLJSON } = require("graphql-type-json");
 const { AuthDirective } = require("graphql-directive-auth");
-const { SchemaDirectiveVisitor } = require("graphql-tools");
 
 const {
     combineNodes,
@@ -1160,10 +1159,12 @@ describe("combineNodes", () => {
 
     it("should throw when loading IdioDirective with invalid typeDefs from a file", async () => {
         try {
+            const { isAuthenticated } = AuthDirective();
+
             const hasScopeDirective = new IdioDirective({
                 name: "hasScope",
                 typeDefs: path.join(__dirname, "./dummy-data/error.gql"),
-                resolver: () => true
+                resolver: isAuthenticated
             });
 
             const node = new GraphQLNode({
@@ -1197,12 +1198,14 @@ describe("combineNodes", () => {
 
     it("should throw directive should contain DirectiveDefinition", async () => {
         try {
+            const { isAuthenticated } = AuthDirective();
+
             const hasScopeDirective = new IdioDirective({
                 name: "hasScope",
                 typeDefs: `
                     directive @hasScopeee(scopes: [String]!) on FIELD_DEFINITION
                 `,
-                resolver: () => true
+                resolver: isAuthenticated
             });
 
             const node = new GraphQLNode({
@@ -1238,11 +1241,12 @@ describe("combineNodes", () => {
         try {
             const JSONScalar = new IdioScalar({
                 name: "JSON",
-                resolver: async () => true
+                resolver: GraphQLJSON
             });
+
             const JSONScalar2 = new IdioScalar({
                 name: "JSON",
-                resolver: async () => true
+                resolver: GraphQLJSON
             });
 
             const UserNode = new GraphQLNode({

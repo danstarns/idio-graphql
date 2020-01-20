@@ -105,7 +105,7 @@ resolvers: {
 }
 ```
 
-> 'Local Services' are initialized as an **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**.
+> 'Local Services' are initialized as a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**.
 
 ## Preserving Parameters
 [**GraphQLGateway**](graphql-gateway) will forward the GraphQL arguments onto the relevant Node. 

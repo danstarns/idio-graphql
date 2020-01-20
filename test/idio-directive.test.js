@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
+const { AuthDirective } = require("graphql-directive-auth");
 const { IdioDirective } = require("../src");
+
+const { isAuthenticated } = AuthDirective();
 
 describe("IdioDirective", () => {
     it("should throw name required", () => {
@@ -92,7 +95,7 @@ describe("IdioDirective", () => {
                 permission: permissionInput!
             ) on FIELD_DEFINITION 
         `,
-            resolver: () => true
+            resolver: isAuthenticated
         });
 
         expect(directive)
@@ -123,7 +126,7 @@ describe("IdioDirective", () => {
                     permission: permissionInput!
                 ) on FIELD_DEFINITION 
             `,
-                resolver: () => true
+                resolver: isAuthenticated
             });
 
             throw new Error();

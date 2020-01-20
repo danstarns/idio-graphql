@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
+const { GraphQLJSON } = require("graphql-type-json");
+const { GraphQLScalarType } = require("graphql");
 const { IdioScalar } = require("../src");
 
 describe("IdioScalar", () => {
@@ -41,7 +43,7 @@ describe("IdioScalar", () => {
     });
 
     it("should create and return a instance of IdioScalar", () => {
-        const scalar = new IdioScalar({ name: "test", resolver: () => true });
+        const scalar = new IdioScalar({ name: "test", resolver: GraphQLJSON });
 
         expect(scalar)
             .to.have.property("name")
@@ -49,14 +51,14 @@ describe("IdioScalar", () => {
 
         expect(scalar)
             .to.have.property("resolver")
-            .to.be.a("function");
+            .to.be.instanceOf(GraphQLScalarType);
     });
 
     it("should throw with invalid name", () => {
         try {
             const scalar = new IdioScalar({
                 name: "scalar",
-                resolver: () => true
+                resolver: GraphQLJSON
             });
 
             throw new Error();
