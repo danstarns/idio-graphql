@@ -8,9 +8,15 @@ const { GraphQLGateway } = require("idio-graphql");
 ```
 
 ## Intro
+
+---
+
 You can use  **GraphQLGateway** to orchestrate a collection of [**GraphQLNode's**](graphql-node) & [**Schema Appliances**](schema-appliances) exposed over a network.
 
 ## Example
+
+---
+
 ```javascript
 const gateway = GraphQLGateway(
     {
@@ -38,6 +44,8 @@ const gateway = GraphQLGateway(
 ```
 
 ## Definitions
+
+---
 
 ```javascript
 /**
@@ -96,9 +104,14 @@ function GraphQLGateway(config: config, brokerOptions: BrokerOptions);
 
 ## Methods 
 
+---
+
 1. [**serve**](#serve)
 
 ### Serve 
+
+---
+
 > **https://moleculer.services/docs/0.12/broker.html**
 
 #### Example

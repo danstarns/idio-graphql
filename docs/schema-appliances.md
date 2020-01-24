@@ -4,6 +4,9 @@ title: Schema Appliances
 ---
 
 ## Intro
+
+---
+
 **Schema Appliances** or 'schema extras' are parts of the GraphQL schema that is not a Node. This includes;  
 
 1. [**Enums**](#enums)
@@ -14,6 +17,9 @@ title: Schema Appliances
 4. [**Schema Globals**](#schema-globals)
 
 ## Enums
+
+---
+
 You can use **[IdioEnums](idio-enum)** to apply **[Enumeration types](https://graphql.org/learn/schema/#enumeration-types)** to your GraphQL schema.
 
 
@@ -74,6 +80,9 @@ const User = new GraphQLNode({
 ```
 
 ## Scalars
+
+---
+
 You can use **[IdioScalars](idio-scalar)** to apply **[Scalar types](https://graphql.org/learn/schema/#scalar-types)** to your GraphQL schema. A scalar does not require `typeDefs`.
 
 > You can only specify scalars at [**combineNodes**](combine-nodes).
@@ -107,6 +116,9 @@ const { typeDefs, resolvers } = await combineNodes(
 ```
 
 ## Directives
+
+---
+
 You can use **[IdioDirectives](idio-directive)** to apply **[Directives](https://graphql.org/learn/queries/#directives)** to your GraphQL schema. 
 
 > Ensure your GraphQL implementation supports Directives. 
@@ -144,6 +156,9 @@ const { typeDefs, resolvers } = await combineNodes(
 ```
 
 ## Interfaces
+
+---
+
 You can use **[IdioInterfaces](idio-interface)** to apply **[Interface types](https://graphql.org/learn/schema/#interfaces)** to your GraphQL schema.
 
 ```javascript
@@ -207,6 +222,9 @@ const User = new GraphQLNode({
 ```
 
 ## Unions
+
+---
+
 You can use **[IdioUnions](idio-union)** to apply **[Union types](https://graphql.org/learn/schema/#union-types)** to your GraphQL schema.
 
 ```javascript
@@ -270,6 +288,9 @@ const User = new GraphQLNode({
 ```
 
 ## Schema Globals
+
+---
+
 If you have type definition's that are generic to multiple Node's, you can provide a string or an array of strings to [**combineNodes**](combine-nodes) where they will be injected into the resulting `typeDefs`.
 
 > If your Schema Global requires a resolver, you should prefer creating a [**GraphQLNode**](graphql-node).

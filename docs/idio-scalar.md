@@ -8,6 +8,9 @@ const { IdioScalar } = require("idio-graphql");
 ```
 
 ## Intro
+
+---
+
 You can use **IdioScalar** to modularize an **[`ScalarTypeDefinition`](http://spec.graphql.org/June2018/#ScalarTypeDefinition)**, together with its resolver. 
 
 > You can only apply scalars 'top-level' at **[combineNodes](combine-nodes)**.
@@ -16,6 +19,8 @@ You can use **IdioScalar** to modularize an **[`ScalarTypeDefinition`](http://sp
 
 
 ## Example
+
+---
 
 _Example uses **[graphql-type-json](https://github.com/taion/graphql-type-json)**_.
 
@@ -27,6 +32,8 @@ const JSONScalar = new IdioScalar({
 ```
 
 ## Definitions
+
+---
 
 ```javascript
 /**

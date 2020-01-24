@@ -8,9 +8,14 @@ const { combineNodes } = require("idio-graphql")
 ```
 
 ## Intro
+
+---
+
 You can use **combineNodes** to snap [**GraphQLNode's**](graphql-node) & [**Schema Appliances**](schema-appliances) together into a single Schema.
 
 ## Example
+
+---
 
 ```javascript 
 const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
@@ -27,6 +32,8 @@ const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
 ```
 
 ## Definitions
+
+---
 
 ```javascript
 /**

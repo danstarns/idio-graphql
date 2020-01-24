@@ -5,6 +5,8 @@ title: Creating Nodes
 
 ## Intro
 
+---
+
 A "Node" **[GraphQLNode](graphql-node)** is designed to encapsulate a **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. Lets create a `User` Node.
 
 ```javascript
@@ -14,6 +16,9 @@ const User = new GraphQLNode({
 ```
 
 ## TypeDefs
+
+---
+
 Here is the **[`Schema Definition Language (SDL)`](http://spec.graphql.org/June2018/#sec-Language)** for our Node.
 
 ```graphql
@@ -48,6 +53,9 @@ const User = new GraphQLNode({
 ```
 
 ## Resolvers
+
+---
+
 A Node allows you to specify the following resolvers;
 
 1. `Query`
@@ -58,6 +66,8 @@ A Node allows you to specify the following resolvers;
 Let's implement the `Query` resolver, called `getUser`, defined in our `typeDefs`.
 
 ### Query
+
+---
 
 ```javascript
 const User = new GraphQLNode({
@@ -78,6 +88,9 @@ const User = new GraphQLNode({
 ``` 
 
 ### Mutation
+
+---
+
 ```javascript
 {
     typeDefs: `
@@ -95,6 +108,8 @@ const User = new GraphQLNode({
 }
 ```
 ### Fields
+
+---
 
 ```javascript
 {
@@ -115,6 +130,9 @@ const User = new GraphQLNode({
 ```
 
 ### Subscription
+
+---
+
 > Subscriptions must return a 'subscribe' property that resolves to an async iterator!
 
 ```javascript
@@ -137,7 +155,10 @@ const User = new GraphQLNode({
 ```
 
 ## Injections
-It's recommended to inject dependencies into your Node, this helps with testing. Most GraphQL implementations work on the concept of `context`. For each resolver injections will be a scoped property on `context`.
+
+---
+
+It's recommended to inject dependencies into your Node, this helps with testing. For each resolver injections will be a scoped property on `context`.
 
 Injections can either be a value or a function.
 
@@ -173,6 +194,9 @@ const User = new GraphQLNode({
 ```
 
 ## Nodes
+
+---
+
 You can recursively nest nodes to reflect domains & work with architectural constraints.
 
 
@@ -196,6 +220,9 @@ const User = new GraphQLNode({
 ```
 
 ## Enums
+
+---
+
 You can encapsulate enums within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioEnum](idio-enum)**.
 
 ```javascript
@@ -212,6 +239,9 @@ const User = new GraphQLNode({
 });
 ```
 ## Interfaces
+
+---
+
 You can encapsulate interfaces within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioInterface](idio-interface)**.
 
 ```javascript
@@ -229,6 +259,9 @@ const User = new GraphQLNode({
 ```
 
 ## Unions
+
+---
+
 You can encapsulate unions within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[IdioUnion](idio-union)**.
 
 ```javascript

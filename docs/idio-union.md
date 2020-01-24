@@ -8,10 +8,15 @@ const { IdioUnion } = require("idio-graphql");
 ```
 
 ## Intro
+
+---
+
 You can use **IdioUnion** to modularize an **[`UnionTypeDefinition`](http://spec.graphql.org/June2018/#UnionTypeDefinition)**,
 together with its resolver. You can specify unions 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level.
 
 ## Example
+
+---
 
 ```javascript
 const AOrB = new IdioUnion({
@@ -29,6 +34,8 @@ const AOrB = new IdioUnion({
 
 
 ## Definitions
+
+---
 
 ```javascript
 /**
@@ -50,9 +57,15 @@ new IdioUnion({ name: string, typeDefs: any, resolver: { __resolveType: () => st
 
 ## Methods 
 
+---
+
+
 1. [**serve**](#serve)
 
 ### Serve 
+
+---
+
 > **https://moleculer.services/docs/0.12/broker.html**
 
 #### Example

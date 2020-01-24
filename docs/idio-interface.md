@@ -8,9 +8,14 @@ const { IdioInterface } = require("idio-graphql");
 ```
 
 ## Intro
+
+---
+
 You can use **IdioInterface** to modularize an **[`InterfaceTypeDefinition`](http://spec.graphql.org/June2018/#InterfaceTypeDefinition)**, together with its resolver. You can specify interfaces 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level.
 
 ## Example
+
+---
 
 ```javascript
 const ErrorInterFace = new IdioInterface({
@@ -32,6 +37,8 @@ const ErrorInterFace = new IdioInterface({
 
 
 ## Definitions
+
+---
 
 ```javascript
 /**
@@ -61,9 +68,14 @@ new IdioInterface({ name: string, typeDefs: any, resolver: { __resolveType: () =
 
 ## Methods 
 
+---
+
 1. [**serve**](#serve)
 
 ### Serve 
+
+---
+
 > **https://moleculer.services/docs/0.12/broker.html**
 
 #### Example

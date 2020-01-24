@@ -9,9 +9,13 @@ const { GraphQLNode } = require("idio-graphql")
 
 ## Intro
 
+---
+
 You can use **GraphQLNode** to modularize an **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. 
 
 ## Example
+
+---
 
 ```javascript 
 const User = new GraphQLNode({
@@ -34,6 +38,8 @@ const User = new GraphQLNode({
 ```
 
 ## Definitions
+
+---
 
 ```javascript
 /**
@@ -95,9 +101,14 @@ new GraphQLNode(config: GraphQLNodeInput)
 
 ## Methods 
 
+---
+
 1. [**serve**](#serve)
 
 ### Serve 
+
+---
+
 > **https://moleculer.services/docs/0.12/broker.html**
 
 #### Example

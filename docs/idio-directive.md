@@ -8,12 +8,18 @@ const { IdioDirective } = require("idio-graphql");
 ```
 
 ## Intro
+
+---
+
 You can use **IdioDirective** to modularize an **[`DirectiveDefinition`](http://spec.graphql.org/June2018/#DirectiveDefinition)**, together with its resolver. 
 
 > You can only specify directives 'top-level' at **[combineNodes](combine-nodes)**.
 
 
 ## Example
+
+---
+
 _Example uses **[graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)**_
 
 ```javascript
@@ -29,6 +35,8 @@ const hasScopeDirective = new IdioDirective({
 ```
 
 ## Definitions
+
+---
 
 ```javascript
 /**

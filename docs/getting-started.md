@@ -3,9 +3,13 @@ id: getting-started
 title: Getting Started
 ---
 
+
 idio-graphql provides a set of methods to enable developers to structure and modularize a GraphQL API into individual, maintainable, modules.
 
 ## Quick Start
+
+---
+
 `$ npm install idio-graphql apollo-server graphql-tag`
 
 Examples use **[apollo-server](https://www.npmjs.com/package/apollo-server)** however, feel free to plug into your own solution. 
@@ -54,6 +58,8 @@ main();
 ```
 
 ## Guides
+
+---
 
 1. [**Creating Nodes**](creating-nodes)
 2. [**Combine Nodes**](combine-nodes-guide)

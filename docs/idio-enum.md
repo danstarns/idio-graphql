@@ -8,9 +8,14 @@ const { IdioEnum } = require("idio-graphql");
 ```
 
 ## Intro
+
+---
+
 You can use **IdioEnum** to modularize an **[`EnumTypeDefinition`](http://spec.graphql.org/June2018/#EnumTypeDefinition)**, together with its resolver. You can specify enums 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level. 
 
 ## Example
+
+---
 
 ```javascript
 const StatusEnum = new IdioEnum({
@@ -33,6 +38,8 @@ const StatusEnum = new IdioEnum({
 
 
 ## Definitions
+
+---
 
 ```javascript
 /**
@@ -62,9 +69,14 @@ new IdioEnum({ name: string, typeDefs: any, resolver: {} );
 
 ## Methods 
 
+---
+
 1. [**serve**](#serve)
 
 ### Serve 
+
+---
+
 > **https://moleculer.services/docs/0.12/broker.html**
 
 #### Example
