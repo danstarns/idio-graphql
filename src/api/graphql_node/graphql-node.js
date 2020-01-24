@@ -156,7 +156,7 @@ function GraphQLNode(config = {}) {
         Object.entries(resolvers.Subscription).forEach(([key, resolver]) => {
             if (!resolver.subscribe) {
                 throw new IdioError(
-                    `${prefix}: '${name}' resolvers.Subscription.${key} must contain a subscribe method`
+                    `${prefix}: '${name}' resolvers.Subscription.${key} must contain a subscribe method.`
                 );
             }
         });
