@@ -7,6 +7,7 @@ const {
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
  *
  *
  * @typedef {import('../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
@@ -15,6 +16,8 @@ const {
  * @typedef {import('../appliances/idio-directive.js').IdioDirective} IdioDirective
  * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
  * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
+ *
+ *
  */
 
 /**
@@ -48,6 +51,7 @@ const {
  * @property {Object} resolvers.Subscription
  * @property {Object} schemaDirectives
  * @property {ServiceBroker} broker
+ * @property {GraphQLSchema} schema
  */
 
 /**

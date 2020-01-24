@@ -1,4 +1,6 @@
 const util = require("util");
+const { graphql } = require("graphql");
+const { makeExecutableSchema } = require("graphql-tools");
 const combineNodes = require("../../combine-nodes.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 const IdioError = require("../../idio-error.js");
@@ -32,6 +34,8 @@ module.exports = ({ brokerOptions, config, broker }) => {
 
     async function start() {
         let started = false;
+
+        let schema;
 
         const { services, locals } = config;
 
@@ -133,6 +137,25 @@ module.exports = ({ brokerOptions, config, broker }) => {
                         await introspectionCall(service, type);
                     }
                 }
+            },
+            actions: {
+                execute: ({
+                    params: {
+                        operationName,
+                        document,
+                        variables,
+                        context,
+                        root
+                    }
+                }) =>
+                    graphql({
+                        schema,
+                        source: document,
+                        rootValue: root,
+                        contextValue: context,
+                        variableValues: variables,
+                        operationName
+                    })
             }
         });
 
@@ -178,11 +201,20 @@ module.exports = ({ brokerOptions, config, broker }) => {
                 )
         };
 
-        const result = await combineNodes(nodes, appliances);
+        const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
+            nodes,
+            appliances
+        );
+
+        schema = makeExecutableSchema({
+            typeDefs,
+            resolvers,
+            schemaDirectives
+        });
 
         started = true;
 
-        return { ...result, broker };
+        return { typeDefs, resolvers, schemaDirectives, schema, broker };
     }
 
     return start;

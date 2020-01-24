@@ -1,4 +1,6 @@
 const util = require("util");
+const { print } = require("graphql/language/printer");
+const { parse } = require("graphql/language/parser");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const IdioError = require("../../idio-error.js");
 const loadNode = require("./load-node.js");
@@ -9,6 +11,11 @@ const sleep = util.promisify(setTimeout);
 /**
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ *
+ *
+ *
+ * @typedef {import('graphql').DocumentNode} DocumentNode
+ * @typedef {import('graphql').ExecutionResult} ExecutionResult
  */
 
 module.exports = (GraphQLNode) => {
@@ -101,61 +108,111 @@ module.exports = (GraphQLNode) => {
             }
         });
 
+        /**
+         * @typedef ExecutionContext
+         * @property {Object} root
+         * @property {Object} context
+         * @property {Object} variables
+         * @property {string} operationName
+         */
+
+        /**
+         *
+         * @param {(DocumentNode|string)} document
+         * @param {ExecutionContext} executionContext
+         *
+         * @returns {Promise.<ExecutionResult>}
+         */
+        function execute(document, executionContext = {}) {
+            const {
+                root,
+                context,
+                variables,
+                operationName
+            } = executionContext;
+
+            try {
+                if (!document) {
+                    throw new IdioError(`document required`);
+                }
+
+                const queryType = typeof document;
+
+                if (queryType !== "object" && queryType !== "string") {
+                    throw new IdioError(
+                        `execute must provide document string or AST.`
+                    );
+                }
+
+                if (queryType === "string") {
+                    document = parse(document);
+                }
+
+                const { kind } = document;
+
+                if (kind) {
+                    const { definitions = [] } = document;
+
+                    if (
+                        definitions.find((x) => x.operation === "subscription")
+                    ) {
+                        throw new IdioError(
+                            "subscriptions not supported with interservice communication."
+                        );
+                    }
+                } else {
+                    throw new IdioError(`Invalid document provided.`);
+                }
+
+                return broker.call("gateway.execute", {
+                    document: print(document),
+                    variables,
+                    operationName,
+                    context,
+                    root
+                });
+            } catch (error) {
+                throw new IdioError(
+                    `Failed executing inter-service query, Error:\n${error}`
+                );
+            }
+        }
+
         Object.entries(this.resolvers).forEach(([key, methods]) =>
             broker.createService({
                 name: `${this.name}:${key}`,
                 actions: Object.entries(methods).reduce(
-                    (result, [name, method]) => {
-                        if (method.subscribe) {
-                            return {
-                                ...result,
-                                [name]: (ctx) => {
-                                    const {
-                                        params: {
-                                            graphQLArgs = JSON.stringify([])
-                                        } = {}
-                                    } = ctx;
+                    (result, [name, method]) => ({
+                        ...result,
+                        [name]: (ctx) => {
+                            const {
+                                params: {
+                                    graphQLArgs = JSON.stringify([])
+                                } = {}
+                            } = ctx;
 
-                                    const decodedArgs = JSON.parse(graphQLArgs);
+                            const decodedArgs = JSON.parse(graphQLArgs);
 
-                                    const context = decodedArgs[CONTEXT_INDEX];
+                            const context = decodedArgs[CONTEXT_INDEX];
 
-                                    if (!context) {
-                                        decodedArgs[CONTEXT_INDEX] = {};
-                                    }
-
-                                    decodedArgs[CONTEXT_INDEX].broker = broker;
-
-                                    return iteratorToStream(
-                                        method.subscribe(...decodedArgs)
-                                    );
-                                }
-                            };
-                        }
-
-                        return {
-                            ...result,
-                            [name]: (ctx) => {
-                                const {
-                                    params: {
-                                        graphQLArgs = JSON.stringify([])
-                                    } = {}
-                                } = ctx;
-
-                                const decodedArgs = JSON.parse(graphQLArgs);
-
-                                const context = decodedArgs[CONTEXT_INDEX];
-
-                                if (!context) {
-                                    decodedArgs[CONTEXT_INDEX] = {};
-                                }
-
-                                decodedArgs[CONTEXT_INDEX].broker = broker;
-
-                                return method(...decodedArgs);
+                            if (!context) {
+                                decodedArgs[CONTEXT_INDEX] = {};
                             }
-                        };
-                    },
+
+                            decodedArgs[CONTEXT_INDEX].broker = broker;
+                            decodedArgs[CONTEXT_INDEX].broker.gql = {
+                                execute
+                            };
+
+                            if (method.subscribe) {
+                                return iteratorToStream(
+                                    method.subscribe(...decodedArgs)
+                                );
+                            }
+
+                            return method(...decodedArgs);
+                        }
+                    }),
                     {}
                 )
             })
