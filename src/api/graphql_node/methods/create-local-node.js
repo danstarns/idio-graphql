@@ -1,6 +1,5 @@
 const safeJsonStringify = require("safe-json-stringify");
 const IdioError = require("../../idio-error.js");
-
 const { streamToIterator } = require("../../../util/index.js");
 
 /**
@@ -28,16 +27,16 @@ function createLocalNode({ broker, GraphQLNode }) {
                                 [resolver]: {
                                     async subscribe(...graphQLArgs) {
                                         try {
-                                            const response = await broker.call(
-                                                `${introspection.name}:${type}.${resolver}`,
-                                                {
-                                                    graphQLArgs: safeJsonStringify(
-                                                        graphQLArgs
-                                                    )
-                                                }
+                                            return streamToIterator(
+                                                await broker.call(
+                                                    `${introspection.name}:${type}.${resolver}`,
+                                                    {
+                                                        graphQLArgs: safeJsonStringify(
+                                                            graphQLArgs
+                                                        )
+                                                    }
+                                                )
                                             );
-
-                                            return streamToIterator(response);
                                         } catch (error) {
                                             throw new IdioError(
                                                 `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
