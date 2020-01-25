@@ -60,7 +60,7 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
 
     if (!resolver.__resolveType) {
         throw new IdioError(
-            `${prefix}: '${name}'.resolver must a __resolveType property.`
+            `${prefix}: '${name}'.resolver must have a __resolveType property.`
         );
     }
 

@@ -170,7 +170,12 @@ module.exports = ({ brokerOptions, config, broker }) => {
                         )
                 )
                 .flatMap(([, value]) => value)
-                .map((local) => local.serve(brokerOptions))
+                .map((local) =>
+                    local.serve({
+                        ...brokerOptions,
+                        gateway: brokerOptions.nodeID
+                    })
+                )
         );
 
         await broker.emit("gateway.broadcast");

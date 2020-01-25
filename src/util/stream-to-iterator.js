@@ -5,14 +5,20 @@ const sleep = util.promisify(setImmediate);
 async function* streamToIterator(stream) {
     let buffers = [];
     let error;
+    let active = true;
 
     stream.on("data", (buff) => buffers.push(buff));
 
     stream.on("error", (err) => {
         error = err;
+        active = false;
     });
 
-    while (true) {
+    stream.on("end", () => {
+        active = false;
+    });
+
+    while (buffers.length || active) {
         // eslint-disable-next-line no-await-in-loop
         await sleep();
 
@@ -24,6 +30,7 @@ async function* streamToIterator(stream) {
             throw error;
         }
 
+        /* istanbul ignore next */
         if (!result) {
             // eslint-disable-next-line no-continue
             continue;

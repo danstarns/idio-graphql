@@ -136,4 +136,29 @@ describe("IdioDirective", () => {
             );
         }
     });
+
+    it("should throw resolver must be instance of SchemaDirectiveVisitor.", () => {
+        try {
+            const directive = new IdioDirective({
+                name: "hasPermission",
+                typeDefs: `
+                input permissionInput {
+                    resource: String!
+                    action: String!
+                }
+                
+                directive @hasPermission(
+                    permission: permissionInput!
+                ) on FIELD_DEFINITION 
+            `,
+                resolver: () => true
+            });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "must be a instance of SchemaDirectiveVisitor."
+            );
+        }
+    });
 });

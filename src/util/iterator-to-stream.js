@@ -17,6 +17,7 @@ async function _read() {
 
         this.push(done ? null : JSON.stringify(value));
     } catch (error) {
+        /* istanbul ignore next */
         this.emit("error", error);
     }
 }

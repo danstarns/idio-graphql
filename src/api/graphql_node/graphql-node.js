@@ -10,7 +10,7 @@ const serve = require("./methods/serve.js");
  * @typedef {import('../appliances/idio-interface.js')} IdioInterface
  * @typedef {import('../appliances/idio-union.js')} IdioUnion
  *
- * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('./methods/create-node-broker.js').IdioBroker} IdioBroker
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  *
  * @typedef {import('../../util/wrapped-resolver.js').PreUnion} PreUnion
@@ -46,7 +46,7 @@ const serve = require("./methods/serve.js");
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions
- * @property {(brokerOptions: BrokerOptions) => ServiceBroker} serve
+ * @property {(brokerOptions: IdioBroker) => ServiceBroker} serve
  */
 
 /**

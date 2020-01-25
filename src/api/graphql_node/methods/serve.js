@@ -1,19 +1,18 @@
 const util = require("util");
-const { print } = require("graphql/language/printer");
-const { parse } = require("graphql/language/parser");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
-const IdioError = require("../../idio-error.js");
 const loadNode = require("./load-node.js");
 const { iteratorToStream } = require("../../../util/index.js");
+const createNodeBroker = require("./create-node-broker.js");
+const execute = require("./execute.js");
 
 const sleep = util.promisify(setTimeout);
 
 /**
- * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- *
- *
- *
+ * @typedef {import('./create-node-broker.js').IdioBroker} IdioBroker
+ */
+
+/**
  * @typedef {import('graphql').DocumentNode} DocumentNode
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
  */
@@ -22,7 +21,7 @@ module.exports = (GraphQLNode) => {
     /**
      * @returns {Promise.<ServiceBroker>}
      */
-    return async function serve(/** @type {BrokerOptions} */ brokerOptions) {
+    return async function serve(/** @type {IdioBroker} */ brokerOptions) {
         this.name;
         this.typeDefs;
         this.resolvers;
@@ -34,14 +33,6 @@ module.exports = (GraphQLNode) => {
         this.serve;
 
         let initialized = false;
-
-        if (!brokerOptions) {
-            throw new IdioError("brokerOptions required.");
-        }
-
-        if (!brokerOptions.transporter) {
-            throw new IdioError("brokerOptions.transporter required.");
-        }
 
         const node = new GraphQLNode({
             name: this.name,
@@ -66,25 +57,6 @@ module.exports = (GraphQLNode) => {
             this.resolvers[type] = { ...(resolvers[type] || {}) };
         });
 
-        let moleculer = {};
-
-        try {
-            // eslint-disable-next-line global-require
-            moleculer = require("moleculer");
-        } catch (error) {
-            throw new IdioError(
-                `Cant find module: 'moleculer' install using npm install --save moleculer`
-            );
-        }
-
-        const { ServiceBroker } = moleculer;
-
-        /** @type {ServiceBroker} */
-        const broker = new ServiceBroker({
-            ...brokerOptions,
-            nodeID: this.name
-        });
-
         const introspection = {
             name: this.name,
             typeDefs: this.typeDefs,
@@ -97,6 +69,11 @@ module.exports = (GraphQLNode) => {
             )
         };
 
+        const broker = createNodeBroker({
+            ...brokerOptions,
+            nodeID: this.name
+        });
+
         broker.createService({
             name: this.name,
             actions: {
@@ -107,76 +84,6 @@ module.exports = (GraphQLNode) => {
                 }
             }
         });
-
-        /**
-         * @typedef ExecutionContext
-         * @property {Object} root
-         * @property {Object} context
-         * @property {Object} variables
-         * @property {string} operationName
-         */
-
-        /**
-         *
-         * @param {(DocumentNode|string)} document
-         * @param {ExecutionContext} executionContext
-         *
-         * @returns {Promise.<ExecutionResult>}
-         */
-        function execute(document, executionContext = {}) {
-            const {
-                root,
-                context,
-                variables,
-                operationName
-            } = executionContext;
-
-            try {
-                if (!document) {
-                    throw new IdioError(`document required`);
-                }
-
-                const queryType = typeof document;
-
-                if (queryType !== "object" && queryType !== "string") {
-                    throw new IdioError(
-                        `execute must provide document string or AST.`
-                    );
-                }
-
-                if (queryType === "string") {
-                    document = parse(document);
-                }
-
-                const { kind } = document;
-
-                if (kind) {
-                    const { definitions = [] } = document;
-
-                    if (
-                        definitions.find((x) => x.operation === "subscription")
-                    ) {
-                        throw new IdioError(
-                            "subscriptions not supported with interservice communication."
-                        );
-                    }
-                } else {
-                    throw new IdioError(`Invalid document provided.`);
-                }
-
-                return broker.call("gateway.execute", {
-                    document: print(document),
-                    variables,
-                    operationName,
-                    context,
-                    root
-                });
-            } catch (error) {
-                throw new IdioError(
-                    `Failed executing inter-service query, Error:\n${error}`
-                );
-            }
-        }
 
         Object.entries(this.resolvers).forEach(([key, methods]) =>
             broker.createService({
@@ -201,7 +108,7 @@ module.exports = (GraphQLNode) => {
 
                             decodedArgs[CONTEXT_INDEX].broker = broker;
                             decodedArgs[CONTEXT_INDEX].broker.gql = {
-                                execute
+                                execute: execute(broker)
                             };
 
                             if (method.subscribe) {
@@ -238,6 +145,7 @@ module.exports = (GraphQLNode) => {
                 )
         );
 
+        // eslint-disable-next-line consistent-return
         const introspectionCall = async (resolve, reject) => {
             try {
                 await broker.emit(`introspection.request`, { type: "node" });

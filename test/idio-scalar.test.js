@@ -68,4 +68,19 @@ describe("IdioScalar", () => {
             );
         }
     });
+
+    it("should throw resolver must be instance of GraphQLScalarType", () => {
+        try {
+            const scalar = new IdioScalar({
+                name: "MyScalar",
+                resolver: () => true
+            });
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.contain(
+                "must be a instance of GraphQLScalarType."
+            );
+        }
+    });
 });

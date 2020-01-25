@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const safeJsonStringify = require("safe-json-stringify");
 const IdioEnum = require("../idio-enum.js");
 const IdioUnion = require("../idio-union.js");
