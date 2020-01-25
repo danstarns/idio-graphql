@@ -1,6 +1,7 @@
 const { parse } = require("graphql/language/parser");
 const { print } = require("graphql/language/printer");
 const IdioError = require("../../idio-error.js");
+
 /**
  * @typedef ExecutionContext
  * @property {Object} root
@@ -21,7 +22,7 @@ const IdioError = require("../../idio-error.js");
  *
  * @returns {Function}
  */
-function execute(broker, { gateway }) {
+function execute(broker, { gateway } = {}) {
     /**
      *
      * @param {(DocumentNode|string)} document

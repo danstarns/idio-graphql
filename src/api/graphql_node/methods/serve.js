@@ -108,7 +108,9 @@ module.exports = (GraphQLNode) => {
 
                             decodedArgs[CONTEXT_INDEX].broker = broker;
                             decodedArgs[CONTEXT_INDEX].broker.gql = {
-                                execute: execute(broker)
+                                execute: execute(broker, {
+                                    gateway: brokerOptions.gateway
+                                })
                             };
 
                             if (method.subscribe) {
