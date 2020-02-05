@@ -67,6 +67,11 @@ function IdioInterface({ name, resolver, typeDefs } = {}) {
     this.resolver = resolver;
 }
 
-IdioInterface.prototype.serve = serveAppliance({ type: "IdioInterface" });
+IdioInterface.prototype.serve = serveAppliance({
+    applianceConstructor: IdioInterface,
+    kind: "InterfaceTypeDefinition",
+    plural: "interface",
+    name: "interfaces"
+});
 
 module.exports = IdioInterface;

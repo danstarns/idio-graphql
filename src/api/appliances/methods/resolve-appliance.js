@@ -1,6 +1,6 @@
 const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
-const { parse } = require("graphql/language");
 const { parseTypeDefs, checkInstance } = require("../../../util/index.js");
+const validateAppliance = require("./validate-appliance.js");
 
 const IdioError = require("../../idio-error.js");
 
@@ -51,27 +51,15 @@ async function resolveAppliance({
 
             INTERNALS.REGISTERED_NAMES[instance.name] = 1;
 
-            let ast;
-
-            try {
-                ast = parse(await instance.typeDefs());
-            } catch (error) {
-                throw new IdioError(
-                    `loading ${applianceConstructor.name} with name: '${instance.name}' could not parse typeDefs \n${error}.`
-                );
-            }
-
-            const foundDefinition = ast.definitions
-                .filter((def) => def.kind === kind)
-                .find((def) => def.name.value === instance.name);
-
-            if (!foundDefinition) {
-                throw new IdioError(
-                    `${applianceConstructor.name} with name: '${instance.name}' should contain a ${kind} called '${instance.name}'.`
-                );
-            }
-
-            typeDefs.push(ast);
+            typeDefs.push(
+                await validateAppliance({
+                    metadata: {
+                        applianceConstructor,
+                        kind
+                    },
+                    appliance: instance
+                })
+            );
 
             resolvers[instance.name] = instance.resolver;
         })

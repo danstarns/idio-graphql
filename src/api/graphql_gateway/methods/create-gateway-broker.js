@@ -1,3 +1,6 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-extraneous-dependencies */
+const uuid = require("uuid/v4");
 const IdioError = require("../../idio-error.js");
 
 /**
@@ -41,7 +44,6 @@ function createGatewayBroker(brokerOptions) {
     let moleculer = {};
 
     try {
-        // eslint-disable-next-line global-require
         moleculer = require("moleculer");
     } catch (error) {
         throw new IdioError(
@@ -49,9 +51,14 @@ function createGatewayBroker(brokerOptions) {
         );
     }
 
-    const { ServiceBroker } = moleculer;
+    const { nodeID } = brokerOptions;
 
-    return new ServiceBroker(brokerOptions);
+    const serviceUUID = `${nodeID}:${nodeID}:${uuid()}`;
+
+    return new moleculer.ServiceBroker({
+        ...brokerOptions,
+        nodeID: serviceUUID
+    });
 }
 
 module.exports = createGatewayBroker;

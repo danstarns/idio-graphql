@@ -3,70 +3,81 @@ const IdioError = require("../../idio-error.js");
 const { streamToIterator } = require("../../../util/index.js");
 
 /**
- * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('../graphql-node.js').Runtime} Runtime
  * @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode
  */
 
 /**
- *
- * @param {Object} options
- * @param {ServiceBroker} options.broker
- * @param {GraphQLNode} options.GraphQLNode
+ * @param {Runtime & {GraphQLNode: GraphQLNode}} RUNTIME
+ * @returns {(introspection: any) => GraphQLNode}
  */
-function createLocalNode({ broker, GraphQLNode }) {
-    return (introspection) => {
-        return new GraphQLNode({
+module.exports = (RUNTIME) => {
+    return function createLocalNode(introspection) {
+        const instanceServiceManager =
+            RUNTIME.serviceManagers.node[introspection.name];
+
+        return new RUNTIME.GraphQLNode({
             ...introspection,
             resolvers: Object.entries(introspection.resolvers).reduce(
                 (result, [type, methods]) => ({
                     ...result,
                     [type]: methods.reduce((res, resolver) => {
+                        async function operation({ graphQLArgs, stream }) {
+                            const serviceToCall = await instanceServiceManager.getNextService();
+
+                            if (!serviceToCall) {
+                                throw new IdioError(
+                                    `No service with name: '${introspection.name}' online.`
+                                );
+                            }
+
+                            const call = () => {
+                                return RUNTIME.broker.call(
+                                    `${serviceToCall}:${type}.${resolver}`,
+                                    {
+                                        graphQLArgs: safeJsonStringify(
+                                            graphQLArgs
+                                        )
+                                    }
+                                );
+                            };
+
+                            try {
+                                let executionResult;
+
+                                if (stream) {
+                                    executionResult = streamToIterator(
+                                        await call()
+                                    );
+                                }
+
+                                executionResult = await call();
+
+                                return executionResult;
+                            } catch ({ message }) {
+                                throw new IdioError(
+                                    `Execution on service: '${introspection.name}' failed. Error: ${message}`
+                                );
+                            }
+                        }
+
                         if (type === "Subscription") {
                             return {
                                 ...res,
                                 [resolver]: {
-                                    async subscribe(...graphQLArgs) {
-                                        try {
-                                            return streamToIterator(
-                                                await broker.call(
-                                                    `${introspection.name}:${type}.${resolver}`,
-                                                    {
-                                                        graphQLArgs: safeJsonStringify(
-                                                            graphQLArgs
-                                                        )
-                                                    }
-                                                )
-                                            );
-                                        } catch (error) {
-                                            throw new IdioError(
-                                                `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
-                                            );
-                                        }
-                                    }
+                                    subscribe: (...graphQLArgs) =>
+                                        operation({
+                                            graphQLArgs,
+                                            stream: true
+                                        })
                                 }
                             };
                         }
 
                         return {
                             ...res,
-                            [resolver]: async (...graphQLArgs) => {
-                                try {
-                                    const response = await broker.call(
-                                        `${introspection.name}:${type}.${resolver}`,
-                                        {
-                                            graphQLArgs: safeJsonStringify(
-                                                graphQLArgs
-                                            )
-                                        }
-                                    );
-
-                                    return response;
-                                } catch (error) {
-                                    throw new IdioError(
-                                        `Can't communicate with service: '${introspection.name}, Error:\n${error}'`
-                                    );
-                                }
-                            }
+                            [resolver]: (...graphQLArgs) =>
+                                operation({ graphQLArgs })
                         };
                     }, {})
                 }),
@@ -74,6 +85,4 @@ function createLocalNode({ broker, GraphQLNode }) {
             )
         });
     };
-}
-
-module.exports = createLocalNode;
+};

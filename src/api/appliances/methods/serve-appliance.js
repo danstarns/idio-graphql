@@ -1,144 +1,96 @@
+/* eslint-disable global-require */
 /* eslint-disable default-case */
-const util = require("util");
-const IdioError = require("../../idio-error.js");
-const CONTEXT_INDEX = require("../../../constants/context-index.js");
+const uuid = require("uuid/v4");
 
-const sleep = util.promisify(setTimeout);
+const CONTEXT_INDEX = require("../../../constants/context-index.js");
+const {
+    createAction,
+    abort,
+    introspectionCall,
+    handleIntrospection
+} = require("../../../util/index.js");
+
+const validateAppliance = require("./validate-appliance.js");
+const createApplianceBroker = require("./create-appliance-broker.js");
 
 /**
- * @typedef {import('moleculer').BrokerOptions} BrokerOptions
- * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef Runtime
+ * @property {string} serviceUUID
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {Object.<string, object>} introspection
+ * @property {boolean} initialized
+ * @property {ServiceBroker} broker
+ * @property {IdioBrokerOptions} brokerOptions
  */
 
-module.exports = ({ type }) => {
-    if (type === "IdioUnion") {
-        type = "union";
-    } else if (type === "IdioInterface") {
-        type = "interface";
-    } else if (type === "IdioEnum") {
-        type = "enum";
-    }
-
+module.exports = (metadata) => {
     /**
      *
      * @param {BrokerOptions} brokerOptions
      */
     async function _serveAppliance(brokerOptions) {
-        this.name;
-        this.typeDefs;
-        this.resolver;
+        const serviceUUID = `${this.name}:${brokerOptions.gateway}:${uuid()}`;
 
-        let moleculer = {};
-        let initialized = false;
-
-        if (!brokerOptions) {
-            throw new IdioError("brokerOptions required.");
-        }
-
-        if (!brokerOptions.transporter) {
-            throw new IdioError("brokerOptions.transporter required.");
-        }
-
-        try {
-            // eslint-disable-next-line global-require
-            moleculer = require("moleculer");
-        } catch (error) {
-            throw new IdioError(
-                `Cant find module: 'moleculer' install using npm install --save moleculer`
-            );
-        }
-
-        const { ServiceBroker } = moleculer;
-
-        /** @type {ServiceBroker} */
-        const broker = new ServiceBroker({
-            ...brokerOptions,
-            nodeID: this.name
-        });
-
-        let introspection;
-
-        if (type === "enum") {
-            introspection = {
+        const RUNTIME = {
+            serviceUUID,
+            gatewayManagers: {},
+            initialized: false,
+            broker: {},
+            brokerOptions: { ...brokerOptions, nodeID: serviceUUID },
+            metadata,
+            appliance: {
                 name: this.name,
-                typeDefs: await this.typeDefs(),
-                resolver: this.resolver
-            };
-
-            broker.createService({
-                name: this.name,
-                actions: {
-                    introspection: ({ params: { gateway } = {} } = {}) => {
-                        initialized = true;
-
-                        broker.logger.info(
-                            `Connected to GraphQLGateway: '${gateway}'.`
-                        );
-
-                        return introspection;
-                    }
-                }
-            });
-        } else {
-            introspection = {
-                name: this.name,
-                typeDefs: await this.typeDefs()
-            };
-
-            broker.createService({
-                name: this.name,
-                actions: {
-                    introspection: ({ params: { gateway } = {} } = {}) => {
-                        initialized = true;
-
-                        broker.logger.info(
-                            `Connected to GraphQLGateway: '${gateway}'.`
-                        );
-
-                        return introspection;
-                    },
-                    __resolveType: (ctx) => {
-                        const {
-                            params: { graphQLArgs = JSON.stringify([]) } = {}
-                        } = ctx;
-
-                        const decodedArgs = JSON.parse(graphQLArgs);
-
-                        const context = decodedArgs[CONTEXT_INDEX - 1];
-
-                        if (!context) {
-                            decodedArgs[CONTEXT_INDEX - 1] = {};
-                        }
-
-                        decodedArgs[CONTEXT_INDEX - 1].broker = broker;
-
-                        return this.resolver.__resolveType(...decodedArgs);
-                    }
-                }
-            });
-        }
-
-        await broker.start();
-
-        const introspectionCall = async (resolve, reject) => {
-            try {
-                await broker.emit(`introspection.request`, { type });
-            } catch (e) {
-                e;
-            }
-
-            await sleep(1000);
-
-            if (!initialized) {
-                setImmediate(introspectionCall, resolve, reject);
-            } else {
-                return resolve();
-            }
+                typeDefs: this.typeDefs,
+                resolver: this.resolver,
+                __resolveType: this.__resolveType
+            },
+            introspection: {}
         };
 
-        await new Promise(introspectionCall);
+        RUNTIME.introspection = {
+            name: this.name,
+            typeDefs: await validateAppliance(RUNTIME),
+            resolver: `${serviceUUID}.resolver`
+        };
 
-        return broker;
+        RUNTIME.broker = createApplianceBroker(RUNTIME);
+
+        const INTROSPECTION_CALL = `${brokerOptions.gateway}:introspection`;
+
+        RUNTIME.broker.createService({
+            name: this.name,
+            actions: {
+                [INTROSPECTION_CALL]: handleIntrospection(RUNTIME)
+            }
+        });
+
+        RUNTIME.broker.createService({
+            name: RUNTIME.serviceUUID,
+            actions: {
+                abort,
+                resolver: (ctx) => {
+                    if (RUNTIME.metadata.plural === "enum") {
+                        return this.resolver;
+                    }
+
+                    return createAction(
+                        {
+                            method: this.__resolveType,
+                            contextIndex: CONTEXT_INDEX - 1
+                        },
+                        RUNTIME
+                    )(ctx);
+                }
+            }
+        });
+
+        await RUNTIME.broker.start();
+
+        await new Promise(
+            introspectionCall(RUNTIME, { type: RUNTIME.metadata.plural })
+        );
+
+        return RUNTIME;
     }
 
     return _serveAppliance;

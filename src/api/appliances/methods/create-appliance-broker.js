@@ -1,19 +1,13 @@
-/* eslint-disable global-require */
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable global-require */
 const IdioError = require("../../idio-error.js");
 
 /**
- * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
- * @typedef {BrokerOptions & {gateway: string}} IdioBrokerOptions
- * @typedef {import('../graphql-node.js').Runtime} Runtime
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
 
-/**
- * @param {Runtime} RUNTIME
- * @returns {ServiceBroker}
- */
-function createNodeBroker(RUNTIME) {
+function createApplianceBroker(RUNTIME) {
     const { brokerOptions } = RUNTIME;
 
     if (!brokerOptions) {
@@ -41,4 +35,4 @@ function createNodeBroker(RUNTIME) {
     return new moleculer.ServiceBroker(brokerOptions);
 }
 
-module.exports = createNodeBroker;
+module.exports = createApplianceBroker;

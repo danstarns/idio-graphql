@@ -10,11 +10,12 @@ const serve = require("./methods/serve.js");
  * @typedef {import('../appliances/idio-interface.js')} IdioInterface
  * @typedef {import('../appliances/idio-union.js')} IdioUnion
  *
- * @typedef {import('./methods/create-node-broker.js').IdioBroker} IdioBroker
+ * @typedef {import('./methods/create-node-broker.js').IdioBrokerOptions} IdioBrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  *
  * @typedef {import('../../util/wrapped-resolver.js').PreUnion} PreUnion
  * @typedef {import('../../util/wrapped-resolver.js').PostUnion} PostUnion
+ * @typedef {import('../../util/services-manager.js').ServiceManager} ServiceManager
  */
 
 /**
@@ -37,6 +38,16 @@ const serve = require("./methods/serve.js");
  */
 
 /**
+ * @typedef Runtime
+ * @property {string} serviceUUID
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {Object.<string, object>} introspection
+ * @property {boolean} initialized
+ * @property {ServiceBroker} broker
+ * @property {IdioBrokerOptions} brokerOptions
+ */
+
+/**
  * @typedef GraphQLNode
  * @property {string} name
  * @property {Promise<string>} typeDefs
@@ -46,7 +57,7 @@ const serve = require("./methods/serve.js");
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions
- * @property {(brokerOptions: IdioBroker) => ServiceBroker} serve
+ * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
  */
 
 /**
@@ -206,6 +217,6 @@ function GraphQLNode(config = {}) {
     }
 }
 
-GraphQLNode.prototype.serve = serve(GraphQLNode);
+GraphQLNode.prototype.serve = serve;
 
 module.exports = GraphQLNode;

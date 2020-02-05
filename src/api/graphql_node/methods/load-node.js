@@ -2,14 +2,14 @@
 const { parse } = require("graphql/language");
 const { wrappedResolver, isFunction } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
-const resolveAppliance = require("../../appliances/methods/resolve-appliance.js");
+const { resolveAppliance } = require("../../appliances/methods/index.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 /**
  * @param {GraphQLNode} n
  */
-async function loadNode(n, { INTERNALS }) {
+async function loadNode(n, { INTERNALS } = { REGISTERED_NAMES: {} }) {
     const node = { ...n };
 
     const prefix = `GraphQLNode with name: '${node.name}'`;
@@ -120,13 +120,21 @@ async function loadNode(n, { INTERNALS }) {
                 Object.keys(methods).forEach((name) => {
                     const method = methods[name];
 
-                    resolvers[type] = {};
+                    if (!resolvers[type]) {
+                        resolvers[type] = {};
+                    }
 
                     if (isFunction(method)) {
-                        resolvers[type][name] = wrappedResolver(method, {
-                            name: `${node.name}.resolvers.${type}.${name}`,
-                            injections: node.injections
-                        });
+                        resolvers = {
+                            ...resolvers,
+                            [type]: {
+                                ...resolvers[type],
+                                [name]: wrappedResolver(method, {
+                                    name: `${node.name}.resolvers.${type}.${name}`,
+                                    injections: node.injections
+                                })
+                            }
+                        };
 
                         return;
                     }

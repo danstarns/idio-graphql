@@ -67,6 +67,11 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
     this.resolver = resolver;
 }
 
-IdioUnion.prototype.serve = serveAppliance({ type: "IdioUnion" });
+IdioUnion.prototype.serve = serveAppliance({
+    applianceConstructor: IdioUnion,
+    kind: "UnionTypeDefinition",
+    plural: "union",
+    name: "unions"
+});
 
 module.exports = IdioUnion;

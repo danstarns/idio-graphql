@@ -217,6 +217,11 @@ query @gateway(name: "gateway-01") {
 async function execute(document, executionContext = {})
 ```
 
+## Scaling 
+
+---
+
+idio-graphql comes with 'effort-less' scaling. 
 
 ## Preserving Parameters
 

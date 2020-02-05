@@ -4,6 +4,7 @@ const IdioEnum = require("../idio-enum.js");
 const IdioUnion = require("../idio-union.js");
 const IdioInterface = require("../idio-interface.js");
 const IdioError = require("../../idio-error.js");
+const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
@@ -11,18 +12,32 @@ const IdioError = require("../../idio-error.js");
  * @param {Object} options
  * @param {string} options.type
  * @param {ServiceBroker} options.broker
+ * @param {Object} options.serviceManagers
  */
-function createLocalAppliance({ type, broker }) {
+function createLocalAppliance({ type, broker, serviceManagers }) {
+    const metadata = APPLIANCE_METADATA.find((x) => x.name === type);
+    const serviceTypeManagers = serviceManagers[metadata.plural];
+
     return function _createLocalAppliance(introspection) {
+        const instanceServiceManager = serviceTypeManagers[introspection.name];
+
         if (type === "enums") {
             return new IdioEnum({
                 ...introspection
             });
         }
 
-        function __resolveType(...graphQLArgs) {
+        async function __resolveType(...graphQLArgs) {
             try {
-                return broker.call(`${introspection.name}.__resolveType`, {
+                const serviceToCall = await instanceServiceManager.getNextService();
+
+                if (!serviceToCall) {
+                    throw new IdioError(
+                        `No service with name: '${introspection.name}' online.`
+                    );
+                }
+
+                return broker.call(`${serviceToCall}.__resolveType`, {
                     graphQLArgs: safeJsonStringify(graphQLArgs)
                 });
             } catch (error) {

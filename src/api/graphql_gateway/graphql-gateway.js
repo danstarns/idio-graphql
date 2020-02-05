@@ -8,16 +8,13 @@ const {
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
- *
- *
  * @typedef {import('../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
  * @typedef {import('../appliances/idio-enum.js').IdioEnum} IdioEnum
  * @typedef {import('../appliances/idio-scalar.js').IdioScalar} IdioScalar
  * @typedef {import('../appliances/idio-directive.js').IdioDirective} IdioDirective
  * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
  * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
- *
- *
+ * @typedef {import('../../util/services-manager.js').ServiceManager} ServiceManager
  */
 
 /**
@@ -26,8 +23,9 @@ const {
  * @property {Array.<string>} enums
  * @property {Array.<string>} interfaces
  * @property {Array.<string>} unions
- *
- *
+ */
+
+/**
  * @typedef locals
  * @property {Array.<GraphQLNode>} nodes
  * @property {Array.<IdioEnum>} enums
@@ -36,14 +34,21 @@ const {
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions
  * @property {any} schemaGlobals - an Array or a single instance of GraphQL typeDefs, use filePath, string, or gql-tag.
- *
- *
+ */
+
+/**
  * @typedef {Object} config
  * @property {services} services
  * @property {locals} locals
- *
- *
- * @typedef Schema
+ */
+
+/**
+ * @typedef Runtime
+ * @property {locals} locals
+ * @property {services} services
+ * @property {services} registeredServices
+ * @property {services} waitingServices
+ * @property {Object.<string, ServiceManager>} serviceManagers
  * @property {string} typeDefs
  * @property {Object} resolvers
  * @property {Object} resolvers.Query
@@ -56,7 +61,7 @@ const {
 
 /**
  * @typedef {Object} GraphQLGateway
- * @property {() => Promise.<Schema>} start
+ * @property {() => Promise.<Runtime>} start
  * @property {ServiceBroker} broker
  */
 
@@ -75,7 +80,6 @@ function GraphQLGateway(config, brokerOptions) {
     return {
         broker,
         start: start({
-            brokerOptions,
             config: createConfig(config),
             broker
         })
