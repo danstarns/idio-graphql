@@ -18,27 +18,26 @@ function graphQLLoader(...options) {
 /**
  * Returns a promise to resolve typeDefs.
  *
- * @param {any} typeDefs - filePath, gql-tag or string.
+ * @param {(FilePath | string | GraphQLAST)} typeDefs - filePath, gql-tag or string.
  *
- * @returns {Promise<string>} typeDefs - Graphql typeDefs resolver
+ * @returns {string} typeDefs - Graphql typeDefs resolver
  */
-
 function parseTypeDefs(typeDefs) {
     if (typeof typeDefs === "string") {
         if (!fs.existsSync(typeDefs)) {
             try {
                 parse(typeDefs);
 
-                return async () => typeDefs;
+                return typeDefs;
             } catch (error) {
                 throw new IdioError(`cannot resolve typeDefs: '${error}'.`);
             }
         } else {
-            return async () => graphQLLoader(typeDefs, "utf8");
+            return fs.readFileSync(typeDefs, "utf8");
         }
     } else if (typeof typeDefs === "object") {
         if (Object.keys(typeDefs).includes("kind")) {
-            return async () => printWithComments(typeDefs);
+            return printWithComments(typeDefs);
         }
 
         throw new IdioError(
