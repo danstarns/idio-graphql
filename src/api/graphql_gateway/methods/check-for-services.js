@@ -10,7 +10,7 @@ const applianceMetadata = [
     {
         applianceConstructor: GraphQLNode,
         kind: "ObjectTypeDefinition",
-        plural: "node",
+        singular: "node",
         name: "nodes"
     }
 ];
@@ -33,12 +33,12 @@ module.exports = (RUNTIME) => {
         if (waiting.length) {
             await Promise.all(
                 waiting.flatMap(async ([key, services]) => {
-                    const { plural } = applianceMetadata.find(
+                    const { singular } = applianceMetadata.find(
                         ({ name }) => name === key
                     );
 
                     broker.logger.info(
-                        `Waiting for ${plural} services: [${services.join(
+                        `Waiting for ${singular} services: [${services.join(
                             ", "
                         )}]`
                     );
@@ -46,7 +46,7 @@ module.exports = (RUNTIME) => {
                     return services.map((service) =>
                         introspectionCall(RUNTIME)(
                             `${service}:${broker.options.nodeID}`,
-                            plural
+                            singular
                         )
                     );
                 })

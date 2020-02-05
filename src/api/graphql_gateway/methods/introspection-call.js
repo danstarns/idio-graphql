@@ -7,7 +7,7 @@ const applianceMetadata = [
     {
         applianceConstructor: GraphQLNode,
         kind: "ObjectTypeDefinition",
-        plural: "node",
+        singular: "node",
         name: "nodes"
     }
 ];
@@ -64,7 +64,7 @@ module.exports = (RUNTIME) => {
             );
 
             const { name } = applianceMetadata.find(
-                ({ plural }) => plural === type
+                ({ singular }) => singular === type
             );
 
             if (RUNTIME.waitingServices[name].includes(introspection.name)) {

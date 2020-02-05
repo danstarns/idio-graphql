@@ -91,16 +91,16 @@ function reduceNode(result, node) {
  * @param {appliances} appliances
  * @returns {Schema}
  */
-async function combineNodes(nodes, appliances = {}) {
+function combineNodes(nodes, appliances = {}) {
     let schemaDirectives = {};
 
     if (!nodes) {
-        throw new IdioError("nodes required.");
+        throw new IdioError("Nodes required.");
     }
 
     if (!Array.isArray(nodes)) {
         throw new IdioError(
-            `expected nodes to be of type array received '${typeof nodes}'.`
+            `Expected nodes to be of type Array received '${typeof nodes}'.`
         );
     }
 
@@ -108,17 +108,7 @@ async function combineNodes(nodes, appliances = {}) {
         REGISTERED_NAMES: {}
     };
 
-    const loadedNodes = await Promise.all(
-        nodes.map((node) => {
-            checkInstance({
-                instance: node,
-                of: GraphQLNode,
-                name: "node"
-            });
-
-            return loadNode(node, { INTERNALS });
-        })
-    );
+    const loadedNodes = nodes.map((node) => loadNode(node, { INTERNALS }));
 
     let { typeDefs, resolvers } = loadedNodes.reduce(reduceNode, {
         INTERNALS,

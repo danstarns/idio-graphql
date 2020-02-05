@@ -4,28 +4,19 @@ const validateAppliance = require("./validate-appliance.js");
 
 const IdioError = require("../../idio-error.js");
 
-async function resolveAppliance({
-    name,
-    appliance,
-    applianceConstructor,
-    plural,
-    kind,
-    INTERNALS
-}) {
+function resolveAppliance(metadata, INTERNALS) {
+    const { name, appliance, applianceConstructor, singular, kind } = metadata;
+
     if (name === "schemaGlobals") {
         if (Array.isArray(appliance)) {
             return {
                 typeDefs: printWithComments(
-                    mergeTypeDefs(
-                        await Promise.all(
-                            appliance.map(async (def) => parseTypeDefs(def)())
-                        )
-                    )
+                    mergeTypeDefs(appliance.map(parseTypeDefs))
                 )
             };
         }
 
-        return { typeDefs: await parseTypeDefs(appliance)() };
+        return { typeDefs: parseTypeDefs(appliance) };
     }
 
     if (!Array.isArray(appliance)) {
@@ -35,35 +26,33 @@ async function resolveAppliance({
     let typeDefs = [];
     let resolvers = {};
 
-    await Promise.all(
-        appliance.map(async (instance) => {
-            checkInstance({
-                instance,
-                of: applianceConstructor,
-                name: plural
-            });
+    appliance.forEach((instance) => {
+        checkInstance({
+            instance,
+            of: applianceConstructor,
+            name: singular
+        });
 
-            if (INTERNALS.REGISTERED_NAMES[instance.name]) {
-                throw new IdioError(
-                    `loading ${applianceConstructor.name} with a name: '${instance.name}' thats already registered.`
-                );
-            }
-
-            INTERNALS.REGISTERED_NAMES[instance.name] = 1;
-
-            typeDefs.push(
-                await validateAppliance({
-                    metadata: {
-                        applianceConstructor,
-                        kind
-                    },
-                    appliance: instance
-                })
+        if (INTERNALS.REGISTERED_NAMES[instance.name]) {
+            throw new IdioError(
+                `loading ${applianceConstructor.name} with a name: '${instance.name}' thats already registered.`
             );
+        }
 
-            resolvers[instance.name] = instance.resolver;
-        })
-    );
+        INTERNALS.REGISTERED_NAMES[instance.name] = 1;
+
+        typeDefs.push(
+            validateAppliance({
+                metadata: {
+                    applianceConstructor,
+                    kind
+                },
+                appliance: instance
+            })
+        );
+
+        resolvers[instance.name] = instance.resolver;
+    });
 
     return { typeDefs: printWithComments(mergeTypeDefs(typeDefs)), resolvers };
 }

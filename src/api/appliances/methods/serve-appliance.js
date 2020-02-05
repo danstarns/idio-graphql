@@ -69,7 +69,7 @@ module.exports = (metadata) => {
             actions: {
                 abort,
                 resolver: (ctx) => {
-                    if (RUNTIME.metadata.plural === "enum") {
+                    if (RUNTIME.metadata.singular === "enum") {
                         return this.resolver;
                     }
 
@@ -87,7 +87,7 @@ module.exports = (metadata) => {
         await RUNTIME.broker.start();
 
         await new Promise(
-            introspectionCall(RUNTIME, { type: RUNTIME.metadata.plural })
+            introspectionCall(RUNTIME, { type: RUNTIME.metadata.singular })
         );
 
         return RUNTIME;

@@ -2,6 +2,7 @@ const { parseTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
 const IdioError = require("../idio-error.js");
+const { validateDefinitions, wrapResolvers } = require("./methods/index.js");
 
 const serve = require("./methods/serve.js");
 
@@ -53,7 +54,7 @@ const serve = require("./methods/serve.js");
  * @property {Promise<string>} typeDefs
  * @property {ResolverType} resolvers
  * @property {Array.<GraphQLNode>} nodes
- * @property {any} injections
+ * @property {Object} injections
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions
@@ -66,7 +67,7 @@ const serve = require("./methods/serve.js");
  * @property {any} typeDefs - gql-tag, string or filePath.
  * @property {ResolverType} resolvers
  * @property {Array.<GraphQLNode>} nodes
- * @property {any} injections
+ * @property {Object} injections
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions
@@ -173,7 +174,7 @@ function GraphQLNode(config = {}) {
         });
     }
 
-    this.resolvers = resolvers;
+    this.resolvers = wrapResolvers({ ...this });
 
     Object.entries({
         enums,
@@ -188,12 +189,12 @@ function GraphQLNode(config = {}) {
                 );
             }
 
-            const { plural, applianceConstructor } = [
+            const { singular, applianceConstructor } = [
                 ...APPLIANCE_METADATA,
                 {
                     applianceConstructor: GraphQLNode,
                     kind: "ObjectTypeDefinition",
-                    plural: "node",
+                    singular: "node",
                     name: "nodes"
                 }
             ].find((x) => x.name === key);
@@ -201,7 +202,7 @@ function GraphQLNode(config = {}) {
             function checkInstanceOfAppliance(appliance) {
                 if (!(appliance instanceof applianceConstructor)) {
                     throw new IdioError(
-                        `${prefix}: '${name}' expected ${plural} to be instance of '${applianceConstructor.name}'.`
+                        `${prefix}: '${name}' expected ${singular} to be instance of '${applianceConstructor.name}'.`
                     );
                 }
             }
@@ -215,6 +216,8 @@ function GraphQLNode(config = {}) {
     if (injections) {
         this.injections = injections;
     }
+
+    validateDefinitions({ ...this });
 }
 
 GraphQLNode.prototype.serve = serve;

@@ -70,7 +70,7 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
 IdioUnion.prototype.serve = serveAppliance({
     applianceConstructor: IdioUnion,
     kind: "UnionTypeDefinition",
-    plural: "union",
+    singular: "union",
     name: "unions"
 });
 

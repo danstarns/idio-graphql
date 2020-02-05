@@ -10,35 +10,35 @@ const APPLIANCE_METADATA = [
     {
         applianceConstructor: IdioScalar,
         kind: "ScalarTypeDefinition",
-        plural: "scalar",
+        singular: "scalar",
         name: "scalars"
     },
     {
         applianceConstructor: IdioEnum,
         kind: "EnumTypeDefinition",
-        plural: "enum",
+        singular: "enum",
         name: "enums"
     },
     {
         applianceConstructor: IdioDirective,
         kind: "DirectiveDefinition",
-        plural: "directive",
+        singular: "directive",
         name: "directives"
     },
     {
-        plural: "schemaGlobal",
+        singular: "schemaGlobal",
         name: "schemaGlobals"
     },
     {
         applianceConstructor: IdioUnion,
         kind: "UnionTypeDefinition",
-        plural: "union",
+        singular: "union",
         name: "unions"
     },
     {
         applianceConstructor: IdioInterface,
         kind: "InterfaceTypeDefinition",
-        plural: "interface",
+        singular: "interface",
         name: "interfaces"
     }
 ];

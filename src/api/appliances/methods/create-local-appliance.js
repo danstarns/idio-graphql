@@ -16,7 +16,7 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
  */
 function createLocalAppliance({ type, broker, serviceManagers }) {
     const metadata = APPLIANCE_METADATA.find((x) => x.name === type);
-    const serviceTypeManagers = serviceManagers[metadata.plural];
+    const serviceTypeManagers = serviceManagers[metadata.singular];
 
     return function _createLocalAppliance(introspection) {
         const instanceServiceManager = serviceTypeManagers[introspection.name];

@@ -70,7 +70,7 @@ function IdioInterface({ name, resolver, typeDefs } = {}) {
 IdioInterface.prototype.serve = serveAppliance({
     applianceConstructor: IdioInterface,
     kind: "InterfaceTypeDefinition",
-    plural: "interface",
+    singular: "interface",
     name: "interfaces"
 });
 

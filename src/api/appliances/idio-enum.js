@@ -68,7 +68,7 @@ function IdioEnum({ name, typeDefs, resolver } = {}) {
 IdioEnum.prototype.serve = serveAppliance({
     applianceConstructor: IdioEnum,
     kind: "EnumTypeDefinition",
-    plural: "enum",
+    singular: "enum",
     name: "enums"
 });
 

@@ -2,7 +2,7 @@ const { parse } = require("graphql/language");
 const { printWithComments } = require("graphql-toolkit");
 const IdioError = require("../../idio-error.js");
 
-async function validateAppliance(RUNTIME) {
+function validateAppliance(RUNTIME) {
     const {
         metadata: { applianceConstructor, kind },
         appliance
@@ -11,7 +11,7 @@ async function validateAppliance(RUNTIME) {
     let ast;
 
     try {
-        ast = parse(await appliance.typeDefs());
+        ast = parse(appliance.typeDefs);
     } catch (error) {
         throw new IdioError(
             `Serving ${applianceConstructor.name} with name: '${appliance.name}' could not parse typeDefs \n${error}.`
