@@ -8,19 +8,19 @@ const {
 
 const APPLIANCE_METADATA = [
     {
-        applianceConstructor: IdioScalar,
+        _Constructor: IdioScalar,
         kind: "ScalarTypeDefinition",
         singular: "scalar",
         name: "scalars"
     },
     {
-        applianceConstructor: IdioEnum,
+        _Constructor: IdioEnum,
         kind: "EnumTypeDefinition",
         singular: "enum",
         name: "enums"
     },
     {
-        applianceConstructor: IdioDirective,
+        _Constructor: IdioDirective,
         kind: "DirectiveDefinition",
         singular: "directive",
         name: "directives"
@@ -30,13 +30,13 @@ const APPLIANCE_METADATA = [
         name: "schemaGlobals"
     },
     {
-        applianceConstructor: IdioUnion,
+        _Constructor: IdioUnion,
         kind: "UnionTypeDefinition",
         singular: "union",
         name: "unions"
     },
     {
-        applianceConstructor: IdioInterface,
+        _Constructor: IdioInterface,
         kind: "InterfaceTypeDefinition",
         singular: "interface",
         name: "interfaces"

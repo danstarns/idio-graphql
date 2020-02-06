@@ -4,7 +4,7 @@ const validateAppliance = require("./validate-appliance.js");
 
 const IdioError = require("../../idio-error.js");
 
-function resolveAppliance(metadata, INTERNALS) {
+function resolveAppliances(metadata, INTERNALS) {
     const { name, appliance, applianceConstructor, singular, kind } = metadata;
 
     if (name === "schemaGlobals") {
@@ -57,4 +57,4 @@ function resolveAppliance(metadata, INTERNALS) {
     return { typeDefs: printWithComments(mergeTypeDefs(typeDefs)), resolvers };
 }
 
-module.exports = resolveAppliance;
+module.exports = resolveAppliances;

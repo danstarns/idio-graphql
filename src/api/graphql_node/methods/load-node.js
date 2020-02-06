@@ -1,26 +1,12 @@
-/* eslint-disable no-restricted-syntax */
-const { resolveAppliance } = require("../../appliances/methods/index.js");
+/* eslint-disable no-multi-assign */
+const { resolveAppliances } = require("../../appliances/methods/index.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
-const wrapResolvers = require("./wrap-resolvers.js");
-const validateDefinitions = require("./validate-definitions.js");
-const { checkInstance } = require("../../util/index.js");
 
-/**
- * @param {GraphQLNode} n
- */
-function loadNode(n, { INTERNALS } = { REGISTERED_NAMES: {} }) {
-    const node = { ...n };
-
-    checkInstance({
-        instance: node,
-        of: GraphQLNode,
-        name: "node"
-    });
-
-    const { nestedTypeDefs, nestedResolvers } = Object.entries({
-        enums: node.enums,
-        interfaces: node.interfaces,
-        unions: node.unions
+function loadNodeAppliances({ enums, interfaces, unions }, INTERNALS) {
+    return Object.entries({
+        enums,
+        interfaces,
+        unions
     })
         .filter(([, value]) => Boolean(value))
         .reduce(
@@ -29,27 +15,43 @@ function loadNode(n, { INTERNALS } = { REGISTERED_NAMES: {} }) {
                     ({ name }) => name === key
                 );
 
-                const resolvedAppliance = resolveAppliance(
+                const { typeDefs, resolvers } = resolveAppliances(
                     { ...metadata, appliance },
                     INTERNALS
                 );
 
-                result.nestedTypeDefs += `\n${resolvedAppliance.typeDefs}\n`;
+                result.typeDefs += `\n${typeDefs}\n`;
 
                 return {
                     ...result,
-                    nestedResolvers: {
-                        ...result.nestedResolvers,
-                        [`${metadata.singular}Resolvers`]: resolvedAppliance.resolvers
+                    resolvers: {
+                        ...result.resolvers,
+                        ...resolvers
                     }
                 };
             },
-            { nestedTypeDefs: "", nestedResolvers: {} }
+            { typeDefs: "", resolvers: {} }
         );
+}
+
+/**
+ * @param {GraphQLNode} n
+ */
+function loadNode(n, { INTERNALS } = { REGISTERED_NAMES: {} }) {
+    const node = { ...n };
+
+    const appliances = loadNodeAppliances({ ...node });
 
     if (node.nodes) {
         node.nodes = node.nodes.map((_node) => loadNode(_node, { INTERNALS }));
     }
+
+    node.typeDefs = node.typeDefs += `\n${appliances.typeDefs}\n`;
+
+    node.resolvers = {
+        ...node.resolvers,
+        ...appliances.resolvers
+    };
 
     return node;
 }
