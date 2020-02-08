@@ -12,7 +12,10 @@ module.exports = function createLocalAppliances(RUNTIME) {
 
     return {
         ...["locals", "directives", "schemaGlobals"].reduce(
-            (res, type) => ({ ...res, [type]: locals[type] || [] }),
+            (res, type) => ({
+                ...res,
+                ...(locals[type] ? { [type]: locals[type] } : {})
+            }),
             {}
         ),
         ...Object.entries(registeredServices)
