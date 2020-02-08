@@ -3,7 +3,6 @@ node_modules
 example
 .vscode
 .cache
-test-bench
 package-temp.json
 build
 dist

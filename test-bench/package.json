@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "inventory_1": "cross-env PORT=\"5000\" nodemon ./inventory_gateway/index.js",
+        "inventory_2": "cross-env PORT=\"5001\" nodemon ./inventory_gateway/index.js",
+        "account_1": "cross-env PORT=\"4000\" nodemon ./account_gateway/index.js",
+        "account_2": "cross-env PORT=\"4001\" nodemon ./account_gateway/index.js",
+        "user": "nodemon ./account_gateway/services/User.js",
+        "product": "nodemon ./inventory_gateway/services/Product.js"
+    }
+}
