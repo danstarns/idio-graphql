@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
+const uuid = require("uuid/v4");
 const IdioError = require("../../idio-error.js");
 
 /**
@@ -7,7 +8,7 @@ const IdioError = require("../../idio-error.js");
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
 
-function createApplianceBroker(RUNTIME) {
+function createApplianceBroker(appliance, RUNTIME) {
     const { brokerOptions } = RUNTIME;
 
     if (!brokerOptions) {
@@ -32,7 +33,12 @@ function createApplianceBroker(RUNTIME) {
         );
     }
 
-    return new moleculer.ServiceBroker(brokerOptions);
+    const serviceUUID = `${appliance.name}:${brokerOptions.gateway}:${uuid()}`;
+
+    return new moleculer.ServiceBroker({
+        ...brokerOptions,
+        nodeID: serviceUUID
+    });
 }
 
 module.exports = createApplianceBroker;

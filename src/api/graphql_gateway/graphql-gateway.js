@@ -15,6 +15,7 @@ const {
  * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
  * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
  * @typedef {import('../../util/services-manager.js').ServiceManager} ServiceManager
+ * @typedef {import('./methods/start.js').Runtime} Runtime
  */
 
 /**
@@ -40,23 +41,6 @@ const {
  * @typedef {Object} config
  * @property {services} services
  * @property {locals} locals
- */
-
-/**
- * @typedef Runtime
- * @property {locals} locals
- * @property {services} services
- * @property {services} registeredServices
- * @property {services} waitingServices
- * @property {Object.<string, ServiceManager>} serviceManagers
- * @property {string} typeDefs
- * @property {Object} resolvers
- * @property {Object} resolvers.Query
- * @property {Object} resolvers.Mutation
- * @property {Object} resolvers.Subscription
- * @property {Object} schemaDirectives
- * @property {ServiceBroker} broker
- * @property {GraphQLSchema} schema
  */
 
 /**

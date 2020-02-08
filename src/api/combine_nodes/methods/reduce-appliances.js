@@ -15,7 +15,7 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata");
 function reduceAppliances(_appliances) {
     return Object.entries(_appliances).reduce(
         (/** @type {result} */ result, [key, appliances]) => {
-            if (!appliances.length) {
+            if (!appliances.length && key !== "schemaGlobals") {
                 return result;
             }
 

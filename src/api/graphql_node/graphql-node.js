@@ -25,12 +25,16 @@ const {
  */
 
 /**
+ * @typedef {({dataLoaders: object, models: object}|{() => object})} injections
+ */
+
+/**
  * @typedef GraphQLNode
  * @property {string} name
  * @property {string} typeDefs
  * @property {Resolvers} resolvers
  * @property {Array.<GraphQLNode>} nodes
- * @property {Object} injections
+ * @property {injections} injections
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions
@@ -43,7 +47,7 @@ const {
  * @property {any} typeDefs - gql-tag, string or filePath.
  * @property {Resolvers} resolvers
  * @property {Array.<GraphQLNode>} nodes
- * @property {Object} injections
+ * @property {injections} injections
  * @property {Array.<IdioEnum>} enums
  * @property {Array.<IdioInterface>} interfaces
  * @property {Array.<IdioUnion>} unions

@@ -1,6 +1,5 @@
 /* eslint-disable global-require */
 /* eslint-disable default-case */
-const uuid = require("uuid/v4");
 
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const {
@@ -14,12 +13,11 @@ const createApplianceBroker = require("./create-appliance-broker.js");
 
 /**
  * @typedef Runtime
- * @property {string} serviceUUID
- * @property {Object.<string, ServiceManager>} gatewayManagers
- * @property {Object.<string, object>} introspection
- * @property {boolean} initialized
- * @property {ServiceBroker} broker
  * @property {IdioBrokerOptions} brokerOptions
+ * @property {ServiceBroker} broker
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {boolean} initialized
+ * @property {Object.<string, object>} introspection
  */
 
 module.exports = (metadata) => {
@@ -28,14 +26,13 @@ module.exports = (metadata) => {
      * @param {BrokerOptions} brokerOptions
      */
     async function _serveAppliance(brokerOptions) {
-        const serviceUUID = `${this.name}:${brokerOptions.gateway}:${uuid()}`;
+        const broker = createApplianceBroker(this, { brokerOptions });
 
         const RUNTIME = {
-            serviceUUID,
+            broker,
+            brokerOptions,
             gatewayManagers: {},
             initialized: false,
-            broker: {},
-            brokerOptions: { ...brokerOptions, nodeID: serviceUUID },
             metadata,
             appliance: {
                 name: this.name,
@@ -46,11 +43,9 @@ module.exports = (metadata) => {
             introspection: {
                 name: this.name,
                 typeDefs: this.typeDefs,
-                resolver: `${serviceUUID}.resolver`
+                resolver: `${broker.options.nodeID}.resolver`
             }
         };
-
-        RUNTIME.broker = createApplianceBroker(RUNTIME);
 
         const INTROSPECTION_CALL = `${brokerOptions.gateway}:introspection`;
 
@@ -62,7 +57,7 @@ module.exports = (metadata) => {
         });
 
         RUNTIME.broker.createService({
-            name: RUNTIME.serviceUUID,
+            name: RUNTIME.broker.nodeID,
             actions: {
                 abort,
                 resolver: (ctx) => {

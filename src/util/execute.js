@@ -19,6 +19,14 @@ const ServicesManager = require("./services-manager.js");
  */
 
 /**
+ * @typedef {(
+ *      document: (DocumentNode|string),
+ *      executionContext: ExecutionContext
+ *   ) => Promise.<ExecutionResult>
+ * } execute
+ */
+
+/**
  * @param {Object} RUNTIME
  * @returns {function}
  */

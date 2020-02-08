@@ -4,13 +4,72 @@ const IdioError = require("../api/idio-error.js");
 const CONTEXT_INDEX = require("../constants/context-index.js");
 
 /**
+ * @typedef {import('graphql').ExecutionResult} ExecutionResult
+ * @typedef {import('graphql').ExecutionArgs} ExecutionArgs
+ * @typedef {import('graphql').DocumentNode} DocumentNode
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('../util/execute.js').execute} execute
+ */
+
+/**
+ * @typedef {ServiceBroker & {gql: {execute: execute}}} IdioBroker
+ */
+
+/**
+ * @typedef {(
+ *      root: any,
+ *      args: object,
+ *      context: {broker: IdioBroker },
+ *      info: DocumentNode
+ *   ) => any} PreHook
+ */
+
+/**
+ * @typedef {(PreHook|Array.<PreHook>)} PreUnion
+ */
+
+/**
+ * @typedef {(
+ *      resolve: any,
+ *      root: any,
+ *      args: object,
+ *      context: {broker: IdioBroker },
+ *      info: DocumentNode
+ *   ) => any} PostHook
+ */
+
+/**
+ * @typedef {(PostHook|Array.<PostHook>)} PostUnion
+ */
+
+/**
+ * @typedef {(
+ *      root: any,
+ *      args: object,
+ *      context: {broker: IdioBroker },
+ *      info: DocumentNode
+ *   ) => any} resolve
+ */
+
+/**
+ * @typedef ResolverObjectInput
+ * @property {resolve} resolve
+ * @property {PreUnion} pre - Function(s) to call pre the resolve method.
+ * @property {PostUnion} post - Function(s) to call post the resolve method.
+ */
+
+/**
+ * @typedef {(ResolverObjectInput|resolve)} ResolverUnion
+ */
+
+/**
  * @param {(Function|Array.<Function>)} input
  * @param {Object} options
  * @param {String} options.name
  * @param {String} options.direction
  * @param {Array} options.args
  *
- * @returns {Promise}
+ * @returns {Promise.<any>}
  */
 async function resultFunction(input, { direction, name, args }) {
     if (Array.isArray(input)) {
@@ -35,54 +94,14 @@ async function resultFunction(input, { direction, name, args }) {
 }
 
 /**
- * @typedef {Function} PreHook
- * @param {any}    root
- * @param {Object} args
- * @param {Object} context
- * @param {Object} info
- */
-
-/**
- * @typedef {(PreHook|Array.<PreHook>)} PreUnion
- */
-
-/**
- * @typedef {Function} PostHook
- * @param {any}    resolve - The outcome of the resolve method.
- * @param {any}    root
- * @param {Object} args
- * @param {Object} context
- * @param {Object} info
- */
-
-/**
- * @typedef {(PostHook|Array.<PostHook>)} PostUnion
- */
-
-/**
- * @typedef ResolverObjectInput
- * @property {Function} resolve
- * @property {PreUnion} pre - Function(s) to call pre the resolve method.
- * @property {PostUnion} post - Function(s) to call post the resolve method.
- */
-
-/**
- * @typedef {(ResolverObjectInput|Function)} ResolverUnion
- */
-
-/**
- * 1. Executes the pre functions(...args)
- * 2. Executes 'resolve' function
- * 3. Executes the post functions('resolve', ...args)
- *
- * @param {Function} resolver
- * @param {Object} options
+ * @param {function} resolver
+ * @param {object} options
  * @param {PreUnion} options.pre
  * @param {PostUnion} options.post
- * @param {String} options.name
+ * @param {string} options.name
  * @param {any} options.injections
  *
- * @returns {Promise}
+ * @returns {Promise.<any>}
  */
 function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
     if (!resolver) {

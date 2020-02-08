@@ -1,4 +1,3 @@
-const uuid = require("uuid/v4");
 const loadNode = require("./load-node.js");
 const createNodeBroker = require("./create-node-broker.js");
 const { abort } = require("../../../util/index.js");
@@ -17,11 +16,10 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 /**
  * @typedef Runtime
- * @property {string} serviceUUID
- * @property {Object.<string, ServiceManager>} gatewayManagers
- * @property {Object.<string, object>} introspection
- * @property {boolean} initialized
  * @property {ServiceBroker} broker
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {boolean} initialized
+ * @property {Object.<string, object>} introspection
  * @property {IdioBrokerOptions} brokerOptions
  */
 
@@ -30,18 +28,15 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
  * @returns {Promise.<Runtime>}
  */
 async function serve(brokerOptions) {
-    const serviceUUID = `${this.name}:${brokerOptions.gateway}:${uuid()}`;
-
     const RUNTIME = {
-        serviceUUID,
+        broker: createNodeBroker(this, { brokerOptions }),
         gatewayManagers: {},
         initialized: false,
         introspection: {},
-        broker: {},
-        brokerOptions: { ...brokerOptions, nodeID: serviceUUID }
+        brokerOptions
     };
 
-    const { resolvers } = loadNode({ ...this });
+    const { resolvers } = loadNode(this);
 
     RUNTIME.introspection = {
         name: this.name,
@@ -53,11 +48,8 @@ async function serve(brokerOptions) {
             }),
             {}
         ),
-        hash: this.typeDefs,
-        nodeID: RUNTIME.serviceUUID
+        hash: this.typeDefs
     };
-
-    RUNTIME.broker = createNodeBroker(RUNTIME);
 
     const INTROSPECTION_CALL = `${brokerOptions.gateway}:introspection`;
 
@@ -69,13 +61,13 @@ async function serve(brokerOptions) {
     });
 
     RUNTIME.broker.createService({
-        name: RUNTIME.serviceUUID,
+        name: RUNTIME.broker.nodeID,
         actions: { abort }
     });
 
     Object.entries(resolvers).forEach(([key, methods]) =>
         RUNTIME.broker.createService({
-            name: `${RUNTIME.serviceUUID}:${key}`,
+            name: `${RUNTIME.broker.nodeID}:${key}`,
             actions: Object.entries(methods).reduce(
                 (result, [name, method]) => ({
                     ...result,

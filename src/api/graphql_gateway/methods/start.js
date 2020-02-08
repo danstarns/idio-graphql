@@ -18,6 +18,23 @@ const compareGateways = require("./compare-gateways.js");
  */
 
 /**
+ * @typedef Runtime
+ * @property {locals} locals
+ * @property {services} services
+ * @property {services} registeredServices
+ * @property {services} waitingServices
+ * @property {Object.<string, ServiceManager>} serviceManagers
+ * @property {string} typeDefs
+ * @property {Object} resolvers
+ * @property {Object} resolvers.Query
+ * @property {Object} resolvers.Mutation
+ * @property {Object} resolvers.Subscription
+ * @property {Object} schemaDirectives
+ * @property {ServiceBroker} broker
+ * @property {GraphQLSchema} schema
+ */
+
+/**
  * @param {Object} curry
  * @param {config} curry.config
  * @param {ServiceBroker} curry.broker

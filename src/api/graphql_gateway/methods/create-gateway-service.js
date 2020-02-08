@@ -48,7 +48,7 @@ function createGatewayService(RUNTIME) {
                             values.forEach((value) => {
                                 if (!RUNTIME.services[key].includes(value)) {
                                     throw new Error(
-                                        `Introspection is missing a service .${key}.${value}`
+                                        `Introspection is missing a service ${key}.${value}`
                                     );
                                 }
                             });

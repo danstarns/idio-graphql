@@ -9,9 +9,7 @@ module.exports = (RUNTIME, { type }) => {
         try {
             const INTROSPECTION_EVENT = `${brokerOptions.gateway}:introspection.request`;
 
-            await broker.emit(INTROSPECTION_EVENT, {
-                type
-            });
+            await broker.emit(INTROSPECTION_EVENT, { type });
         } catch (e) {
             e;
         }

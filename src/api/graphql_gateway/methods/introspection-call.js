@@ -56,7 +56,7 @@ module.exports = (RUNTIME) => {
 
         if (!RUNTIME.serviceManagers[type][serviceName]) {
             RUNTIME.serviceManagers[type][serviceName] = new ServicesManager(
-                introspection.nodeID,
+                service,
                 {
                     broker,
                     hash: introspection.hash
