@@ -60,6 +60,17 @@ async function resultFunction(input, { direction, name, args }) {
  */
 
 /**
+ * @typedef ResolverObjectInput
+ * @property {Function} resolve
+ * @property {PreUnion} pre - Function(s) to call pre the resolve method.
+ * @property {PostUnion} post - Function(s) to call post the resolve method.
+ */
+
+/**
+ * @typedef {(ResolverObjectInput|Function)} ResolverUnion
+ */
+
+/**
  * 1. Executes the pre functions(...args)
  * 2. Executes 'resolve' function
  * 3. Executes the post functions('resolve', ...args)
@@ -123,17 +134,32 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
     }
 
     async function newResolver(...graphQLArgs) {
+        if (!graphQLArgs[CONTEXT_INDEX]) {
+            graphQLArgs[CONTEXT_INDEX] = {};
+        }
+
         if (injections) {
-            if (!(typeof graphQLArgs[CONTEXT_INDEX] === "object")) {
-                graphQLArgs[CONTEXT_INDEX] = Object(
-                    graphQLArgs[CONTEXT_INDEX] || {}
-                );
+            if (!graphQLArgs[CONTEXT_INDEX].injections) {
+                graphQLArgs[CONTEXT_INDEX].injections = {};
             }
 
-            graphQLArgs[CONTEXT_INDEX].injections = {
-                ...(graphQLArgs[CONTEXT_INDEX].injections || {}),
-                ...injections
-            };
+            if (isFunction(injections)) {
+                try {
+                    graphQLArgs[CONTEXT_INDEX].injections = {
+                        ...(graphQLArgs[CONTEXT_INDEX].injections || {}),
+                        ...(await injections())
+                    };
+                } catch (error) {
+                    throw new IdioError(
+                        `'${name}' failed executing injections: Error:\n${error.message}`
+                    );
+                }
+            } else {
+                graphQLArgs[CONTEXT_INDEX].injections = {
+                    ...(graphQLArgs[CONTEXT_INDEX].injections || {}),
+                    ...injections
+                };
+            }
         }
 
         if (pre) {

@@ -1,7 +1,7 @@
 const { parse } = require("graphql/language/parser");
 const { print } = require("graphql/language/printer");
 const IdioError = require("../api/idio-error.js");
-const { ServicesManager } = require("./index.js");
+const ServicesManager = require("./services-manager.js");
 
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult

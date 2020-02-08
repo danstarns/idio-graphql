@@ -3,8 +3,8 @@ const { expect } = require("chai");
 const { AuthDirective } = require("graphql-directive-auth");
 const { GraphQLNode, combineNodes, IdioDirective } = require("../../src");
 
-describe("gists/idio-directive", async () => {
-    it("should verify idio-directive", async () => {
+describe("gists/idio-directive", () => {
+    it("should verify idio-directive", () => {
         const { isAuthenticated } = AuthDirective();
 
         const hasScopeDirective = new IdioDirective({
@@ -34,12 +34,9 @@ describe("gists/idio-directive", async () => {
             }
         });
 
-        const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
-            [User],
-            {
-                directives: [hasScopeDirective]
-            }
-        );
+        const { typeDefs, resolvers, schemaDirectives } = combineNodes([User], {
+            directives: [hasScopeDirective]
+        });
 
         expect(typeDefs)
             .to.be.a("string")

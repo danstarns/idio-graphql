@@ -46,7 +46,7 @@ function IdioScalar({ name, resolver } = {}) {
 
     this.name = name;
 
-    this.typeDefs = async () => `scalar ${name}`;
+    this.typeDefs = `scalar ${name}`;
 
     if (!resolver) {
         throw new IdioError(`${prefix}: '${name}' without resolver.`);

@@ -37,7 +37,7 @@ describe("gists/dependency-injection", () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -63,7 +63,7 @@ describe("gists/dependency-injection", () => {
         expect(result).to.equal("the cat jumped over the moon");
     });
 
-    it("should verify dependency injection with a subscriptions", async () => {
+    it("should verify dependency injection with a subscriptions", () => {
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `type User {
@@ -87,7 +87,7 @@ describe("gists/dependency-injection", () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -117,7 +117,7 @@ describe("gists/dependency-injection", () => {
             .to.have.property("userUpdate");
     });
 
-    it("should verify dependency injection with a subscriptions", async () => {
+    it("should verify dependency injection with a subscriptions", () => {
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `type User {
@@ -143,7 +143,7 @@ describe("gists/dependency-injection", () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -210,7 +210,7 @@ describe("gists/dependency-injection", () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -263,7 +263,7 @@ describe("gists/dependency-injection", () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -310,12 +310,14 @@ describe("gists/dependency-injection", () => {
                 }
             });
 
-            await combineNodes([User]);
+            const { resolvers } = combineNodes([User]);
+
+            await resolvers.Query.user(undefined, {}, {});
 
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "GraphQLNode with name: 'User' failed executing injections\nError: failed"
+                `'User.resolvers.Query.user' failed executing injections:`
             );
         }
     });

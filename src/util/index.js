@@ -10,6 +10,7 @@ const ServicesManager = require("./services-manager.js");
 const handleIntrospection = require("./handle-introspection.js");
 const introspectionCall = require("./introspection-call.js");
 const createAction = require("./create-action.js");
+const validateTypeDefs = require("./validate-typedefs.js");
 
 module.exports = {
     parseTypeDefs,
@@ -23,5 +24,6 @@ module.exports = {
     ServicesManager,
     handleIntrospection,
     introspectionCall,
-    createAction
+    createAction,
+    validateTypeDefs
 };

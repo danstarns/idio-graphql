@@ -104,7 +104,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `constructing GraphQLNode: expected node: 'User' resolvers to be of type 'object' but received 'number'`
+                `GraphQLNode with name: 'User' expected node resolvers to be of type 'object' but received 'number'`
             );
         }
     });
@@ -131,7 +131,7 @@ describe("GraphQLNode ", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                `constructing GraphQLNode: 'User' resolvers received unexpected properties '[ notAllowed ]'`
+                `GraphQLNode with name: 'User' invalid resolvers`
             );
         }
     });
@@ -150,10 +150,7 @@ describe("GraphQLNode ", () => {
             }
         `,
             resolvers: {
-                Query: {},
-                Mutation: {},
-                Subscription: {},
-                Fields: {}
+                Query: { getUserByID: () => true }
             }
         });
 
@@ -164,27 +161,12 @@ describe("GraphQLNode ", () => {
 
         expect(node)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
         expect(node)
             .to.have.property("resolvers")
             .to.be.a("object")
             .to.have.property("Query");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Mutation");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Subscription");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Fields");
     });
 
     it("should throw enums must be of type array", () => {
@@ -202,10 +184,7 @@ describe("GraphQLNode ", () => {
                 }
             `,
                 resolvers: {
-                    Query: {},
-                    Mutation: {},
-                    Subscription: {},
-                    Fields: {}
+                    Query: { getUserByID: () => true }
                 },
                 enums: {}
             });
@@ -233,10 +212,7 @@ describe("GraphQLNode ", () => {
                 }
             `,
                 resolvers: {
-                    Query: {},
-                    Mutation: {},
-                    Subscription: {},
-                    Fields: {}
+                    Query: { getUserByID: () => true }
                 },
                 enums: [{ name: "Status", resolver: () => true }]
             });
@@ -273,10 +249,7 @@ describe("GraphQLNode ", () => {
             }
         `,
             resolvers: {
-                Query: {},
-                Mutation: {},
-                Subscription: {},
-                Fields: {}
+                Query: { getUserByID: () => true }
             },
             enums: [StatusEnum]
         });
@@ -288,27 +261,12 @@ describe("GraphQLNode ", () => {
 
         expect(node)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
         expect(node)
             .to.have.property("resolvers")
             .to.be.a("object")
             .to.have.property("Query");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Mutation");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Subscription");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Fields");
 
         expect(node)
             .to.have.property("enums")
@@ -334,10 +292,7 @@ describe("GraphQLNode ", () => {
                 }
             `,
                 resolvers: {
-                    Query: {},
-                    Mutation: {},
-                    Subscription: {},
-                    Fields: {}
+                    Query: { getUserByID: () => true }
                 },
                 nodes: {}
             });
@@ -365,10 +320,7 @@ describe("GraphQLNode ", () => {
                 }
             `,
                 resolvers: {
-                    Query: {},
-                    Mutation: {},
-                    Subscription: {},
-                    Fields: {}
+                    Query: { getUserByID: () => true }
                 },
                 nodes: [{ name: "Post", resolvers: {}, typeDefs: `` }]
             });
@@ -412,10 +364,7 @@ describe("GraphQLNode ", () => {
             }
         `,
             resolvers: {
-                Query: {},
-                Mutation: {},
-                Subscription: {},
-                Fields: {}
+                Query: { getUserByID: () => true }
             },
             nodes: [Post]
         });
@@ -427,27 +376,12 @@ describe("GraphQLNode ", () => {
 
         expect(node)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
         expect(node)
             .to.have.property("resolvers")
             .to.be.a("object")
             .to.have.property("Query");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Mutation");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Subscription");
-
-        expect(node)
-            .to.have.property("resolvers")
-            .to.be.a("object")
-            .to.have.property("Fields");
 
         expect(node)
             .to.have.property("nodes")

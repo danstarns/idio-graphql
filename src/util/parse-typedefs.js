@@ -3,20 +3,7 @@ const { printWithComments } = require("graphql-toolkit");
 const { parse } = require("graphql/language");
 const IdioError = require("../api/idio-error.js");
 
-function graphQLLoader(...options) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(...options, (err, res) => {
-            /* istanbul ignore next */
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve(res);
-        });
-    });
-}
 /**
- * Returns a promise to resolve typeDefs.
  *
  * @param {(FilePath | string | GraphQLAST)} typeDefs - filePath, gql-tag or string.
  *

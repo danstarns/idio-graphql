@@ -1,9 +1,9 @@
-const resolveAppliances = require("./resolve-appliances.js");
+const loadAppliances = require("./load-appliances.js");
 const createLocalAppliance = require("./create-local-appliance.js");
 const serveAppliance = require("./serve-appliance.js");
 
 module.exports = {
-    resolveAppliances,
+    loadAppliances,
     createLocalAppliance,
     serveAppliance
 };

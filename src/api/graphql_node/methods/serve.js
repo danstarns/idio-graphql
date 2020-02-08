@@ -11,7 +11,18 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 /**
  * @typedef {import('./create-node-broker.js').IdioBrokerOptions} IdioBrokerOptions
- * @typedef {import('../graphql-node.js').Runtime} Runtime
+ * @typedef {import('../../../util/services-manager.js').ServiceManager} ServiceManager
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ */
+
+/**
+ * @typedef Runtime
+ * @property {string} serviceUUID
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {Object.<string, object>} introspection
+ * @property {boolean} initialized
+ * @property {ServiceBroker} broker
+ * @property {IdioBrokerOptions} brokerOptions
  */
 
 /**
@@ -30,16 +41,11 @@ async function serve(brokerOptions) {
         brokerOptions: { ...brokerOptions, nodeID: serviceUUID }
     };
 
-    const { typeDefs, resolvers } = await loadNode({
-        name: this.name,
-        typeDefs: this.typeDefs,
-        resolvers: this.resolvers,
-        injections: this.injections
-    });
+    const { resolvers } = loadNode({ ...this });
 
     RUNTIME.introspection = {
         name: this.name,
-        typeDefs,
+        typeDefs: this.typeDefs,
         resolvers: Object.entries(resolvers).reduce(
             (result, [name, methods]) => ({
                 ...result,
@@ -47,7 +53,7 @@ async function serve(brokerOptions) {
             }),
             {}
         ),
-        hash: typeDefs,
+        hash: this.typeDefs,
         nodeID: RUNTIME.serviceUUID
     };
 

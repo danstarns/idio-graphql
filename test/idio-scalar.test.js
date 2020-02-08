@@ -50,6 +50,10 @@ describe("IdioScalar", () => {
             .to.contain("test");
 
         expect(scalar)
+            .to.have.property("typeDefs")
+            .to.be.a("string");
+
+        expect(scalar)
             .to.have.property("resolver")
             .to.be.instanceOf(GraphQLScalarType);
     });

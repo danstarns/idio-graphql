@@ -4,7 +4,9 @@
   "description": "Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.",
   "main": "./src/index.js",
   "scripts": {
-    "test": "nyc mocha",
+    "test": "mocha",
+    "test:dev": "cross-env mocha --watch",
+    "test:coverage": "nyc mocha",
     "build": "mkdir dist && babel src -d dist",
     "docs:start": "cd ./website && docusaurus-start ",
     "docs:build": "cd ./website && docusaurus-build",
@@ -43,6 +45,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "graphql-directive-auth": "^0.3.2",
+    "graphql-tag": "^2.10.3",
     "graphql-type-json": "^0.3.1",
     "mocha": "^6.2.2",
     "moleculer": "^0.13.12",

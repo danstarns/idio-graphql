@@ -2,7 +2,7 @@ const { expect } = require("chai");
 
 const { GraphQLNode, combineNodes } = require("../../src");
 
-describe("gists/resolver-hooks", async () => {
+describe("gists/resolver-hooks", () => {
     it("should share the context object between each hook", async () => {
         let result;
 
@@ -34,7 +34,7 @@ describe("gists/resolver-hooks", async () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -101,7 +101,7 @@ describe("gists/resolver-hooks", async () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs)
             .to.be.a("string")
@@ -133,7 +133,7 @@ describe("gists/resolver-hooks", async () => {
         expect(result).to.equal("the cat jumped over the moon");
     });
 
-    it("should throw GraphQLNode with name: 'User' has resolver that requires a 'resolve' method", async () => {
+    it("should throw GraphQLNode with name: 'User' has resolver that requires a 'resolve' method", () => {
         try {
             const User = new GraphQLNode({
                 name: "User",
@@ -151,7 +151,7 @@ describe("gists/resolver-hooks", async () => {
                 }
             });
 
-            await combineNodes([User]);
+            combineNodes([User]);
 
             throw new Error();
         } catch (error) {

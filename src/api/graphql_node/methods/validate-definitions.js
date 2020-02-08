@@ -4,6 +4,44 @@ const IdioError = require("../../idio-error.js");
 function validateDefinitions(node) {
     const prefix = `GraphQLNode with name: '${node.name}'`;
 
+    const typeOfResolvers = typeof node.resolvers;
+
+    if (typeOfResolvers !== "object") {
+        throw new IdioError(
+            `${prefix} expected node resolvers to be of type 'object' but received '${typeOfResolvers}'.`
+        );
+    }
+
+    if (!Object.keys(node.resolvers).length) {
+        throw new IdioError(
+            `${prefix} at least one resolver required. Consider using 'schemaGlobals' if '${node.name}' does not require a resolver.`
+        );
+    }
+
+    const allowedResolvers = ["Query", "Mutation", "Subscription", "Fields"];
+
+    const notAllowedResolvers = Object.keys(node.resolvers).filter(
+        (key) => !allowedResolvers.includes(key)
+    );
+
+    if (notAllowedResolvers.length) {
+        throw new IdioError(
+            `${prefix} invalid resolvers '[ ${notAllowedResolvers} ]'.`
+        );
+    }
+
+    if (node.resolvers.Subscription) {
+        Object.entries(node.resolvers.Subscription).forEach(
+            ([key, resolver]) => {
+                if (!resolver.subscribe) {
+                    throw new IdioError(
+                        `${prefix} resolvers.Subscription.${key} must contain a subscribe method.`
+                    );
+                }
+            }
+        );
+    }
+
     let ast;
 
     try {
@@ -15,12 +53,6 @@ function validateDefinitions(node) {
     const nodeAst = ast.definitions
         .filter(({ kind }) => kind === "ObjectTypeDefinition")
         .find(({ name: { value } }) => value === node.name);
-
-    if (!nodeAst) {
-        throw new IdioError(
-            `${prefix} should contain a ObjectTypeDefinition called '${node.name}'.`
-        );
-    }
 
     const nodeFields = nodeAst.fields.map(({ name }) => name.value);
 

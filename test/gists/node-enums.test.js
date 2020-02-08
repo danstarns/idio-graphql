@@ -2,8 +2,8 @@ const { expect } = require("chai");
 
 const { GraphQLNode, combineNodes, IdioEnum } = require("../../src");
 
-describe("gists/node-enums", async () => {
-    it("should verify node-enums", async () => {
+describe("gists/node-enums", () => {
+    it("should verify node-enums", () => {
         const StatusEnum = new IdioEnum({
             name: "Status",
             typeDefs: `
@@ -39,7 +39,7 @@ describe("gists/node-enums", async () => {
             enums: [StatusEnum]
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User]);
+        const { typeDefs, resolvers } = combineNodes([User]);
 
         expect(typeDefs).to.be.a("string");
 

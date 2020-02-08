@@ -8,7 +8,7 @@ const sleep = util.promisify(setTimeout);
 const applianceMetadata = [
     ...APPLIANCE_METADATA,
     {
-        applianceConstructor: GraphQLNode,
+        _Constructor: GraphQLNode,
         kind: "ObjectTypeDefinition",
         singular: "node",
         name: "nodes"

@@ -5,7 +5,7 @@ const GraphQLNode = require("../../graphql_node/graphql-node.js");
 const applianceMetadata = [
     ...APPLIANCE_METADATA,
     {
-        applianceConstructor: GraphQLNode,
+        _Constructor: GraphQLNode,
         kind: "ObjectTypeDefinition",
         singular: "node",
         name: "nodes"

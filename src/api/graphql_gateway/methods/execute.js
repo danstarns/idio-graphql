@@ -31,7 +31,7 @@ function execute(RUNTIME) {
             });
         } catch (error) {
             /** @type {ExecutionResult} */
-            return { errors: [new IdioError(error)], data: null };
+            return { errors: [new IdioError(error)] };
         }
     };
 }

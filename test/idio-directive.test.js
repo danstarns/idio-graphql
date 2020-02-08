@@ -105,7 +105,7 @@ describe("IdioDirective", () => {
 
         expect(directive)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
         expect(directive)
             .to.have.property("resolver")

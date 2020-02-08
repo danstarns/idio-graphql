@@ -10,7 +10,6 @@ const {
     handleIntrospection
 } = require("../../../util/index.js");
 
-const validateAppliance = require("./validate-appliance.js");
 const createApplianceBroker = require("./create-appliance-broker.js");
 
 /**
@@ -44,13 +43,11 @@ module.exports = (metadata) => {
                 resolver: this.resolver,
                 __resolveType: this.__resolveType
             },
-            introspection: {}
-        };
-
-        RUNTIME.introspection = {
-            name: this.name,
-            typeDefs: await validateAppliance(RUNTIME),
-            resolver: `${serviceUUID}.resolver`
+            introspection: {
+                name: this.name,
+                typeDefs: this.typeDefs,
+                resolver: `${serviceUUID}.resolver`
+            }
         };
 
         RUNTIME.broker = createApplianceBroker(RUNTIME);

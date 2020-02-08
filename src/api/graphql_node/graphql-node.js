@@ -1,37 +1,23 @@
-const { parseTypeDefs } = require("../../util/index.js");
+const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
-const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
 const IdioError = require("../idio-error.js");
-const { validateDefinitions, wrapResolvers } = require("./methods/index.js");
-
-const serve = require("./methods/serve.js");
+const {
+    validateDefinitions,
+    wrapResolvers,
+    validateNodeAppliances,
+    serve
+} = require("./methods/index.js");
 
 /**
  * @typedef {import('../appliances/idio-enum.js')} IdioEnum
  * @typedef {import('../appliances/idio-interface.js')} IdioInterface
  * @typedef {import('../appliances/idio-union.js')} IdioUnion
- *
- * @typedef {import('./methods/create-node-broker.js').IdioBrokerOptions} IdioBrokerOptions
- * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- *
- * @typedef {import('../../util/wrapped-resolver.js').PreUnion} PreUnion
- * @typedef {import('../../util/wrapped-resolver.js').PostUnion} PostUnion
- * @typedef {import('../../util/services-manager.js').ServiceManager} ServiceManager
+ * @typedef {import('../../util/wrapped-resolver.js').ResolverUnion} ResolverUnion
+ * @typedef {import('./methods/serve.js').Runtime} Runtime
  */
 
 /**
- * @typedef ResolverObjectInput
- * @property {Function} resolve
- * @property {PreUnion} pre - Function(s) to call pre the resolve method.
- * @property {PostUnion} post - Function(s) to call post the resolve method.
- */
-
-/**
- * @typedef {(ResolverObjectInput|Function)} ResolverUnion
- */
-
-/**
- * @typedef ResolverType
+ * @typedef Resolvers
  * @property {Object.<string, ResolverUnion>} Query
  * @property {Object.<string, ResolverUnion>} Mutation
  * @property {Object.<string, {subscribe: Function}>} Subscription
@@ -39,20 +25,10 @@ const serve = require("./methods/serve.js");
  */
 
 /**
- * @typedef Runtime
- * @property {string} serviceUUID
- * @property {Object.<string, ServiceManager>} gatewayManagers
- * @property {Object.<string, object>} introspection
- * @property {boolean} initialized
- * @property {ServiceBroker} broker
- * @property {IdioBrokerOptions} brokerOptions
- */
-
-/**
  * @typedef GraphQLNode
  * @property {string} name
- * @property {Promise<string>} typeDefs
- * @property {ResolverType} resolvers
+ * @property {string} typeDefs
+ * @property {Resolvers} resolvers
  * @property {Array.<GraphQLNode>} nodes
  * @property {Object} injections
  * @property {Array.<IdioEnum>} enums
@@ -65,7 +41,7 @@ const serve = require("./methods/serve.js");
  * @typedef GraphQLNodeInput
  * @property {string} name
  * @property {any} typeDefs - gql-tag, string or filePath.
- * @property {ResolverType} resolvers
+ * @property {Resolvers} resolvers
  * @property {Array.<GraphQLNode>} nodes
  * @property {Object} injections
  * @property {Array.<IdioEnum>} enums
@@ -99,11 +75,9 @@ function GraphQLNode(config = {}) {
     this.resolvers;
     this.nodes;
     this.injections;
-
     this.enums;
     this.interfaces;
     this.unions;
-
     this.serve;
 
     if (!name) {
@@ -114,7 +88,7 @@ function GraphQLNode(config = {}) {
         throw new IdioError(`${prefix}: name must be of type 'string'.`);
     }
 
-    if (RESTRICTED_NAMES[name.toLocaleLowerCase()]) {
+    if (RESTRICTED_NAMES[name.toLowerCase()]) {
         throw new IdioError(
             `${prefix}: creating node '${name}' with invalid name.`
         );
@@ -132,92 +106,36 @@ function GraphQLNode(config = {}) {
         throw new IdioError(`${prefix}: '${name}' Error: '${error}'.`);
     }
 
-    if (!resolvers) {
-        throw new IdioError(`${prefix}: '${name}' resolvers required.`);
-    }
-
-    const typeOfResolvers = typeof resolvers;
-
-    if (typeOfResolvers !== "object") {
-        throw new IdioError(
-            `${prefix}: expected node: '${name}' resolvers to be of type 'object' but received '${typeOfResolvers}'.`
-        );
-    }
-
-    if (!Object.keys(resolvers).length) {
-        throw new IdioError(
-            `${prefix}: '${name}' at least one resolver required. Consider using 'schemaGlobals' if '${name}' does not require a resolver.`
-        );
-    }
-
-    const allowedResolvers = ["Query", "Mutation", "Subscription", "Fields"];
-
-    const notAllowedResolvers = Object.keys(resolvers).filter(
-        (key) => !allowedResolvers.includes(key)
-    );
-
-    if (notAllowedResolvers.length) {
-        throw new IdioError(
-            `${prefix}: '${name}' resolvers received unexpected properties '[ ${notAllowedResolvers.join(
-                ", "
-            )} ]'.`
-        );
-    }
-
-    if (resolvers.Subscription) {
-        Object.entries(resolvers.Subscription).forEach(([key, resolver]) => {
-            if (!resolver.subscribe) {
-                throw new IdioError(
-                    `${prefix}: '${name}' resolvers.Subscription.${key} must contain a subscribe method.`
-                );
-            }
-        });
-    }
-
-    this.resolvers = wrapResolvers({ ...this });
-
-    Object.entries({
-        enums,
-        interfaces,
-        unions,
-        nodes
-    }).forEach(([key, appliances]) => {
-        if (appliances) {
-            if (!Array.isArray(appliances)) {
-                throw new IdioError(
-                    `${prefix}: '${name}' ${key} must be of type 'array'.`
-                );
-            }
-
-            const { singular, applianceConstructor } = [
-                ...APPLIANCE_METADATA,
-                {
-                    applianceConstructor: GraphQLNode,
-                    kind: "ObjectTypeDefinition",
-                    singular: "node",
-                    name: "nodes"
-                }
-            ].find((x) => x.name === key);
-
-            function checkInstanceOfAppliance(appliance) {
-                if (!(appliance instanceof applianceConstructor)) {
-                    throw new IdioError(
-                        `${prefix}: '${name}' expected ${singular} to be instance of '${applianceConstructor.name}'.`
-                    );
-                }
-            }
-
-            appliances.forEach(checkInstanceOfAppliance);
-
-            this[key] = appliances;
-        }
+    this.typeDefs = validateTypeDefs(this, {
+        _Constructor: GraphQLNode,
+        kind: "ObjectTypeDefinition",
+        singular: "node",
+        name: "nodes"
     });
 
     if (injections) {
         this.injections = injections;
     }
 
-    validateDefinitions({ ...this });
+    if (!resolvers) {
+        throw new IdioError(`${prefix}: '${name}' resolvers required.`);
+    }
+
+    this.resolvers = resolvers;
+
+    validateDefinitions(this);
+
+    this.resolvers = wrapResolvers(this);
+
+    Object.entries({ nodes, enums, interfaces, unions }).forEach(
+        ([key, value]) => {
+            if (value) {
+                this[key] = value;
+            }
+        }
+    );
+
+    validateNodeAppliances(GraphQLNode)(this);
 }
 
 GraphQLNode.prototype.serve = serve;

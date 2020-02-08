@@ -1,6 +1,6 @@
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
-const { parseTypeDefs } = require("../../util/index.js");
+const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 const serveAppliance = require("./methods/serve-appliance.js");
 
 /**
@@ -54,6 +54,13 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
         throw new IdioError(`${prefix}: '${name}' \n${error}.`);
     }
 
+    this.typeDefs = validateTypeDefs(this, {
+        _Constructor: IdioUnion,
+        kind: "UnionTypeDefinition",
+        singular: "union",
+        name: "unions"
+    });
+
     if (!resolver) {
         throw new IdioError(`${prefix}: '${name}' without resolver.`);
     }
@@ -68,7 +75,7 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
 }
 
 IdioUnion.prototype.serve = serveAppliance({
-    applianceConstructor: IdioUnion,
+    _Constructor: IdioUnion,
     kind: "UnionTypeDefinition",
     singular: "union",
     name: "unions"

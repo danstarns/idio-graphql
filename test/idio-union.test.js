@@ -41,8 +41,8 @@ describe("IdioUnion", () => {
 
     it("should throw error when creating union without a resolver", () => {
         try {
-            const union = new IdioUnion({
-                name: "MyUnion",
+            const AOrB = new IdioUnion({
+                name: "AOrB",
                 typeDefs: `union AOrB = A | B`
             });
         } catch (error) {
@@ -52,8 +52,8 @@ describe("IdioUnion", () => {
 
     it("should throw error when creating union without a resolver __resolveType property", () => {
         try {
-            const union = new IdioUnion({
-                name: "MyUnion",
+            const AOrB = new IdioUnion({
+                name: "AOrB",
                 typeDefs: `union AOrB = A | B`,
                 resolver: {
                     abc: () => true
@@ -67,26 +67,26 @@ describe("IdioUnion", () => {
     });
 
     it("should create and return a instance of IdioUnion", () => {
-        const union = new IdioUnion({
-            name: "MyUnion",
+        const AOrB = new IdioUnion({
+            name: "AOrB",
             typeDefs: `union AOrB = A | B`,
             resolver: {
                 __resolveType: () => true
             }
         });
 
-        expect(union).to.be.instanceOf(IdioUnion);
+        expect(AOrB).to.be.instanceOf(IdioUnion);
 
-        expect(union)
+        expect(AOrB)
             .to.have.property("name")
             .to.be.a("string")
-            .to.contain("MyUnion");
+            .to.contain("AOrB");
 
-        expect(union)
+        expect(AOrB)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
-        expect(union)
+        expect(AOrB)
             .to.have.property("resolver")
             .to.be.a("object")
             .to.have.property("__resolveType")

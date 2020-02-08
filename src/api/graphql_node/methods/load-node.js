@@ -1,52 +1,27 @@
-/* eslint-disable no-multi-assign */
-const { resolveAppliances } = require("../../appliances/methods/index.js");
-const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
-
-function loadNodeAppliances({ enums, interfaces, unions }, INTERNALS) {
-    return Object.entries({
-        enums,
-        interfaces,
-        unions
-    })
-        .filter(([, value]) => Boolean(value))
-        .reduce(
-            (result, [key, appliance]) => {
-                const metadata = APPLIANCE_METADATA.find(
-                    ({ name }) => name === key
-                );
-
-                const { typeDefs, resolvers } = resolveAppliances(
-                    { ...metadata, appliance },
-                    INTERNALS
-                );
-
-                result.typeDefs += `\n${typeDefs}\n`;
-
-                return {
-                    ...result,
-                    resolvers: {
-                        ...result.resolvers,
-                        ...resolvers
-                    }
-                };
-            },
-            { typeDefs: "", resolvers: {} }
-        );
-}
+const loadNodeAppliances = require("./load-node-appliances.js");
 
 /**
- * @param {GraphQLNode} n
+ * @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode
+ * @typedef {import('../../appliances/index.js').IdioEnum} IdioEnum
+ * @typedef {import('../../appliances/index.js').IdioInterface} IdioInterface
+ * @typedef {import('../../appliances/index.js').IdioUnion} IdioUnion
  */
-function loadNode(n, { INTERNALS } = { REGISTERED_NAMES: {} }) {
-    const node = { ...n };
 
+/**
+ * @typedef appliances
+ * @property {IdioEnum[]} enums
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
+ */
+
+/**
+ * @param {GraphQLNode} node
+ */
+function loadNode(node) {
+    /** @type {appliances} */
     const appliances = loadNodeAppliances({ ...node });
 
-    if (node.nodes) {
-        node.nodes = node.nodes.map((_node) => loadNode(_node, { INTERNALS }));
-    }
-
-    node.typeDefs = node.typeDefs += `\n${appliances.typeDefs}\n`;
+    node.typeDefs = `${node.typeDefs} \n ${appliances.typeDefs}`;
 
     node.resolvers = {
         ...node.resolvers,

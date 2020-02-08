@@ -1,4 +1,4 @@
-const { parseTypeDefs } = require(`../../util/index.js`);
+const { parseTypeDefs, validateTypeDefs } = require(`../../util/index.js`);
 const { SchemaDirectiveVisitor } = require("graphql-tools");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
@@ -56,6 +56,13 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
     } catch (error) {
         throw new IdioError(`${prefix}: '${name}' \n${error}.`);
     }
+
+    this.typeDefs = validateTypeDefs(this, {
+        _Constructor: IdioDirective,
+        kind: "DirectiveDefinition",
+        singular: "directive",
+        name: "directives"
+    });
 
     if (!resolver) {
         throw new IdioError(`${prefix}: '${name}' without a resolver.`);

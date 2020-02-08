@@ -6,6 +6,23 @@ const {
     IdioInterface
 } = require("../api/appliances/index.js");
 
+/**
+ * @typedef {import('../api/appliances/index.js').IdioScalar} IdioScalar
+ * @typedef {import('../api/appliances/index.js').IdioEnum} IdioEnum
+ * @typedef {import('../api/appliances/index.js').IdioDirective} IdioDirective
+ * @typedef {import('../api/appliances/index.js').IdioUnion} IdioUnion
+ * @typedef {import('../api/appliances/index.js').IdioInterface} IdioInterface
+ */
+
+/**
+ * @typedef Metadata
+ * @property {(IdioScalar | IdioEnum | IdioDirective | IdioUnion | IdioInterface)} _Constructor
+ * @property {string} kind
+ * @property {string} singular
+ * @property {string} name
+ */
+
+/** @type {Metadata[]} */
 const APPLIANCE_METADATA = [
     {
         _Constructor: IdioScalar,

@@ -2,8 +2,8 @@ const { expect } = require("chai");
 
 const { GraphQLNode, combineNodes } = require("../../src");
 
-describe("gists/nested-nodes", async () => {
-    it("should verify nested-nodes", async () => {
+describe("gists/nested-nodes", () => {
+    it("should verify nested-nodes", () => {
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `
@@ -63,7 +63,7 @@ describe("gists/nested-nodes", async () => {
             nodes: [Comment]
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User, Post]);
+        const { typeDefs, resolvers } = combineNodes([User, Post]);
 
         expect(typeDefs).to.be.a("string");
 

@@ -4,6 +4,7 @@ const createLocalNode = require("./create-local-node.js");
 const createNodeBroker = require("./create-node-broker.js");
 const validateDefinitions = require("./validate-definitions.js");
 const wrapResolvers = require("./wrap-resolvers.js");
+const validateNodeAppliances = require("./validate-node-appliances.js");
 
 module.exports = {
     serve,
@@ -11,5 +12,6 @@ module.exports = {
     createLocalNode,
     createNodeBroker,
     validateDefinitions,
-    wrapResolvers
+    wrapResolvers,
+    validateNodeAppliances
 };

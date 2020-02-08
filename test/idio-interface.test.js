@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { IdioInterface } = require("../src/index.js");
+const gql = require("graphql-tag");
 
 describe("IdioInterface", () => {
     it("should throw name required", () => {
@@ -43,10 +44,13 @@ describe("IdioInterface", () => {
         try {
             const interface = new IdioInterface({
                 name: "MyInterface",
-                typeDefs: `interface ErrorInterface {
-        message: String
-        code: Int
-    }`
+                typeDefs: gql`
+                    interface MyInterface {
+                        message: String
+                        code: Int
+                    }
+                `,
+                resolver: { __resolveType: () => true }
             });
         } catch (error) {
             expect(error.message).to.contain("without resolver.");
@@ -57,7 +61,7 @@ describe("IdioInterface", () => {
         try {
             const interface = new IdioInterface({
                 name: "MyInterface",
-                typeDefs: `interface ErrorInterface {
+                typeDefs: `interface MyInterface {
         message: String
         code: Int
     }`,
@@ -75,7 +79,7 @@ describe("IdioInterface", () => {
     it("should create and return a instance of IdioInterface", () => {
         const interface = new IdioInterface({
             name: "MyInterface",
-            typeDefs: `interface ErrorInterface {
+            typeDefs: `interface MyInterface {
         message: String
         code: Int
     }`,
@@ -93,7 +97,7 @@ describe("IdioInterface", () => {
 
         expect(interface)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
         expect(interface)
             .to.have.property("resolver")

@@ -1,5 +1,5 @@
 const { makeExecutableSchema } = require("graphql-tools");
-const combineNodes = require("../../combine-nodes.js");
+const combineNodes = require("../../combine_nodes/combine-nodes.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 
 const { createLocalNode } = require("../../graphql_node/methods/index.js");

@@ -1,4 +1,4 @@
-const { parseTypeDefs } = require("../../util/index.js");
+const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
 const serveAppliance = require("./methods/serve-appliance.js");
@@ -58,6 +58,13 @@ function IdioEnum({ name, typeDefs, resolver } = {}) {
         throw new IdioError(`${prefix}: '${name}' \n${error}.`);
     }
 
+    this.typeDefs = validateTypeDefs(this, {
+        _Constructor: IdioEnum,
+        kind: "EnumTypeDefinition",
+        singular: "enum",
+        name: "enums"
+    });
+
     if (!resolver) {
         throw new IdioError(`${prefix}: '${name}' without a resolver.`);
     }
@@ -66,7 +73,7 @@ function IdioEnum({ name, typeDefs, resolver } = {}) {
 }
 
 IdioEnum.prototype.serve = serveAppliance({
-    applianceConstructor: IdioEnum,
+    _Constructor: IdioEnum,
     kind: "EnumTypeDefinition",
     singular: "enum",
     name: "enums"

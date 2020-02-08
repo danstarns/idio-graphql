@@ -96,7 +96,7 @@ describe("IdioEnum", () => {
 
         expect(_enum)
             .to.have.property("typeDefs")
-            .to.be.a("function");
+            .to.be.a("string");
 
         expect(_enum)
             .to.have.property("name")

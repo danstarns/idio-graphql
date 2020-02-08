@@ -17,7 +17,7 @@ function compareGateways(RUNTIME) {
             if (values) {
                 return {
                     ...result,
-                    [key]: values.map((x) => x.name)
+                    [key]: values.map(({ name }) => name)
                 };
             }
 

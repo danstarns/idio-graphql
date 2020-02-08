@@ -19,16 +19,16 @@ async function* streamToIterator(stream) {
     });
 
     while (buffers.length || active) {
+        if (error) {
+            throw error;
+        }
+
         // eslint-disable-next-line no-await-in-loop
         await sleep();
 
         const [result, ...restOfBuffers] = buffers;
 
         buffers = [...restOfBuffers];
-
-        if (error) {
-            throw error;
-        }
 
         /* istanbul ignore next */
         if (!result) {
