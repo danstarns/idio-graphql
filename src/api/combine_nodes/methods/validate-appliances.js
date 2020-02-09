@@ -3,7 +3,13 @@ const { checkInstance } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
 
 /**
- * @param {import('../combine-nodes.js').appliances} appliances
+ * @typedef {import('../combine-nodes.js').appliances} appliances
+ * @typedef {import('../combine-nodes.js').RUNTIME} RUNTIME
+ */
+
+/**
+ * @param {appliances} appliances
+ * @param {RUNTIME} RUNTIME
  */
 function validateAppliances(appliances, RUNTIME) {
     Object.entries(appliances)

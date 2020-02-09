@@ -14,14 +14,15 @@ const {
  */
 
 /**
- * @typedef {Object} Schema
+ * @typedef RUNTIME
+ * @property {object} REGISTERED_NAMES
  * @property {GraphQLSchema} schema
  * @property {string} typeDefs
- * @property {Object} resolvers
- * @property {Object} resolvers.Query
- * @property {Object} resolvers.Mutation
- * @property {Object} resolvers.Subscription
- * @property {Object} schemaDirectives
+ * @property {object} resolvers
+ * @property {object} resolvers.Query
+ * @property {object} resolvers.Mutation
+ * @property {object} resolvers.Subscription
+ * @property {object} schemaDirectives
  */
 
 /**
@@ -29,11 +30,15 @@ const {
  *
  * @param {Array.<GraphQLNode>} nodes
  * @param {appliances} appliances
- * @returns {Schema}
+ * @returns {RUNTIME}
  */
 function combineNodes(nodes, appliances = {}) {
     const RUNTIME = {
-        REGISTERED_NAMES: {}
+        REGISTERED_NAMES: {},
+        schema: {},
+        typeDefs: "",
+        resolvers: {},
+        schemaDirectives: {}
     };
 
     validateNodes(nodes, RUNTIME);
@@ -44,26 +49,26 @@ function combineNodes(nodes, appliances = {}) {
 
     const reducedAppliances = reduceAppliances(appliances);
 
-    /** @type {Schema} */
-    const Schema = {
-        typeDefs: printWithComments(
-            mergeTypeDefs([
-                ...reducedNodes.typeDefs,
-                ...reducedAppliances.typeDefs
-            ])
-        ),
-        resolvers: {
-            ...reducedNodes.resolvers,
-            ...reducedAppliances.resolvers
-        },
-        ...(reducedAppliances.schemaDirectives
-            ? { schemaDirectives: reducedAppliances.schemaDirectives }
-            : {})
+    RUNTIME.typeDefs = printWithComments(
+        mergeTypeDefs([...reducedNodes.typeDefs, ...reducedAppliances.typeDefs])
+    );
+
+    RUNTIME.resolvers = {
+        ...reducedNodes.resolvers,
+        ...reducedAppliances.resolvers
     };
 
-    Schema.schema = makeExecutableSchema({ ...Schema });
+    if (reducedAppliances.schemaDirectives) {
+        RUNTIME.schemaDirectives = reducedAppliances.schemaDirectives;
+    }
 
-    return Schema;
+    RUNTIME.schema = makeExecutableSchema({
+        resolvers: RUNTIME.resolvers,
+        typeDefs: RUNTIME.typeDefs,
+        schemaDirectives: RUNTIME.schemaDirectives
+    });
+
+    return RUNTIME;
 }
 
 module.exports = combineNodes;

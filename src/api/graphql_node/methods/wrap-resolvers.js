@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-const CONTEXT_INDEX = require("../../../constants/context-index.js");
+const INDEX = require("../../../constants/context-index.js");
 const { wrappedResolver, isFunction } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
 
@@ -38,29 +38,48 @@ function wrapResolvers(node) {
                             ...method,
                             async *subscribe(...graphQLArgs) {
                                 try {
-                                    if (!graphQLArgs[CONTEXT_INDEX]) {
-                                        graphQLArgs[CONTEXT_INDEX] = {};
+                                    if (!graphQLArgs[INDEX]) {
+                                        graphQLArgs[INDEX] = {};
                                     }
 
                                     if (node.injections) {
+                                        if (!graphQLArgs[INDEX].injections) {
+                                            graphQLArgs[INDEX].injections = {};
+                                        }
+
                                         if (
-                                            !graphQLArgs[CONTEXT_INDEX].node
-                                                .injections
+                                            !(
+                                                typeof graphQLArgs[INDEX]
+                                                    .injections === "object"
+                                            )
                                         ) {
-                                            graphQLArgs[
-                                                CONTEXT_INDEX
-                                            ].node.injections = {};
+                                            throw new IdioError(
+                                                `'${name}' injections must be or resolve to an object`
+                                            );
                                         }
 
                                         if (isFunction(node.injections)) {
+                                            async function getInjections() {
+                                                const res = await node.injections();
+
+                                                if (
+                                                    !(typeof res === "object")
+                                                ) {
+                                                    throw new IdioError(
+                                                        `'${name}' injections be or resolve to an object`
+                                                    );
+                                                }
+
+                                                return res;
+                                            }
+
                                             try {
                                                 graphQLArgs[
-                                                    CONTEXT_INDEX
+                                                    INDEX
                                                 ].injections = {
-                                                    ...(graphQLArgs[
-                                                        CONTEXT_INDEX
-                                                    ].injections || {}),
-                                                    ...(await node.injections())
+                                                    ...graphQLArgs[INDEX]
+                                                        .injections,
+                                                    ...(await getInjections())
                                                 };
                                             } catch (error) {
                                                 throw new IdioError(
@@ -69,10 +88,10 @@ function wrapResolvers(node) {
                                             }
                                         } else {
                                             graphQLArgs[
-                                                CONTEXT_INDEX
+                                                INDEX
                                             ].node.injections = {
-                                                ...(graphQLArgs[CONTEXT_INDEX]
-                                                    .node.injections || {}),
+                                                ...(graphQLArgs[INDEX].node
+                                                    .injections || {}),
                                                 ...node.injections
                                             };
                                         }

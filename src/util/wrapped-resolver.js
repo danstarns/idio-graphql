@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const isFunction = require("./is-function.js");
 const IdioError = require("../api/idio-error.js");
-const CONTEXT_INDEX = require("../constants/context-index.js");
+const INDEX = require("../constants/context-index.js");
 
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
@@ -154,20 +154,38 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
     }
 
     async function newResolver(...graphQLArgs) {
-        if (!graphQLArgs[CONTEXT_INDEX]) {
-            graphQLArgs[CONTEXT_INDEX] = {};
+        if (!graphQLArgs[INDEX]) {
+            graphQLArgs[INDEX] = {};
         }
 
         if (injections) {
-            if (!graphQLArgs[CONTEXT_INDEX].injections) {
-                graphQLArgs[CONTEXT_INDEX].injections = {};
+            if (!graphQLArgs[INDEX].injections) {
+                graphQLArgs[INDEX].injections = {};
+            }
+
+            if (!(typeof graphQLArgs[INDEX].injections === "object")) {
+                throw new IdioError(
+                    `'${name}' injections must be or resolve to an object`
+                );
             }
 
             if (isFunction(injections)) {
+                async function getInjections() {
+                    const res = await injections();
+
+                    if (!(typeof res === "object")) {
+                        throw new IdioError(
+                            `'${name}' injections be or resolve to an object`
+                        );
+                    }
+
+                    return res;
+                }
+
                 try {
-                    graphQLArgs[CONTEXT_INDEX].injections = {
-                        ...(graphQLArgs[CONTEXT_INDEX].injections || {}),
-                        ...(await injections())
+                    graphQLArgs[INDEX].injections = {
+                        ...graphQLArgs[INDEX].injections,
+                        ...(await getInjections())
                     };
                 } catch (error) {
                     throw new IdioError(
@@ -175,8 +193,8 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
                     );
                 }
             } else {
-                graphQLArgs[CONTEXT_INDEX].injections = {
-                    ...(graphQLArgs[CONTEXT_INDEX].injections || {}),
+                graphQLArgs[INDEX].injections = {
+                    ...(graphQLArgs[INDEX].injections || {}),
                     ...injections
                 };
             }
