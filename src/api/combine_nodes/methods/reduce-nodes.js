@@ -50,11 +50,11 @@ function reduceNode(r, node) {
             ...result,
             typeDefs: [...result.typeDefs, ...nestedTypeDefs],
             resolvers: Object.entries(result.resolvers).reduce(
-                (_result, [key, values]) => ({
-                    ..._result,
+                (res, [key, value]) => ({
+                    ...res,
                     ...(nestedResolvers[key]
-                        ? { [key]: { ...values, ...nestedResolvers[key] } }
-                        : { [key]: values })
+                        ? { [key]: { ...nestedResolvers[key], ...value } }
+                        : { [key]: value })
                 }),
                 {}
             )
