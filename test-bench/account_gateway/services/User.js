@@ -22,8 +22,8 @@ const User = new GraphQLNode({
     `,
     resolvers: {
         Query: {
-            user: (root, args, context) => {
-                return users.find((x) => x.id === args.id);
+            user: (root, { id }) => {
+                return users.find((x) => x.id === id);
             },
             users: () => users
         }

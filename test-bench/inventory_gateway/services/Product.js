@@ -49,7 +49,7 @@ const Product = new GraphQLNode({
         },
         Query: {
             products: async () => products,
-            product: () => products.find((x) => x.id === id)
+            product: (root, { id }) => products.find((x) => x.id === id)
         }
     }
 });

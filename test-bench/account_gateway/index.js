@@ -14,8 +14,6 @@ const AccountsGateway = GraphQLGateway(
 
 async function main() {
     try {
-        await AccountsGateway.start();
-
         const {
             typeDefs,
             resolvers,
