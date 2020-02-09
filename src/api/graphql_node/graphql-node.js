@@ -33,11 +33,11 @@ const {
  * @property {string} name
  * @property {string} typeDefs
  * @property {Resolvers} resolvers
- * @property {Array.<GraphQLNode>} nodes
+ * @property {GraphQLNode[]} nodes
  * @property {injections} injections
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
+ * @property {IdioEnum[]} enums
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
  * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
  */
 
@@ -46,11 +46,11 @@ const {
  * @property {string} name
  * @property {any} typeDefs - gql-tag, string or filePath.
  * @property {Resolvers} resolvers
- * @property {Array.<GraphQLNode>} nodes
+ * @property {GraphQLNode[]} nodes
  * @property {injections} injections
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
+ * @property {IdioEnum[]} enums
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
  */
 
 /**

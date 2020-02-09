@@ -28,7 +28,7 @@ const {
 /**
  * You can use combineNodes to snap GraphQLNode's & Schema Appliances together into a single Schema.
  *
- * @param {Array.<GraphQLNode>} nodes
+ * @param {GraphQLNode[]} nodes
  * @param {appliances} appliances
  * @returns {RUNTIME}
  */

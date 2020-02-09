@@ -69,7 +69,7 @@ function withBroker(RUNTIME) {
             if (kind) {
                 const { definitions = [] } = document;
 
-                /** @type {Array.<OperationDefinitionNode>} */
+                /** @type {OperationDefinitionNode[]} */
                 const operations = definitions.filter(
                     (x) => x.kind === "OperationDefinition"
                 );
@@ -80,7 +80,7 @@ function withBroker(RUNTIME) {
                     );
                 }
 
-                /** @type {Array.<DirectiveDefinitionNode>} */
+                /** @type {DirectiveDefinitionNode[]} */
                 const directives = operations
                     .flatMap((operation) => operation.directives || [])
                     .filter((directive) => directive.name.value === "gateway");

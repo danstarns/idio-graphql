@@ -47,7 +47,7 @@ function _getNextService() {
  * @property {string} gateway
  * @property {string} serviceName
  * @property {string} hash
- * @property {Array.<string>} activeServices
+ * @property {string[]} activeServices
  * @property {string} lastOutput
  */
 
