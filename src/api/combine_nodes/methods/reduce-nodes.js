@@ -15,56 +15,45 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
  */
 
 function inject(methods, RUNTIME) {
-    return Object.entries(methods).reduce(
-        (result, [key, method]) => ({
+    return Object.entries(methods).reduce((result, [key, method]) => {
+        const func = (_method, graphQLArgs) => {
+            const newArgs = [...graphQLArgs];
+
+            if (!newArgs[CONTEXT_INDEX]) {
+                newArgs[CONTEXT_INDEX] = {};
+            }
+
+            if (!newArgs[CONTEXT_INDEX].injections) {
+                newArgs[CONTEXT_INDEX].injections = {};
+            }
+
+            if (!(typeof newArgs[CONTEXT_INDEX].injections === "object")) {
+                newArgs[CONTEXT_INDEX].injections = {};
+            }
+
+            newArgs[CONTEXT_INDEX].injections = {
+                ...newArgs[CONTEXT_INDEX].injections,
+                execute: execute.withSchema(RUNTIME.schema)
+            };
+
+            return _method(...newArgs);
+        };
+
+        return {
             ...result,
-            ...(method.subscribe ? {
-                [key]: {
-                    ...method,
-                    subscribe: (...graphQLArgs) => {
-
-                        const newArgs = [...graphQLArgs];
-
-                        if (!newArgs[CONTEXT_INDEX]) {
-                            newArgs[CONTEXT_INDEX] = {}
-                        }
-
-                        if (!newArgs[CONTEXT_INDEX].injections) {
-                            newArgs[CONTEXT_INDEX].injections = { execute: execute.withSchema(RUNTIME.schema) }
-                        }
-
-                        newArgs[CONTEXT_INDEX].injections = {
-                            ...newArgs[CONTEXT_INDEX].injections,
-                            execute: execute.withSchema(RUNTIME.schema)
-                        }
-
-                        return method.subscribe(...newArgs)
+            ...(method.subscribe
+                ? {
+                    [key]: {
+                        ...method,
+                        subscribe: (...graphQLArgs) =>
+                            func(method.subscribe, ...graphQLArgs)
                     }
                 }
-            } : {
-                    [key]: async (...graphQLArgs) => {
-
-                        const newArgs = [...graphQLArgs];
-
-                        if (!newArgs[CONTEXT_INDEX]) {
-                            newArgs[CONTEXT_INDEX] = {}
-                        }
-
-                        if (!newArgs[CONTEXT_INDEX].injections) {
-                            newArgs[CONTEXT_INDEX].injections = { execute: execute.withSchema(RUNTIME.schema) }
-                        }
-
-                        newArgs[CONTEXT_INDEX].injections = {
-                            ...newArgs[CONTEXT_INDEX].injections,
-                            execute: execute.withSchema(RUNTIME.schema)
-                        }
-
-                        return method(...newArgs)
-                    }
+                : {
+                    [key]: (...graphQLArgs) => func(method, ...graphQLArgs)
                 })
-        }),
-        {}
-    );
+        };
+    }, {});
 }
 
 /**

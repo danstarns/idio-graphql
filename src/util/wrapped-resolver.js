@@ -63,12 +63,13 @@ const INDEX = require("../constants/context-index.js");
  */
 
 /**
+ * @todo make this use recursion
  * @param {ResolverUnion} input
  * @param {object} options
  * @param {string} options.name
  * @param {string} options.direction
  * @param {array} options.args
- *-
+ *
  * @returns {Promise<any>}
  */
 async function resultFunction(input, { direction, name, args }) {
