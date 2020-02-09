@@ -19,9 +19,9 @@ const IdioError = require("../idio-error.js");
  *
  * IdioScalar does not require typeDefs, it uses the name to match up the resolver.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {Object} config.resolver
+ * @param {GraphQLScalarType} config.resolver
  *
  * @returns {IdioScalar}
  */

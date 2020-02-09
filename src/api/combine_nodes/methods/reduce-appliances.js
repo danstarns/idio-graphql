@@ -9,9 +9,8 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata");
  */
 
 /**
- * @param {import('../combine-nodes.js').appliances} appliances
+ * @param {import('../combine-nodes.js').appliances} _appliances
  */
-
 function reduceAppliances(_appliances) {
     return Object.entries(_appliances).reduce(
         (/** @type {result} */ result, [key, appliances]) => {

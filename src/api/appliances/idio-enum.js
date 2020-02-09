@@ -6,24 +6,26 @@ const serveAppliance = require("./methods/serve-appliance.js");
 /**
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('graphql').DocumentNode} DocumentNode
  */
 
 /**
  * @typedef IdioEnum
  * @property {string} name
- * @property {Promise.<string>} typeDefs
- * @property {Object} resolver
- * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ * @property {string} typeDefs
+ * @property {object} resolver
+ * @property {(brokerOptions: BrokerOptions) => Promise<ServiceBroker>} serve
  */
 
 /**
  * You can use IdioEnum to modularize an EnumTypeDefinition, together with its resolver.
+ *
  * You can specify enums 'top-level' at combineNodes or at an GraphQLNode level.
  *
  * @param {Object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
- * @param {Object} config.resolver
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
+ * @param {object} config.resolver
  *
  * @returns {IdioEnum}
  */

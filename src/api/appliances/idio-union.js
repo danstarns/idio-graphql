@@ -6,12 +6,13 @@ const serveAppliance = require("./methods/serve-appliance.js");
 /**
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('graphql').DocumentNode} DocumentNode
  */
 
 /**
  * @typedef IdioUnion
  * @property {string} name
- * @property {Promise.<string>} typeDefs
+ * @property {string} typeDefs
  * @property {{__resolveType: () => string}} resolver
  * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
  */
@@ -20,9 +21,9 @@ const serveAppliance = require("./methods/serve-appliance.js");
  * You can use IdioUnion to modularize an UnionTypeDefinition, together with its resolver.
  * You can specify unions 'top-level' at combineNodes or at an GraphQLNode level.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
  * @param {{__resolveType: () => string}} config.resolver
  *
  * @returns {IdioUnion}

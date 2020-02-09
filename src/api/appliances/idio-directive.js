@@ -5,13 +5,14 @@ const IdioError = require("../idio-error.js");
 
 /**
  * @typedef {import('graphql-tools').SchemaDirectiveVisitor} SchemaDirectiveVisitor
+ * @typedef {import('graphql').DocumentNode} DocumentNode
  */
 
 /**
  * @typedef IdioDirective
  * @property {string} name
- * @property {Promise<string>} typeDefs
- * @property {Object} resolver
+ * @property {string} typeDefs
+ * @property {object} resolver
  */
 
 /**
@@ -19,9 +20,9 @@ const IdioError = require("../idio-error.js");
  *
  * You can only specify directives 'top-level' at combineNodes.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
  * @param {SchemaDirectiveVisitor} config.resolver
  *
  * @returns {IdioDirective}

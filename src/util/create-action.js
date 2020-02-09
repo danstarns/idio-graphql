@@ -3,6 +3,7 @@ const iteratorToStream = require("./iterator-to-stream.js");
 
 /**
  * @typedef {import('moleculer').Context} Context
+ * @typedef {import('./execute.js').execute} execute
  */
 
 /**
@@ -12,10 +13,7 @@ const iteratorToStream = require("./iterator-to-stream.js");
 module.exports = ({ method, contextIndex }, RUNTIME) => {
     const { broker } = RUNTIME;
 
-    /**
-     * @param {Context} ctx
-     */
-    return async function createAction(ctx) {
+    return async function createAction(/** @type {Context} */ ctx) {
         const { params: { graphQLArgs = JSON.stringify([]) } = {} } = ctx;
 
         const decodedArgs = JSON.parse(graphQLArgs);
@@ -28,7 +26,7 @@ module.exports = ({ method, contextIndex }, RUNTIME) => {
 
         decodedArgs[contextIndex].broker = broker;
         decodedArgs[contextIndex].broker.gql = {
-            execute: execute(RUNTIME)
+            /** @type {execute} */ execute: execute(RUNTIME)
         };
 
         let result;
