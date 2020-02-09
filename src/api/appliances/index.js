@@ -13,19 +13,21 @@ const IdioInterface = require("./idio-interface.js");
  */
 
 /**
- * @typedef {Object} appliances
- * @property {Array.<IdioScalar>} scalars
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioDirective>} directives
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
+ * @typedef appliances
+ * @property {IdioScalar[]} scalars
+ * @property {IdioEnum[]} enums
+ * @property {IdioDirective[]} directives
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
  * @property {any} schemaGlobals - an Array or a single instance of Graphql typeDefs, use filePath, string, or gql-tag.
  */
 
-module.exports = {
+const appliances = {
     IdioEnum,
     IdioScalar,
     IdioDirective,
     IdioUnion,
     IdioInterface
 };
+
+module.exports = appliances;

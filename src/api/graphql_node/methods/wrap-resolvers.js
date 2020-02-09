@@ -3,13 +3,6 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const { wrappedResolver, isFunction } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
 
-/**
- * @typedef ResolverObjectInput
- * @property {Function} resolve
- * @property {PreUnion} pre - Function(s) to call pre the resolve method.
- * @property {PostUnion} post - Function(s) to call post the resolve method.
- */
-
 function wrapResolvers(node) {
     const prefix = `GraphQLNode with name: '${node.name}'`;
 

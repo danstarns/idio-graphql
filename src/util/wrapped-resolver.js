@@ -26,7 +26,7 @@ const CONTEXT_INDEX = require("../constants/context-index.js");
  */
 
 /**
- * @typedef {(PreHook|Array.<PreHook>)} PreUnion
+ * @typedef {(PreHook|PreHook[])} PreUnion
  */
 
 /**
@@ -40,7 +40,7 @@ const CONTEXT_INDEX = require("../constants/context-index.js");
  */
 
 /**
- * @typedef {(PostHook|Array.<PostHook>)} PostUnion
+ * @typedef {(PostHook|PostHook[])} PostUnion
  */
 
 /**
@@ -64,13 +64,13 @@ const CONTEXT_INDEX = require("../constants/context-index.js");
  */
 
 /**
- * @param {(Function|Array.<Function>)} input
- * @param {Object} options
- * @param {String} options.name
- * @param {String} options.direction
- * @param {Array} options.args
- *
- * @returns {Promise.<any>}
+ * @param {ResolverUnion} input
+ * @param {object} options
+ * @param {string} options.name
+ * @param {string} options.direction
+ * @param {array} options.args
+ *-
+ * @returns {Promise<any>}
  */
 async function resultFunction(input, { direction, name, args }) {
     if (Array.isArray(input)) {
@@ -102,7 +102,7 @@ async function resultFunction(input, { direction, name, args }) {
  * @param {string} options.name
  * @param {any} options.injections
  *
- * @returns {Promise.<any>}
+ * @returns {Promise<any>}
  */
 function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
     if (!resolver) {
