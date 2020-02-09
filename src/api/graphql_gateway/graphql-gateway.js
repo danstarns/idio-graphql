@@ -1,39 +1,34 @@
-const {
-    createConfig,
-    createGatewayBroker,
-    start
-} = require("./methods/index.js");
+const { createConfig, start } = require("./methods/index.js");
+const { createBroker } = require("../../util/index.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
- * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
  * @typedef {import('../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
  * @typedef {import('../appliances/idio-enum.js').IdioEnum} IdioEnum
  * @typedef {import('../appliances/idio-scalar.js').IdioScalar} IdioScalar
  * @typedef {import('../appliances/idio-directive.js').IdioDirective} IdioDirective
  * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
  * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
- * @typedef {import('../../util/services-manager.js').ServiceManager} ServiceManager
  * @typedef {import('./methods/start.js').Runtime} Runtime
  */
 
 /**
  * @typedef services
- * @property {Array.<string>} nodes
- * @property {Array.<string>} enums
- * @property {Array.<string>} interfaces
- * @property {Array.<string>} unions
+ * @property {string[]} nodes
+ * @property {string[]} enums
+ * @property {string[]} interfaces
+ * @property {string[]} unions
  */
 
 /**
  * @typedef locals
- * @property {Array.<GraphQLNode>} nodes
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioScalar>} scalars
- * @property {Array.<IdioDirective>} directives
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
+ * @property {GraphQLNode[]} nodes
+ * @property {IdioEnum[]} enums
+ * @property {IdioScalar[]} scalars
+ * @property {IdioDirective[]} directives
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
  * @property {any} schemaGlobals - an Array or a single instance of GraphQL typeDefs, use filePath, string, or gql-tag.
  */
 
@@ -44,22 +39,19 @@ const {
  */
 
 /**
- * @typedef {Object} GraphQLGateway
- * @property {() => Promise.<Runtime>} start
- * @property {ServiceBroker} broker
- */
-
-/**
  *
  * You can use GraphQLGateway to orchestrate a collection of GraphQLNode's & Schema Appliances exposed over a network.
  *
  * @param {config} config
  * @param {BrokerOptions} brokerOptions
  *
- * @returns {GraphQLGateway}
+ * @returns {{start: () => Promise<Runtime>, broker: ServiceBroker}}
  */
 function GraphQLGateway(config, brokerOptions) {
-    const broker = createGatewayBroker(brokerOptions);
+    const broker = createBroker(
+        { name: brokerOptions.nodeID },
+        { brokerOptions: { ...brokerOptions, gateway: brokerOptions.nodeID } }
+    );
 
     return {
         broker,

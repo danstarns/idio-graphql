@@ -9,18 +9,17 @@ const INDEX = require("../constants/context-index.js");
  * @typedef {import('graphql').DocumentNode} DocumentNode
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('../util/execute.js').execute} execute
- * @typedef {import('../api/graphql_node/graphql-node.js').injections} injections
  */
 
 /**
- * @typedef {ServiceBroker & {gql: {execute: execute}}} IdioBroker
+ * @typedef {{execute: execute, dataLoaders?: object, models?: object}} injections
  */
 
 /**
  * @typedef {(
  *      root: any,
  *      args: object,
- *      context: {broker: IdioBroker, injections: injections},
+ *      context: {broker?: ServiceBroker, injections: injections},
  *      info: DocumentNode
  *   ) => any} PreHook
  */
@@ -34,7 +33,7 @@ const INDEX = require("../constants/context-index.js");
  *      resolve: any,
  *      root: any,
  *      args: object,
- *      context: {broker: IdioBroker, injections: injections},
+ *      context: {broker?: ServiceBroker, injections: injections},
  *      info: DocumentNode
  *   ) => any} PostHook
  */
@@ -47,7 +46,7 @@ const INDEX = require("../constants/context-index.js");
  * @typedef {(
  *      root: any,
  *      args: object,
- *      context: {broker: IdioBroker, injections: injections},
+ *      context: {broker?: ServiceBroker, injections: injections},
  *      info: DocumentNode
  *   ) => any} resolve
  */

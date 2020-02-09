@@ -1,10 +1,10 @@
 const loadNode = require("./load-node.js");
-const createNodeBroker = require("./create-node-broker.js");
 const { abort } = require("../../../util/index.js");
 const {
     handleIntrospection,
     introspectionCall,
-    createAction
+    createAction,
+    createBroker
 } = require("../../../util/index.js");
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
@@ -29,7 +29,7 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
  */
 async function serve(brokerOptions) {
     const RUNTIME = {
-        broker: createNodeBroker(this, { brokerOptions }),
+        broker: createBroker(this, { brokerOptions }),
         gatewayManagers: {},
         initialized: false,
         introspection: {},

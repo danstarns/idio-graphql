@@ -1,14 +1,29 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
 const uuid = require("uuid/v4");
-const IdioError = require("../../idio-error.js");
+const IdioError = require("../../src/api/idio-error.js");
 
 /**
- * @typedef {import('moleculer').BrokerOptions} BrokerOptions
+ * @typedef {import('moleculer').BrokerOptions & {gateway: string}} BrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
 
-function createApplianceBroker(appliance, RUNTIME) {
+/**
+ * @typedef instance
+ * @property {string} name
+ */
+
+/**
+ * @typedef RUNTIME
+ * @property {BrokerOptions} brokerOptions
+ */
+
+/**
+ *
+ * @param {instance} instance
+ * @param {RUNTIME} RUNTIME
+ */
+function createBroker(instance, RUNTIME) {
     const { brokerOptions } = RUNTIME;
 
     if (!brokerOptions) {
@@ -33,7 +48,7 @@ function createApplianceBroker(appliance, RUNTIME) {
         );
     }
 
-    const serviceUUID = `${appliance.name}:${brokerOptions.gateway}:${uuid()}`;
+    const serviceUUID = `${instance.name}:${brokerOptions.gateway}:${uuid()}`;
 
     return new moleculer.ServiceBroker({
         ...brokerOptions,
@@ -41,4 +56,4 @@ function createApplianceBroker(appliance, RUNTIME) {
     });
 }
 
-module.exports = createApplianceBroker;
+module.exports = createBroker;

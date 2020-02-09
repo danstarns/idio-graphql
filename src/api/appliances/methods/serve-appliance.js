@@ -1,15 +1,13 @@
 /* eslint-disable global-require */
 /* eslint-disable default-case */
-
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 const {
     createAction,
     abort,
     introspectionCall,
-    handleIntrospection
+    handleIntrospection,
+    createBroker
 } = require("../../../util/index.js");
-
-const createApplianceBroker = require("./create-appliance-broker.js");
 
 /**
  * @typedef Runtime
@@ -26,7 +24,7 @@ module.exports = (metadata) => {
      * @param {BrokerOptions} brokerOptions
      */
     async function _serveAppliance(brokerOptions) {
-        const broker = createApplianceBroker(this, { brokerOptions });
+        const broker = createBroker(this, { brokerOptions });
 
         const RUNTIME = {
             broker,

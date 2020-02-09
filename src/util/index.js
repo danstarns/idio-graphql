@@ -11,6 +11,8 @@ const handleIntrospection = require("./handle-introspection.js");
 const introspectionCall = require("./introspection-call.js");
 const createAction = require("./create-action.js");
 const validateTypeDefs = require("./validate-typedefs.js");
+const createBroker = require("./create-broker.js");
+const execute = require("./execute.js");
 
 module.exports = {
     parseTypeDefs,
@@ -25,5 +27,7 @@ module.exports = {
     handleIntrospection,
     introspectionCall,
     createAction,
-    validateTypeDefs
+    validateTypeDefs,
+    createBroker,
+    execute
 };

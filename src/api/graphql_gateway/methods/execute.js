@@ -10,7 +10,7 @@ const IdioError = require("../../idio-error.js");
 
 /**
  * @param {Runtime} RUNTIME
- * @returns {(ctx: Context) => Promise.<ExecutionResult>}
+ * @returns {(ctx: Context) => Promise<ExecutionResult>}
  */
 function execute(RUNTIME) {
     const { schema } = RUNTIME;

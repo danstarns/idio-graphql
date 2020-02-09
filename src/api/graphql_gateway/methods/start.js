@@ -12,7 +12,6 @@ const compareGateways = require("./compare-gateways.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('moleculer').BrokerOptions} BrokerOptions
  * @typedef {import('../graphql-gateway.js').config} config
  * @typedef {import('../graphql-gateway.js').Runtime} Runtime
  */

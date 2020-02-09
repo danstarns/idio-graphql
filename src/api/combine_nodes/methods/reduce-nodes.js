@@ -1,4 +1,7 @@
+/* eslint-disable prettier/prettier */
 const { loadNode } = require("../../graphql_node/methods/index.js");
+const { execute } = require("../../../util/index.js");
+const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 /**
  * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
@@ -11,12 +14,65 @@ const { loadNode } = require("../../graphql_node/methods/index.js");
  *  @property {object} resolvers
  */
 
+function inject(methods, RUNTIME) {
+    return Object.entries(methods).reduce(
+        (result, [key, method]) => ({
+            ...result,
+            ...(method.subscribe ? {
+                [key]: {
+                    ...method,
+                    subscribe: (...graphQLArgs) => {
+
+                        const newArgs = [...graphQLArgs];
+
+                        if (!newArgs[CONTEXT_INDEX]) {
+                            newArgs[CONTEXT_INDEX] = {}
+                        }
+
+                        if (!newArgs[CONTEXT_INDEX].injections) {
+                            newArgs[CONTEXT_INDEX].injections = { execute: execute.withSchema(RUNTIME.schema) }
+                        }
+
+                        newArgs[CONTEXT_INDEX].injections = {
+                            ...newArgs[CONTEXT_INDEX].injections,
+                            execute: execute.withSchema(RUNTIME.schema)
+                        }
+
+                        return method.subscribe(...newArgs)
+                    }
+                }
+            } : {
+                    [key]: async (...graphQLArgs) => {
+
+                        const newArgs = [...graphQLArgs];
+
+                        if (!newArgs[CONTEXT_INDEX]) {
+                            newArgs[CONTEXT_INDEX] = {}
+                        }
+
+                        if (!newArgs[CONTEXT_INDEX].injections) {
+                            newArgs[CONTEXT_INDEX].injections = { execute: execute.withSchema(RUNTIME.schema) }
+                        }
+
+                        newArgs[CONTEXT_INDEX].injections = {
+                            ...newArgs[CONTEXT_INDEX].injections,
+                            execute: execute.withSchema(RUNTIME.schema)
+                        }
+
+                        return method(...newArgs)
+                    }
+                })
+        }),
+        {}
+    );
+}
+
 /**
  *
  * @param {reducedNodes} r
  * @param {GraphQLNode} node
  */
-function reduceNode(r, node) {
+function reduceNode(r, node, RUNTIME) {
     let { ...result } = r;
 
     result.typeDefs.push(node.typeDefs);
@@ -26,11 +82,16 @@ function reduceNode(r, node) {
         ...Object.entries(node.resolvers)
             .filter(([key]) => key !== "Fields")
             .reduce(
-                (res, [key, value]) => ({
+                (res, [key, methods]) => ({
                     ...res,
                     ...(result.resolvers[key]
-                        ? { [key]: { ...result.resolvers[key], ...value } }
-                        : { [key]: value })
+                        ? {
+                            [key]: {
+                                ...result.resolvers[key],
+                                ...inject(methods, RUNTIME)
+                            }
+                        }
+                        : { [key]: inject(methods, RUNTIME) })
                 }),
                 {}
             ),
@@ -41,10 +102,12 @@ function reduceNode(r, node) {
         const {
             resolvers: nestedResolvers,
             typeDefs: nestedTypeDefs
-        } = node.nodes.map(loadNode).reduce(reduceNode, {
-            typeDefs: [],
-            resolvers: {}
-        });
+        } = node.nodes
+            .map(loadNode)
+            .reduce((_result, _node) => reduceNode(_result, _node, RUNTIME), {
+                typeDefs: [],
+                resolvers: {}
+            });
 
         result = {
             ...result,
@@ -68,10 +131,13 @@ function reduceNode(r, node) {
  * @param {nodes} nodes
  * @returns {reducedNodes}
  */
-function reduceNodes(nodes) {
+function reduceNodes(nodes, RUNTIME) {
     return nodes
         .map(loadNode)
-        .reduce(reduceNode, { typeDefs: [], resolvers: {} });
+        .reduce((result, node) => reduceNode(result, node, RUNTIME), {
+            typeDefs: [],
+            resolvers: {}
+        });
 }
 
 module.exports = reduceNodes;

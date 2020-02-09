@@ -1,7 +1,9 @@
 const { parse } = require("graphql/language/parser");
 const { print } = require("graphql/language/printer");
+const { graphql } = require("graphql");
 const IdioError = require("../api/idio-error.js");
 const ServicesManager = require("./services-manager.js");
+const parseTypeDefs = require("./parse-typedefs.js");
 
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
@@ -30,7 +32,7 @@ const ServicesManager = require("./services-manager.js");
  * @param {Object} RUNTIME
  * @returns {function}
  */
-module.exports = (RUNTIME) => {
+function withBroker(RUNTIME) {
     const { broker, gatewayManagers } = RUNTIME;
 
     /**
@@ -244,4 +246,48 @@ module.exports = (RUNTIME) => {
             };
         }
     };
+}
+
+function withSchema(schema) {
+    return async function execute(document, options) {
+        if (!document) {
+            throw new IdioError(`document required.`);
+        }
+
+        const queryType = typeof document;
+
+        if (queryType !== "object" && queryType !== "string") {
+            throw new IdioError(`execute must provide document string or AST.`);
+        }
+
+        if (queryType === "string") {
+            document = parse(document);
+        } else {
+            document = print(document);
+        }
+
+        const { operationName, variables, context, root } = options;
+
+        try {
+            const { data, errors } = await graphql({
+                schema,
+                source: document,
+                rootValue: root,
+                contextValue: context,
+                variableValues: variables,
+                operationName
+            });
+
+            /** @type {ExecutionResult} */
+            return { data, errors };
+        } catch (error) {
+            /** @type {ExecutionResult} */
+            return { errors: [new IdioError(error)] };
+        }
+    };
+}
+
+module.exports = {
+    withBroker,
+    withSchema
 };

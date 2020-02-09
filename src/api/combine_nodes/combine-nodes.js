@@ -45,7 +45,7 @@ function combineNodes(nodes, appliances = {}) {
 
     validateAppliances(appliances, RUNTIME);
 
-    const reducedNodes = reduceNodes(nodes);
+    const reducedNodes = reduceNodes(nodes, RUNTIME);
 
     const reducedAppliances = reduceAppliances(appliances);
 

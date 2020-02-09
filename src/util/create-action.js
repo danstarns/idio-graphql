@@ -25,9 +25,14 @@ module.exports = ({ method, contextIndex }, RUNTIME) => {
         }
 
         decodedArgs[contextIndex].broker = broker;
-        decodedArgs[contextIndex].broker.gql = {
-            /** @type {execute} */ execute: execute(RUNTIME)
-        };
+
+        if (!decodedArgs[contextIndex].injections) {
+            decodedArgs[contextIndex].injections = {};
+        }
+
+        decodedArgs[contextIndex].injections.execute = execute.withBroker(
+            RUNTIME
+        );
 
         let result;
 

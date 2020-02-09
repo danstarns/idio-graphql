@@ -1,6 +1,5 @@
 const fs = require("fs");
-const { printWithComments } = require("graphql-toolkit");
-const { parse } = require("graphql/language");
+const { parse, print } = require("graphql/language");
 const IdioError = require("../api/idio-error.js");
 
 /**
@@ -24,7 +23,7 @@ function parseTypeDefs(typeDefs) {
         }
     } else if (typeof typeDefs === "object") {
         if (Object.keys(typeDefs).includes("kind")) {
-            return printWithComments(typeDefs);
+            return print(typeDefs);
         }
 
         throw new IdioError(
