@@ -84,24 +84,20 @@ module.exports = ({ config, broker }) => {
 
         await new Promise(checkForServices(RUNTIME));
 
-        const nodes = RUNTIME.registeredServices.nodes.map(
-            createLocalNode({
-                ...RUNTIME,
-                GraphQLNode
-            })
-        );
-
         ({
             typeDefs: RUNTIME.typeDefs,
             resolvers: RUNTIME.resolvers,
-            schemaDirectives: RUNTIME.schemaDirectives
-        } = await combineNodes(nodes, createLocalAppliances(RUNTIME)));
-
-        RUNTIME.schema = makeExecutableSchema({
-            typeDefs: RUNTIME.typeDefs,
-            resolvers: RUNTIME.resolvers,
-            schemaDirectives: RUNTIME.schemaDirectives
-        });
+            schemaDirectives: RUNTIME.schemaDirectives,
+            schema: RUNTIME.schema
+        } = combineNodes(
+            RUNTIME.registeredServices.nodes.map(
+                createLocalNode({
+                    ...RUNTIME,
+                    GraphQLNode
+                })
+            ),
+            createLocalAppliances(RUNTIME)
+        ));
 
         return RUNTIME;
     };
