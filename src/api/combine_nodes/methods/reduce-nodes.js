@@ -16,27 +16,25 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 function inject(methods, RUNTIME) {
     return Object.entries(methods).reduce((result, [key, method]) => {
-        const func = (_method, graphQLArgs) => {
-            const newArgs = [...graphQLArgs];
-
-            if (!newArgs[CONTEXT_INDEX]) {
-                newArgs[CONTEXT_INDEX] = {};
+        const createArgs = (...graphQLArgs) => {
+            if (!graphQLArgs[CONTEXT_INDEX]) {
+                graphQLArgs[CONTEXT_INDEX] = {};
             }
 
-            if (!newArgs[CONTEXT_INDEX].injections) {
-                newArgs[CONTEXT_INDEX].injections = {};
+            if (!graphQLArgs[CONTEXT_INDEX].injections) {
+                graphQLArgs[CONTEXT_INDEX].injections = {};
             }
 
-            if (!(typeof newArgs[CONTEXT_INDEX].injections === "object")) {
-                newArgs[CONTEXT_INDEX].injections = {};
+            if (!(typeof graphQLArgs[CONTEXT_INDEX].injections === "object")) {
+                graphQLArgs[CONTEXT_INDEX].injections = {};
             }
 
-            newArgs[CONTEXT_INDEX].injections = {
-                ...newArgs[CONTEXT_INDEX].injections,
+            graphQLArgs[CONTEXT_INDEX].injections = {
+                ...graphQLArgs[CONTEXT_INDEX].injections,
                 execute: execute.withSchema(RUNTIME.schema)
             };
 
-            return _method(...newArgs);
+            return graphQLArgs;
         };
 
         return {
@@ -46,11 +44,12 @@ function inject(methods, RUNTIME) {
                     [key]: {
                         ...method,
                         subscribe: (...graphQLArgs) =>
-                            func(method.subscribe, ...graphQLArgs)
+                            method.subscribe(createArgs(...graphQLArgs))
                     }
                 }
                 : {
-                    [key]: (...graphQLArgs) => func(method, ...graphQLArgs)
+                    [key]: (...graphQLArgs) =>
+                        method(createArgs(...graphQLArgs))
                 })
         };
     }, {});
