@@ -2,6 +2,13 @@
 const { loadAppliances } = require("../../appliances/methods/index.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 
+/**
+ * @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode
+ */
+
+/**
+ * @param {GraphQLNode} node
+ */
 function loadNodeAppliances(node) {
     const { enums, interfaces, unions } = node;
 
