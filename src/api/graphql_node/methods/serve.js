@@ -17,15 +17,15 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 /**
  * @typedef Runtime
  * @property {ServiceBroker} broker
- * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {Object<string, ServiceManager>} gatewayManagers
  * @property {boolean} initialized
- * @property {Object.<string, object>} introspection
+ * @property {Object<string, object>} introspection
  * @property {IdioBrokerOptions} brokerOptions
  */
 
 /**
  * @param {IdioBrokerOptions} brokerOptions
- * @returns {Promise.<Runtime>}
+ * @returns {Promise<Runtime>}
  */
 async function serve(brokerOptions) {
     const RUNTIME = {
@@ -86,23 +86,15 @@ async function serve(brokerOptions) {
         })
     );
 
-    await Promise.all(
-        [this.enums, this.unions, this.interfaces, this.nodes]
-            .filter(Boolean)
-            .flatMap((appliances) =>
-                appliances.map((appliance) => appliance.serve(brokerOptions))
-            )
-    );
+    const appliances = [this.enums, this.unions, this.interfaces, this.nodes]
+        .filter(Boolean)
+        .reduce((result, value) => [...result, ...value], []);
+
+    await Promise.all(appliances.map((x) => x.serve(brokerOptions)));
 
     await RUNTIME.broker.start();
 
-    await RUNTIME.broker.waitForServices(
-        [this.enums, this.unions, this.interfaces, this.nodes]
-            .filter(Boolean)
-            .flatMap((appliances) =>
-                appliances.map((appliance) => appliance.name)
-            )
-    );
+    await RUNTIME.broker.waitForServices(appliances.map(({ name }) => name));
 
     await new Promise(introspectionCall(RUNTIME, { type: "node" }));
 
