@@ -90,7 +90,7 @@ function wrapResolvers(node) {
                                             graphQLArgs[
                                                 INDEX
                                             ].node.injections = {
-                                                ...(graphQLArgs[INDEX].node
+                                                ...(graphQLArgs[INDEX]
                                                     .injections || {}),
                                                 ...node.injections
                                             };
