@@ -1,4 +1,3 @@
-const loadNode = require("./load-node.js");
 const { abort } = require("../../../util/index.js");
 const {
     handleIntrospection,
@@ -36,12 +35,10 @@ async function serve(brokerOptions) {
         brokerOptions
     };
 
-    const { resolvers } = loadNode(this);
-
     RUNTIME.introspection = {
         name: this.name,
         typeDefs: this.typeDefs,
-        resolvers: Object.entries(resolvers).reduce(
+        resolvers: Object.entries(this.resolvers).reduce(
             (result, [name, methods]) => ({
                 ...result,
                 [name]: Object.keys(methods)
@@ -65,7 +62,7 @@ async function serve(brokerOptions) {
         actions: { abort }
     });
 
-    Object.entries(resolvers).forEach(([key, methods]) =>
+    Object.entries(this.resolvers).forEach(([key, methods]) =>
         RUNTIME.broker.createService({
             name: `${RUNTIME.broker.nodeID}:${key}`,
             actions: Object.entries(methods).reduce(
@@ -73,9 +70,7 @@ async function serve(brokerOptions) {
                     ...result,
                     [name]: createAction(
                         {
-                            method: method.subscribe
-                                ? method.subscribe
-                                : method,
+                            method,
                             contextIndex: CONTEXT_INDEX
                         },
                         RUNTIME
