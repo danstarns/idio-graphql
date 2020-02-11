@@ -49,9 +49,9 @@ module.exports = (RUNTIME) => {
                                     executionResult = streamToIterator(
                                         await call()
                                     );
+                                } else {
+                                    executionResult = await call();
                                 }
-
-                                executionResult = await call();
 
                                 return executionResult;
                             } catch ({ message }) {
