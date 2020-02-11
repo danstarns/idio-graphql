@@ -22,7 +22,7 @@ module.exports = (RUNTIME) => {
                 (result, [type, methods]) => ({
                     ...result,
                     [type]: methods.reduce((res, resolver) => {
-                        async function operation({ graphQLArgs, stream }) {
+                        async function operation(...graphQLArgs) {
                             const serviceToCall = await instanceServiceManager.getNextService();
 
                             if (!serviceToCall) {
@@ -31,8 +31,8 @@ module.exports = (RUNTIME) => {
                                 );
                             }
 
-                            const call = () => {
-                                return RUNTIME.broker.call(
+                            try {
+                                const executionResult = await RUNTIME.broker.call(
                                     `${serviceToCall}:${type}.${resolver}`,
                                     {
                                         graphQLArgs: safeJsonStringify(
@@ -40,18 +40,6 @@ module.exports = (RUNTIME) => {
                                         )
                                     }
                                 );
-                            };
-
-                            try {
-                                let executionResult;
-
-                                if (stream) {
-                                    executionResult = streamToIterator(
-                                        await call()
-                                    );
-                                } else {
-                                    executionResult = await call();
-                                }
 
                                 return executionResult;
                             } catch ({ message }) {
@@ -65,11 +53,10 @@ module.exports = (RUNTIME) => {
                             return {
                                 ...res,
                                 [resolver]: {
-                                    subscribe: (...graphQLArgs) =>
-                                        operation({
-                                            graphQLArgs,
-                                            stream: true
-                                        })
+                                    subscribe: async (...graphQLArgs) =>
+                                        streamToIterator(
+                                            await operation(...graphQLArgs)
+                                        )
                                 }
                             };
                         }
@@ -77,7 +64,7 @@ module.exports = (RUNTIME) => {
                         return {
                             ...res,
                             [resolver]: (...graphQLArgs) =>
-                                operation({ graphQLArgs })
+                                operation(...graphQLArgs)
                         };
                     }, {})
                 }),
