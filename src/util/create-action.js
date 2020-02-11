@@ -38,9 +38,9 @@ module.exports = ({ method, contextIndex }, RUNTIME) => {
 
         if (method.subscribe) {
             result = iteratorToStream(method.subscribe(...decodedArgs));
+        } else {
+            result = await method(...decodedArgs);
         }
-
-        result = await method(...decodedArgs);
 
         return result;
     };
