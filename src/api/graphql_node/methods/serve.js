@@ -72,7 +72,12 @@ async function serve(brokerOptions) {
                 (result, [name, method]) => ({
                     ...result,
                     [name]: createAction(
-                        { method, contextIndex: CONTEXT_INDEX },
+                        {
+                            method: method.subscribe
+                                ? method.subscribe
+                                : method,
+                            contextIndex: CONTEXT_INDEX
+                        },
                         RUNTIME
                     )
                 }),
