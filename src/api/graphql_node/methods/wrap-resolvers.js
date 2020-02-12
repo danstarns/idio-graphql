@@ -87,9 +87,7 @@ function wrapResolvers(node) {
                                                 );
                                             }
                                         } else {
-                                            graphQLArgs[
-                                                INDEX
-                                            ].node.injections = {
+                                            graphQLArgs[INDEX].injections = {
                                                 ...(graphQLArgs[INDEX]
                                                     .injections || {}),
                                                 ...node.injections
