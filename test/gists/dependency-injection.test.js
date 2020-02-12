@@ -176,66 +176,6 @@ describe("gists/dependency-injection", () => {
             .to.be.a("function");
     });
 
-    it("should verify dependency injection with a initial function", async () => {
-        let result;
-
-        const User = new GraphQLNode({
-            name: "User",
-            typeDefs: `type User {
-                name: String
-            }
-            
-            type Query {
-                user: User
-            }`,
-            injections: () => ({
-                song: "the cat"
-            }),
-            resolvers: {
-                Query: {
-                    user: {
-                        pre: (...args) => {
-                            args[2].injections.song += " jumped";
-                        },
-                        resolve: (...args) => {
-                            args[2].injections.song += " over the";
-                        },
-                        post: (...args) => {
-                            args[3].injections.song += " moon";
-
-                            result = args[3].injections.song;
-                        }
-                    }
-                }
-            }
-        });
-
-        const { typeDefs, resolvers } = combineNodes([User]);
-
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
-
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
-
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
-
-        expect(resolvers)
-            .to.be.a("object")
-            .to.have.property("Query")
-            .to.be.a("object")
-            .to.have.property("user")
-            .to.be.a("function");
-
-        await resolvers.Query.user(undefined, {}, {});
-
-        expect(result).to.equal("the cat jumped over the moon");
-    });
-
     it("should verify that the first argument to the post function(s) is the result of resolve", async () => {
         let result;
 
@@ -287,38 +227,5 @@ describe("gists/dependency-injection", () => {
         await resolvers.Query.user(undefined, {}, {});
 
         expect(result).to.equal("the cat jumped over the moon");
-    });
-
-    it("should catch and throw the error inside inject function", async () => {
-        try {
-            const User = new GraphQLNode({
-                name: "User",
-                typeDefs: `type User {
-                name: String
-            }
-            
-            type Query {
-                user: User
-            }`,
-                injections: () => {
-                    throw new Error("failed");
-                },
-                resolvers: {
-                    Query: {
-                        user: () => true
-                    }
-                }
-            });
-
-            const { resolvers } = combineNodes([User]);
-
-            await resolvers.Query.user(undefined, {}, {});
-
-            throw new Error();
-        } catch (error) {
-            expect(error.message).to.contain(
-                `'User.resolvers.Query.user' failed executing injections:`
-            );
-        }
     });
 });

@@ -25,7 +25,7 @@ const {
  */
 
 /**
- * @typedef {({dataLoaders: object, models: object}|{() => object})} injections
+ * @typedef {{dataLoaders: object, models: object}} injections
  */
 
 /**

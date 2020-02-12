@@ -13,14 +13,14 @@ const injectGraphQLArgs = require("./inject-graphql-args.js");
  */
 
 /**
- * @typedef {{execute: execute, dataLoaders?: object, models?: object}} injections
+ * @typedef {{execute: execute, dataLoaders?: object, models?: object, broker?: ServiceBroker}} context
  */
 
 /**
  * @typedef {(
  *      root: any,
  *      args: object,
- *      context: {broker?: ServiceBroker, injections: injections},
+ *      context: context,
  *      info: DocumentNode
  *   ) => any} PreHook
  */
@@ -34,7 +34,7 @@ const injectGraphQLArgs = require("./inject-graphql-args.js");
  *      resolve: any,
  *      root: any,
  *      args: object,
- *      context: {broker?: ServiceBroker, injections: injections},
+ *      context: context,
  *      info: DocumentNode
  *   ) => any} PostHook
  */
@@ -47,7 +47,7 @@ const injectGraphQLArgs = require("./inject-graphql-args.js");
  * @typedef {(
  *      root: any,
  *      args: object,
- *      context: {broker?: ServiceBroker, injections: injections},
+ *      context: context,
  *      info: DocumentNode
  *   ) => any} resolve
  */
@@ -101,7 +101,7 @@ async function resultFunction(input, { direction, name, args }) {
  * @param {PreUnion} options.pre
  * @param {PostUnion} options.post
  * @param {string} options.name
- * @param {any} options.injections
+ * @param {object} options.injections
  *
  * @returns {Promise<any>}
  */
