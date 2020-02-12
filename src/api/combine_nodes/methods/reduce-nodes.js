@@ -44,12 +44,12 @@ function inject(methods, RUNTIME) {
                     [key]: {
                         ...method,
                         subscribe: (...graphQLArgs) =>
-                            method.subscribe(createArgs(graphQLArgs))
+                            method.subscribe(...createArgs(graphQLArgs))
                     }
                 }
                 : {
                     [key]: (...graphQLArgs) =>
-                        method(createArgs(graphQLArgs))
+                        method(...createArgs(graphQLArgs))
                 })
         };
     }, {});
