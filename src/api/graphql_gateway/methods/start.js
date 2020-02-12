@@ -1,4 +1,3 @@
-const { makeExecutableSchema } = require("graphql-tools");
 const combineNodes = require("../../combine_nodes/combine-nodes.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 
@@ -22,19 +21,19 @@ const compareGateways = require("./compare-gateways.js");
  * @property {services} services
  * @property {services} registeredServices
  * @property {services} waitingServices
- * @property {Object.<string, ServiceManager>} serviceManagers
+ * @property {Object<string, ServiceManager>} serviceManagers
  * @property {string} typeDefs
- * @property {Object} resolvers
- * @property {Object} resolvers.Query
- * @property {Object} resolvers.Mutation
- * @property {Object} resolvers.Subscription
- * @property {Object} schemaDirectives
+ * @property {object} resolvers
+ * @property {object} resolvers.Query
+ * @property {object} resolvers.Mutation
+ * @property {object} resolvers.Subscription
+ * @property {object} schemaDirectives
  * @property {ServiceBroker} broker
  * @property {GraphQLSchema} schema
  */
 
 /**
- * @param {Object} curry
+ * @param {object} curry
  * @param {config} curry.config
  * @param {ServiceBroker} curry.broker
  */
