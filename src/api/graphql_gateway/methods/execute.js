@@ -4,7 +4,7 @@ const IdioError = require("../../idio-error.js");
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
+ * @typedef {import('./start.js').Runtime} Runtime
  * @typedef {import('moleculer').Context} Context
  */
 
