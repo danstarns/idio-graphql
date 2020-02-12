@@ -2,6 +2,7 @@
 const isFunction = require("./is-function.js");
 const IdioError = require("../api/idio-error.js");
 const INDEX = require("../constants/context-index.js");
+const injectGraphQLArgs = require("./inject-graphql-args.js");
 
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
@@ -158,47 +159,7 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
             graphQLArgs[INDEX] = {};
         }
 
-        if (injections) {
-            if (!graphQLArgs[INDEX].injections) {
-                graphQLArgs[INDEX].injections = {};
-            }
-
-            if (!(typeof graphQLArgs[INDEX].injections === "object")) {
-                throw new IdioError(
-                    `'${name}' injections must be or resolve to an object`
-                );
-            }
-
-            if (isFunction(injections)) {
-                async function getInjections() {
-                    const res = await injections();
-
-                    if (!(typeof res === "object")) {
-                        throw new IdioError(
-                            `'${name}' injections be or resolve to an object`
-                        );
-                    }
-
-                    return res;
-                }
-
-                try {
-                    graphQLArgs[INDEX].injections = {
-                        ...graphQLArgs[INDEX].injections,
-                        ...(await getInjections())
-                    };
-                } catch (error) {
-                    throw new IdioError(
-                        `'${name}' failed executing injections: Error:\n${error.message}`
-                    );
-                }
-            } else {
-                graphQLArgs[INDEX].injections = {
-                    ...(graphQLArgs[INDEX].injections || {}),
-                    ...injections
-                };
-            }
-        }
+        graphQLArgs = injectGraphQLArgs({ graphQLArgs, injections });
 
         if (pre) {
             await resultFunction(pre, {

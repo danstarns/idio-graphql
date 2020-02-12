@@ -2,6 +2,7 @@
 const INDEX = require("../../../constants/context-index.js");
 const { wrappedResolver, isFunction } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
+const { injectGraphQLArgs } = require("../../../util/index.js");
 
 function wrapResolvers(node) {
     const prefix = `GraphQLNode with name: '${node.name}'`;
@@ -42,58 +43,10 @@ function wrapResolvers(node) {
                                         graphQLArgs[INDEX] = {};
                                     }
 
-                                    if (node.injections) {
-                                        if (!graphQLArgs[INDEX].injections) {
-                                            graphQLArgs[INDEX].injections = {};
-                                        }
-
-                                        if (
-                                            !(
-                                                typeof graphQLArgs[INDEX]
-                                                    .injections === "object"
-                                            )
-                                        ) {
-                                            throw new IdioError(
-                                                `'${name}' injections must be or resolve to an object`
-                                            );
-                                        }
-
-                                        if (isFunction(node.injections)) {
-                                            async function getInjections() {
-                                                const res = await node.injections();
-
-                                                if (
-                                                    !(typeof res === "object")
-                                                ) {
-                                                    throw new IdioError(
-                                                        `'${name}' injections be or resolve to an object`
-                                                    );
-                                                }
-
-                                                return res;
-                                            }
-
-                                            try {
-                                                graphQLArgs[
-                                                    INDEX
-                                                ].injections = {
-                                                    ...graphQLArgs[INDEX]
-                                                        .injections,
-                                                    ...(await getInjections())
-                                                };
-                                            } catch (error) {
-                                                throw new IdioError(
-                                                    `'${name}' failed executing injections: Error:\n${error.message}`
-                                                );
-                                            }
-                                        } else {
-                                            graphQLArgs[INDEX].injections = {
-                                                ...(graphQLArgs[INDEX]
-                                                    .injections || {}),
-                                                ...node.injections
-                                            };
-                                        }
-                                    }
+                                    graphQLArgs = injectGraphQLArgs({
+                                        graphQLArgs,
+                                        injections: node.injections
+                                    });
 
                                     const iterator = await method.subscribe(
                                         ...graphQLArgs
