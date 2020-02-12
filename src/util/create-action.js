@@ -24,11 +24,11 @@ module.exports = ({ method, contextIndex }, RUNTIME) => {
             decodedArgs[contextIndex] = {};
         }
 
-        decodedArgs[contextIndex].broker = broker;
-
         if (!decodedArgs[contextIndex].injections) {
             decodedArgs[contextIndex].injections = {};
         }
+
+        decodedArgs[contextIndex].injections.broker = broker;
 
         decodedArgs[contextIndex].injections.execute = execute.withBroker(
             RUNTIME
