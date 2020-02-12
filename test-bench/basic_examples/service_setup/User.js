@@ -5,9 +5,9 @@ const { GraphQLNode } = require("../../../src/api/index.js");
 const sleep = util.promisify(setImmediate);
 
 const users = [
-    { id: "0", name: "Bob", age: 3, post: ["0"] },
-    { id: "1", name: "Jane", age: 13, post: ["1", "2"] },
-    { id: "2", name: "Will", age: 23, post: ["2"] }
+    { id: "0", name: "Bob", age: 3, posts: ["0"] },
+    { id: "1", name: "Jane", age: 13, posts: ["1", "2"] },
+    { id: "2", name: "Will", age: 23, posts: ["2"] }
 ];
 
 async function* userUpdate() {
@@ -19,7 +19,7 @@ async function* userUpdate() {
                 id: "0",
                 name: "Bob",
                 age: Math.floor(Math.random() * 20),
-                post: ["0"]
+                posts: ["0"]
             }
         };
     }
@@ -64,7 +64,7 @@ const User = new GraphQLNode({
             posts: async (root, args, { injections }) => {
                 const result = await injections.execute(
                     gql`
-                        query($ids: [String]) {
+                        query($ids: [String!]) {
                             posts(ids: $ids) {
                                 id
                                 title
@@ -79,7 +79,7 @@ const User = new GraphQLNode({
                 );
 
                 if (result.errors) {
-                    throw result.errors;
+                    throw new Error(result.errors[0].message);
                 }
 
                 return result.data.posts;

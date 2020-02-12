@@ -2,9 +2,9 @@ const { gql } = require("apollo-server");
 const { GraphQLNode } = require("../../../../src/api/index.js");
 
 const users = [
-    { id: "0", name: "Bob", age: 3, post: ["0"] },
-    { id: "1", name: "Jane", age: 13, post: ["1", "2"] },
-    { id: "2", name: "Will", age: 23, post: ["2"] }
+    { id: "0", name: "Bob", age: 3, posts: ["0"] },
+    { id: "1", name: "Jane", age: 13, posts: ["1", "2"] },
+    { id: "2", name: "Will", age: 23, posts: ["2"] }
 ];
 
 const User = new GraphQLNode({
