@@ -63,8 +63,7 @@ module.exports = (RUNTIME) => {
 
                         return {
                             ...res,
-                            [resolver]: (...graphQLArgs) =>
-                                operation(...graphQLArgs)
+                            [resolver]: operation
                         };
                     }, {})
                 }),
