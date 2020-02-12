@@ -16,7 +16,7 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 function inject(methods, RUNTIME) {
     return Object.entries(methods).reduce((result, [key, method]) => {
-        const createArgs = (...graphQLArgs) => {
+        const createArgs = (graphQLArgs) => {
             if (!graphQLArgs[CONTEXT_INDEX]) {
                 graphQLArgs[CONTEXT_INDEX] = {};
             }
@@ -44,12 +44,12 @@ function inject(methods, RUNTIME) {
                     [key]: {
                         ...method,
                         subscribe: (...graphQLArgs) =>
-                            method.subscribe(createArgs(...graphQLArgs))
+                            method.subscribe(createArgs(graphQLArgs))
                     }
                 }
                 : {
                     [key]: (...graphQLArgs) =>
-                        method(createArgs(...graphQLArgs))
+                        method(createArgs(graphQLArgs))
                 })
         };
     }, {});
