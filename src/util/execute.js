@@ -42,8 +42,12 @@ function withBroker(RUNTIME) {
         /** @type {(DocumentNode|string)} */ document,
         /** @type {ExecutionContext} */ executionContext
     ) {
-        const { root, context, variables, operationName } =
+        const { root, context, variables = {}, operationName } =
             executionContext || {};
+
+        if (!(typeof variables === "object")) {
+            throw new IdioError(`variables must be of type object`);
+        }
 
         let selectedGateway;
 
@@ -280,9 +284,9 @@ function withSchema(schema) {
 
             /** @type {ExecutionResult} */
             return { data, errors };
-        } catch (error) {
+        } catch ({ message }) {
             /** @type {ExecutionResult} */
-            return { errors: [new IdioError(error)] };
+            return { errors: [new IdioError(message)] };
         }
     };
 }
