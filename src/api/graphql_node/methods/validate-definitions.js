@@ -1,6 +1,11 @@
 const { parse } = require("graphql/language");
 const IdioError = require("../../idio-error.js");
 
+/** @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode */
+
+/**
+ * @param {GraphQLNode} node
+ */
 function validateDefinitions(node) {
     const prefix = `GraphQLNode with name: '${node.name}'`;
 

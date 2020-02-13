@@ -1,6 +1,23 @@
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 const IdioError = require("../../idio-error.js");
 
+/** @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode */
+/** @typedef {import('../../appliances/idio-enum.js').IdioEnum} IdioEnum */
+/** @typedef {import('../../appliances/idio-interface.js').IdioInterface} IdioInterface */
+/** @typedef {import('../../appliances/idio-union.js').IdioUnion} IdioUnion */
+
+/**
+ * @param {GraphQLNode} node
+ * @returns {(
+ *  options: {
+ *        name: string,
+ *        enums: IdioEnum[],
+ *        interfaces: IdioInterface[],
+ *        unions: IdioUnion[],
+ *        nodes: GraphQLNode[]
+ *  }) => void
+ * }
+ */
 module.exports = (GraphQLNode) => {
     return function validateNodeAppliances({
         name,
@@ -43,8 +60,6 @@ module.exports = (GraphQLNode) => {
                 }
 
                 appliances.forEach(checkInstanceOfAppliance);
-
-                this[key] = appliances;
             }
         });
     };

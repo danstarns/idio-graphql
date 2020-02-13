@@ -23,6 +23,10 @@ function validateNodes(nodes, RUNTIME) {
         );
     }
 
+    if (!nodes.length) {
+        throw new IdioError("at least 1 node is required");
+    }
+
     nodes.forEach((node) => {
         checkInstance({
             instance: node,
