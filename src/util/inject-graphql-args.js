@@ -4,7 +4,11 @@ const IdioError = require("../api/idio-error.js");
 function injectGraphQLArgs({ graphQLArgs, injections }) {
     const args = [...graphQLArgs];
 
-    if (injections) {
+    if (injections && args.length) {
+        if (!args[INDEX]) {
+            args[INDEX] = {};
+        }
+
         if (!args[INDEX].injections) {
             args[INDEX].injections = {};
         }
