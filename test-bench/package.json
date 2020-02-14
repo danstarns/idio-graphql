@@ -1,8 +1,0 @@
-{
-    "scripts": {
-        "basic:local": "cross-env nodemon ./basic_examples/local_setup/index.js",
-        "basic:service:gateway": "cross-env nodemon ./basic_examples/service_setup/index.js",
-        "basic:service:user": "cross-env nodemon ./basic_examples/service_setup/User.js",
-        "basic:service:post": "cross-env nodemon ./basic_examples/service_setup/Post.js"
-    }
-}
