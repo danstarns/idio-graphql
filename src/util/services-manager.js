@@ -1,46 +1,6 @@
 const util = require("util");
 
-const sleep = util.promisify(setImmediate);
-
-function _getNextService() {
-    if (!this.activeServices.length) {
-        return null;
-    }
-
-    let found;
-
-    if (this.activeServices.length === 1) {
-        [found] = this.activeServices;
-
-        this.lastOutput = found;
-
-        return found;
-    }
-
-    if (this.activeServices.length === 2) {
-        if (this.lastOutput !== this.activeServices[0]) {
-            this.lastOutput = this.activeServices[0];
-
-            return this.activeServices[0];
-        }
-
-        this.lastOutput = this.activeServices[1];
-
-        return this.activeServices[1];
-    }
-
-    found = this.activeServices[
-        Math.floor(Math.random() * this.activeServices.length)
-    ];
-
-    if (found === this.lastOutput) {
-        return _getNextService.call(this);
-    }
-
-    this.lastOutput = found;
-
-    return found;
-}
+const sleep = util.promisify(setTimeout);
 
 /**
  * @typedef ServiceManager
@@ -86,27 +46,27 @@ ServiceManager.prototype.getNextService = async function getNextService() {
     async function getServiceToCall() {
         counter += 1;
 
-        await sleep();
-
-        const service = _getNextService.call(this);
-
-        if (service) {
-            return service;
+        if (!this.activeServices.length) {
+            return;
         }
 
-        if (counter > 10) {
-            if (!service && this.lastOutput) {
-                return this.lastOutput;
+        const service = this.activeServices[
+            Math.floor(Math.random() * this.activeServices.length)
+        ];
+
+        if (service === this.lastOutput) {
+            if (counter > 10) {
+                return service;
             }
 
-            return service;
-        }
-
-        if (!service) {
-            await sleep();
+            await sleep(100);
 
             return getServiceToCall.call(this);
         }
+
+        this.lastOutput = service;
+
+        return service;
     }
 
     const serviceToCall = await getServiceToCall.call(this);
