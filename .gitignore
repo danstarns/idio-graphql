@@ -1,8 +1,5 @@
-node_modules
-.nyc_output
-example
-.vscode
-.cache
-package-temp.json
-build
-dist
+node_modules/
+.nyc_output/
+.vscode/
+.cache/
+website/
