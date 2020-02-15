@@ -11,7 +11,7 @@ const {
     IdioEnum,
     IdioScalar,
     IdioDirective
-} = require("../src");
+} = require("../../../src");
 
 describe("combineNodes", () => {
     it("should throw nodes required", () => {
@@ -1078,7 +1078,10 @@ describe("combineNodes", () => {
         try {
             const node = new GraphQLNode({
                 name: "Post",
-                typeDefs: path.join(__dirname, "./dummy-data/Error-Post.gql"),
+                typeDefs: path.join(
+                    __dirname,
+                    "../../dummy-data/Error-Post.gql"
+                ),
                 resolvers: {
                     Mutation: {
                         likePost: () => true
@@ -1105,7 +1108,7 @@ describe("combineNodes", () => {
         try {
             const _Enum = new IdioEnum({
                 name: "Status",
-                typeDefs: path.join(__dirname, "./dummy-data/error.gql"),
+                typeDefs: path.join(__dirname, "../../dummy-data/error.gql"),
                 resolver: {}
             });
 
@@ -1190,7 +1193,7 @@ describe("combineNodes", () => {
 
             const hasScopeDirective = new IdioDirective({
                 name: "hasScope",
-                typeDefs: path.join(__dirname, "./dummy-data/error.gql"),
+                typeDefs: path.join(__dirname, "../../dummy-data/error.gql"),
                 resolver: isAuthenticated
             });
 

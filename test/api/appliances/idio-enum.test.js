@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { IdioEnum } = require("../src");
+const { IdioEnum } = require("../../../src");
 
 describe("IdioEnum", () => {
     it("should throw constructing IdioEnum name required", () => {

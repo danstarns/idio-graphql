@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { IdioInterface } = require("../src/index.js");
+const { IdioInterface } = require("../../../src/index.js");
 const gql = require("graphql-tag");
 
 describe("IdioInterface", () => {

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
 
-const { GraphQLNode, IdioEnum } = require("../src");
+const { GraphQLNode, IdioEnum } = require("../../../src");
 
 describe("GraphQLNode ", () => {
     it("should throw name required", () => {

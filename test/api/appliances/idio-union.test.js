@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { IdioUnion } = require("../src/index.js");
+const { IdioUnion } = require("../../../src/index.js");
 
 describe("IdioUnion", () => {
     it("should throw name required", () => {

@@ -2,7 +2,7 @@
 const { expect } = require("chai");
 
 const { AuthDirective } = require("graphql-directive-auth");
-const { IdioDirective } = require("../src");
+const { IdioDirective } = require("../../../src");
 
 const { isAuthenticated } = AuthDirective();
 

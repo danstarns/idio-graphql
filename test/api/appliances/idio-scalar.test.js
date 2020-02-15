@@ -3,7 +3,7 @@ const { expect } = require("chai");
 
 const { GraphQLJSON } = require("graphql-type-json");
 const { GraphQLScalarType } = require("graphql");
-const { IdioScalar } = require("../src");
+const { IdioScalar } = require("../../../src");
 
 describe("IdioScalar", () => {
     it("should throw constructing IdioScalar name required", () => {
