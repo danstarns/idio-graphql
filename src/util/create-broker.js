@@ -9,19 +9,11 @@ const IdioError = require("../../src/api/idio-error.js");
  */
 
 /**
- * @typedef instance
- * @property {string} name
- */
-
-/**
- * @typedef RUNTIME
- * @property {BrokerOptions} brokerOptions
- */
-
-/**
  *
- * @param {instance} instance
- * @param {RUNTIME} RUNTIME
+ * @param {{name: string}} instance
+ * @param {{BrokerOptions: brokerOptions}} RUNTIME
+ *
+ * @returns {ServiceBroker}
  */
 function createBroker(instance, RUNTIME) {
     const { brokerOptions } = RUNTIME;
@@ -43,6 +35,7 @@ function createBroker(instance, RUNTIME) {
     try {
         moleculer = require("moleculer");
     } catch (error) {
+        /* istanbul ignore next */
         throw new IdioError(
             `Cant find module: 'moleculer' install using npm install --save moleculer`
         );
