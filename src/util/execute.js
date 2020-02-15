@@ -3,290 +3,253 @@ const { print } = require("graphql/language/printer");
 const { graphql } = require("graphql");
 const IdioError = require("../api/idio-error.js");
 const ServicesManager = require("./services-manager.js");
-const parseTypeDefs = require("./parse-typedefs.js");
 
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
  * @typedef {import('graphql').DocumentNode} DocumentNode
  * @typedef {import('graphql').OperationDefinitionNode} OperationDefinitionNode
  * @typedef {import('graphql').DirectiveDefinitionNode} DirectiveDefinitionNode
+ * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
  */
 
 /**
  * @typedef ExecutionContext
- * @property {Object} root
- * @property {Object} context
- * @property {Object} variables
+ * @property {object} root
+ * @property {object} context
+ * @property {object} variables
  * @property {string} operationName
  */
 
 /**
  * @typedef {(
- *      document: (DocumentNode|string),
+ *      document: (DocumentNode | string),
  *      executionContext: ExecutionContext
- *   ) => Promise.<ExecutionResult>
+ *   ) => Promise<ExecutionResult>
  * } execute
  */
 
 /**
- * @param {Object} RUNTIME
- * @returns {function}
+ *
+ * @param {(string | DocumentNode)} document
+ * @returns {DocumentNode}
+ */
+function parseDocument(document) {
+    if (!document) {
+        throw new IdioError("document required.");
+    }
+
+    const queryType = typeof document;
+
+    if (queryType !== "object" && queryType !== "string") {
+        throw new IdioError(`document must be a string or AST.`);
+    }
+
+    if (queryType === "string") {
+        document = parse(document);
+    }
+
+    const { kind } = document;
+
+    if (kind) {
+        const subscriptions = document.definitions.filter(
+            (x) =>
+                x.kind === "OperationDefinition" &&
+                x.operation === "subscription"
+        );
+
+        if (subscriptions.length) {
+            throw new IdioError("subscriptions not supported.");
+        }
+    } else {
+        throw new IdioError(`invalid document provided.`);
+    }
+
+    return document;
+}
+
+/**
+ * @param {object} RUNTIME
+ * @returns {execute}
  */
 function withBroker(RUNTIME) {
     const { broker, gatewayManagers } = RUNTIME;
 
-    /**
-     * @returns {Promise.<ExecutionResult>}
-     */
-    return async function execute(
-        /** @type {(DocumentNode|string)} */ document,
-        /** @type {ExecutionContext} */ executionContext
-    ) {
-        const { root, context, variables = {}, operationName } =
-            executionContext || {};
-
-        if (!(typeof variables === "object")) {
-            throw new IdioError(`variables must be of type object`);
-        }
-
-        let selectedGateway;
-
+    return async function execute(document, executionContext = {}) {
         try {
-            if (!document) {
-                throw new IdioError(`document required.`);
-            }
+            document = parseDocument(document);
 
-            const queryType = typeof document;
+            const {
+                root,
+                context,
+                variables,
+                operationName
+            } = executionContext;
 
-            if (queryType !== "object" && queryType !== "string") {
+            let selectedGateway;
+
+            const directives = document.definitions
+                .filter((def) => def.kind === "OperationDefinition")
+                .flatMap((operation) => operation.directives)
+                .filter((directive) => directive.name.value === "gateway");
+
+            if (directives.length > 1) {
                 throw new IdioError(
-                    `execute must provide document string or AST.`
+                    `interservice communication @gateway directive only supported once per document.`
                 );
             }
 
-            if (queryType === "string") {
-                document = parse(document);
-            }
+            const [directive] = directives;
 
-            const { kind } = document;
+            if (directive) {
+                const directiveError = `@gateway directive requires 1 argument, called name, of type string.`;
 
-            if (kind) {
-                const { definitions = [] } = document;
+                if (!directive.arguments.length) {
+                    throw new IdioError(directiveError);
+                }
 
-                /** @type {OperationDefinitionNode[]} */
-                const operations = definitions.filter(
-                    (x) => x.kind === "OperationDefinition"
+                const nameArgument = directive.arguments.find(
+                    (x) => x.name.value === "name"
                 );
 
-                if (operations.find((x) => x.operation === "subscription")) {
-                    throw new IdioError(
-                        "subscriptions not supported with interservice communication."
-                    );
+                if (!nameArgument) {
+                    throw new IdioError(directiveError);
                 }
 
-                /** @type {DirectiveDefinitionNode[]} */
-                const directives = operations
-                    .flatMap((operation) => operation.directives || [])
-                    .filter((directive) => directive.name.value === "gateway");
-
-                if (directives.length > 1) {
-                    throw new IdioError(
-                        `Interservice communication @gateway directive only supported once per document.`
-                    );
+                if (nameArgument.value.kind !== "StringValue") {
+                    throw new IdioError(directiveError);
                 }
 
-                const [
-                    /** @type {DirectiveDefinitionNode} */ directive
-                ] = directives;
+                const directiveGateway = nameArgument.value.value;
 
-                if (directive) {
-                    const directiveError = `@gateway directive requires 1 argument, called name, of type string.`;
+                if (!gatewayManagers[directiveGateway]) {
+                    const foundDirectiveGateways = (
+                        await broker.call("$node.list", {
+                            onlyAvailable: true
+                        })
+                    )
+                        .filter((_service) => {
+                            const [
+                                serviceName,
+                                gatewayName
+                            ] = _service.id.split(":");
 
-                    if (!directive.arguments.length) {
-                        throw new IdioError(directiveError);
-                    }
-
-                    const nameArgument = directive.arguments.find(
-                        (x) => x.name.value === "name"
-                    );
-
-                    if (!nameArgument) {
-                        throw new IdioError(directiveError);
-                    }
-
-                    if (!nameArgument.value.kind === "StringValue") {
-                        throw new IdioError(directiveError);
-                    }
-
-                    const directiveGateway = nameArgument.value.value;
-
-                    if (!gatewayManagers[directiveGateway]) {
-                        const foundDirectiveGateways = (
-                            await broker.call("$node.list", {
-                                onlyAvailable: true
-                            })
-                        )
-                            .filter((_service) => {
-                                const [
-                                    serviceName,
-                                    gatewayName
-                                ] = _service.id.split(":");
-
-                                return (
-                                    serviceName === directiveGateway &&
-                                    gatewayName === directiveGateway
-                                );
-                            })
-                            .map(({ id }) => id);
-
-                        if (foundDirectiveGateways.length) {
-                            gatewayManagers[
-                                directiveGateway
-                            ] = new ServicesManager(
-                                `${foundDirectiveGateways[0]}`,
-                                {
-                                    broker,
-                                    hash: directiveGateway
-                                }
+                            return (
+                                serviceName === directiveGateway &&
+                                gatewayName === directiveGateway
                             );
+                        })
+                        .map(({ id }) => id);
 
-                            foundDirectiveGateways
-                                .filter((x) => x !== directiveGateway)
-                                .forEach((x) => {
-                                    gatewayManagers[directiveGateway].push(x);
-                                });
-                        }
-                    }
-
-                    if (!gatewayManagers[directiveGateway]) {
-                        return {
-                            errors: [
-                                new IdioError(
-                                    `Cant reach Gateway: '${directiveGateway}'`
-                                )
-                            ],
-                            data: null
-                        };
-                    }
-
-                    selectedGateway = await gatewayManagers[
-                        directiveGateway
-                    ].getNextService();
-
-                    if (!selectedGateway) {
-                        return {
-                            errors: [
-                                new IdioError(
-                                    `Cant reach Gateway: '${directiveGateway}'`
-                                )
-                            ],
-                            data: null
-                        };
-                    }
-
-                    document = {
-                        ...document,
-                        definitions: [...document.definitions].map(
-                            (definition) => {
-                                if (!definition.directives.length) {
-                                    return definition;
-                                }
-
-                                return {
-                                    ...definition,
-                                    directives: definition.directives.filter(
-                                        ({ name: { value } }) =>
-                                            value !== "gateway"
-                                    )
-                                };
+                    if (foundDirectiveGateways.length) {
+                        gatewayManagers[directiveGateway] = new ServicesManager(
+                            `${foundDirectiveGateways[0]}`,
+                            {
+                                broker,
+                                hash: directiveGateway
                             }
-                        )
-                    };
-                }
-            } else {
-                throw new IdioError(`Invalid document provided.`);
-            }
+                        );
 
-            if (!selectedGateway) {
+                        foundDirectiveGateways
+                            .filter((x) => x !== directiveGateway)
+                            .forEach((x) => {
+                                gatewayManagers[directiveGateway].push(x);
+                            });
+                    }
+                }
+
+                if (!gatewayManagers[directiveGateway]) {
+                    throw new IdioError(
+                        `cannot reach gateway: '${directiveGateway}'`
+                    );
+                }
+
+                selectedGateway = await gatewayManagers[
+                    directiveGateway
+                ].getNextService();
+
+                if (!selectedGateway) {
+                    throw new IdioError(
+                        `cannot reach gateway: '${directiveGateway}'`
+                    );
+                }
+
+                document = {
+                    ...document,
+                    definitions: [...document.definitions].map((definition) => {
+                        if (!definition.directives.length) {
+                            return definition;
+                        }
+
+                        return {
+                            ...definition,
+                            directives: definition.directives.filter(
+                                ({ name: { value } }) => value !== "gateway"
+                            )
+                        };
+                    })
+                };
+            } else {
                 selectedGateway = await gatewayManagers[
                     broker.options.gateway
                 ].getNextService();
 
                 if (!selectedGateway) {
-                    return {
-                        errors: [
-                            new IdioError(
-                                `Cant reach Gateway: '${broker.options.gateway}'`
-                            )
-                        ],
-                        data: null
-                    };
+                    throw new IdioError(
+                        `cannot reach gateway: '${broker.options.gateway}'`
+                    );
                 }
             }
 
-            /**
-             * @type {ExecutionResult}
-             */
-            const result = await broker.call(`${selectedGateway}.execute`, {
-                document: print(document),
-                variables,
-                operationName,
-                context,
-                root
-            });
+            const { data, errors } = await broker.call(
+                `${selectedGateway}.execute`,
+                {
+                    document: print(document),
+                    context,
+                    root,
+                    variables,
+                    operationName
+                }
+            );
 
-            return result;
-        } catch (error) {
-            /**
-             * @type {ExecutionResult}
-             */
+            return { data, errors };
+        } catch ({ message }) {
             return {
-                errors: [
-                    new IdioError(
-                        `Failed executing inter-service query, Error:\n${error.message}`
-                    )
-                ],
+                errors: [new IdioError(message)],
                 data: null
             };
         }
     };
 }
 
+/**
+ *
+ * @param {GraphQLSchema} schema
+ * @returns {execute}
+ */
 function withSchema(schema) {
-    return async function execute(document, options) {
-        if (!document) {
-            throw new IdioError(`document required.`);
-        }
-
-        const queryType = typeof document;
-
-        if (queryType !== "object" && queryType !== "string") {
-            throw new IdioError(`execute must provide document string or AST.`);
-        }
-
-        if (queryType === "string") {
-            document = parse(document);
-        } else {
-            document = print(document);
-        }
-
-        const { operationName, variables, context, root } = options;
-
+    return async function execute(document, executionContext = {}) {
         try {
+            document = parseDocument(document);
+
+            const {
+                operationName,
+                variables,
+                context,
+                root
+            } = executionContext;
+
             const { data, errors } = await graphql({
                 schema,
-                source: document,
+                source: print(document),
                 rootValue: root,
                 contextValue: context,
                 variableValues: variables,
                 operationName
             });
 
-            /** @type {ExecutionResult} */
             return { data, errors };
         } catch ({ message }) {
-            /** @type {ExecutionResult} */
-            return { errors: [new IdioError(message)] };
+            return { errors: [new IdioError(message)], data: null };
         }
     };
 }
