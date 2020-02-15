@@ -84,7 +84,10 @@ function validateDefinitions(node) {
                 })
                 .flatMap(({ fields }) => fields)
                 .map(({ name: { value } }) => value),
-            JS: Object.keys(node.resolvers[type] || {})
+
+            JS: Object.keys(
+                node.resolvers[type] || /* istanbul ignore next */ {}
+            )
         };
 
         resolvers.SDL.forEach((field) => {
