@@ -18,9 +18,7 @@ module.exports = ({ method, contextIndex }, RUNTIME) => {
 
         const decodedArgs = JSON.parse(graphQLArgs);
 
-        const context = decodedArgs[contextIndex];
-
-        if (!context) {
+        if (!decodedArgs[contextIndex]) {
             decodedArgs[contextIndex] = {};
         }
 
