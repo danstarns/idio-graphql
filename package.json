@@ -7,7 +7,7 @@
     "test": "cross-env ./node_modules/.bin/mocha",
     "test:dev": "cross-env ./node_modules/.bin/mocha --watch",
     "test:coverage": "cross-env ./node_modules/.bin/nyc ./node_modules/.bin/mocha",
-    "build": "cross-env mkdir dist && ./node_modules/.bin/babel src -d dist",
+    "build": "mkdir dist && cross-env ./node_modules/.bin/babel src -d dist",
     "docs:start": "cd ./website && docusaurus-start ",
     "docs:build": "cd ./website && docusaurus-build",
     "publish-gh-pages": "cd ./website && docusaurus-publish",
