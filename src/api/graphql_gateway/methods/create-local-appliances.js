@@ -1,7 +1,7 @@
 const { createLocalAppliance } = require("../../appliances/methods/index.js");
 
 /**
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
+ * @typedef {import('./start.js').Runtime} Runtime
  */
 
 /**
@@ -11,7 +11,7 @@ module.exports = function createLocalAppliances(RUNTIME) {
     const { registeredServices, broker, serviceManagers, locals } = RUNTIME;
 
     return {
-        ...["locals", "directives", "schemaGlobals"].reduce(
+        ...["scalars", "directives", "schemaGlobals"].reduce(
             (res, type) => ({
                 ...res,
                 ...(locals[type] ? { [type]: locals[type] } : {})
