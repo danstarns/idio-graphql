@@ -58,9 +58,7 @@ function combineNodes(nodes, appliances = {}) {
         ...reducedAppliances.resolvers
     };
 
-    if (reducedAppliances.schemaDirectives) {
-        RUNTIME.schemaDirectives = reducedAppliances.schemaDirectives;
-    }
+    RUNTIME.schemaDirectives = reducedAppliances.schemaDirectives;
 
     RUNTIME.schema = makeExecutableSchema({
         resolvers: RUNTIME.resolvers,
