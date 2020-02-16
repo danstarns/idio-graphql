@@ -18,6 +18,10 @@ const IdioError = require("../../src/api/idio-error.js");
 function createBroker(instance, RUNTIME) {
     const { brokerOptions } = RUNTIME;
 
+    if (!instance.name) {
+        throw new IdioError("instance.name required");
+    }
+
     if (!brokerOptions) {
         throw new IdioError("brokerOptions required.");
     }

@@ -17,9 +17,19 @@ const createBroker = proxyquire("../../src/util/create-broker.js", {
 });
 
 describe("createBroker", () => {
+    it("should throw instance.name required", () => {
+        try {
+            createBroker({}, { brokerOptions: { transporter: "test" } });
+        } catch (error) {
+            expect(error.message)
+                .to.be.a("string")
+                .to.contain("instance.name required");
+        }
+    });
+
     it("should throw brokerOptions required", () => {
         try {
-            createBroker({}, {});
+            createBroker({ name: "test" }, {});
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")
@@ -29,7 +39,7 @@ describe("createBroker", () => {
 
     it("should throw brokerOptions.transporter required", () => {
         try {
-            createBroker({}, { brokerOptions: {} });
+            createBroker({ name: "test" }, { brokerOptions: {} });
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")
@@ -39,7 +49,10 @@ describe("createBroker", () => {
 
     it("should throw brokerOptions.gateway required", () => {
         try {
-            createBroker({}, { brokerOptions: { transporter: "test" } });
+            createBroker(
+                { name: "test" },
+                { brokerOptions: { transporter: "test" } }
+            );
         } catch (error) {
             expect(error.message)
                 .to.be.a("string")
