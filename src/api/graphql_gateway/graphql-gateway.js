@@ -11,6 +11,7 @@ const { createBroker } = require("../../util/index.js");
  * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
  * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
  * @typedef {import('./methods/start.js').Runtime} Runtime
+ * @typedef {import('graphql').DocumentNode} DocumentNode
  */
 
 /**
@@ -29,11 +30,17 @@ const { createBroker } = require("../../util/index.js");
  * @property {IdioDirective[]} directives
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
- * @property {any} schemaGlobals - an Array or a single instance of GraphQL typeDefs, use filePath, string, or gql-tag.
+ * @property {(string | DocumentNode | string[] | DocumentNode[])} schemaGlobals
  */
 
 /**
- * @typedef {Object} config
+ * @typedef GraphQLGateway
+ * @property {() => Promise<Runtime>} start
+ * @property {ServiceBroker} broker
+ */
+
+/**
+ * @typedef GraphQLGatewayConfig
  * @property {services} services
  * @property {locals} locals
  */
@@ -42,24 +49,21 @@ const { createBroker } = require("../../util/index.js");
  *
  * You can use GraphQLGateway to orchestrate a collection of GraphQLNode's & Schema Appliances exposed over a network.
  *
- * @param {config} config
+ * @param {GraphQLGatewayConfig} config
  * @param {BrokerOptions} brokerOptions
  *
- * @returns {{start: () => Promise<Runtime>, broker: ServiceBroker}}
+ * @returns {GraphQLGateway}
  */
-function GraphQLGateway(config, brokerOptions) {
-    const broker = createBroker(
+function GraphQLGateway(config, brokerOptions = {}) {
+    this.broker = createBroker(
         { name: brokerOptions.nodeID },
         { brokerOptions: { ...brokerOptions, gateway: brokerOptions.nodeID } }
     );
 
-    return {
-        broker,
-        start: start({
-            config: createConfig(config),
-            broker
-        })
-    };
+    this.start = start({
+        config: createConfig(config),
+        broker: this.broker
+    });
 }
 
 module.exports = GraphQLGateway;

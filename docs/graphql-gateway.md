@@ -18,7 +18,7 @@ You can use  **GraphQLGateway** to orchestrate a collection of [**GraphQLNode's*
 ---
 
 ```javascript
-const gateway = GraphQLGateway(
+const gateway = new GraphQLGateway(
     {
         services: { 
             nodes,
@@ -50,48 +50,40 @@ const gateway = GraphQLGateway(
 ```javascript
 /**
  * @typedef services
- * @property {Array.<string>} nodes
- * @property {Array.<string>} enums
- * @property {Array.<string>} interfaces
- * @property {Array.<string>} unions
- *
- *
+ * @property {string[]} nodes
+ * @property {string[]} enums
+ * @property {string[]} interfaces
+ * @property {string[]} unions
+ */
+
+/**
  * @typedef locals
- * @property {Array.<GraphQLNode>} nodes
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioScalar>} scalars
- * @property {Array.<IdioDirective>} directives
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
- * @property {any} schemaGlobals - an Array or a single instance of GraphQL typeDefs, use filePath, string, or gql-tag.
- *
- *
- * @typedef {Object} config
- * @property {services} services
- * @property {locals} locals
- *
- *
- * @typedef Schema
- * @property {string} typeDefs
- * @property {Object} resolvers
- * @property {Object} resolvers.Query
- * @property {Object} resolvers.Mutation
- * @property {Object} resolvers.Subscription
- * @property {Object} schemaDirectives
+ * @property {GraphQLNode[]} nodes
+ * @property {IdioEnum[]} enums
+ * @property {IdioScalar[]} scalars
+ * @property {IdioDirective[]} directives
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
+ * @property {(string | DocumentNode | string[] | DocumentNode[])} schemaGlobals
+ */
+
+/**
+ * @typedef GraphQLGateway
+ * @property {() => Promise<Runtime>} start
  * @property {ServiceBroker} broker
  */
 
 /**
- * @typedef {Object} GraphQLGateway
- * @property {() => Promise.<Schema>} start
- * @property {ServiceBroker} broker
+ * @typedef GraphQLGatewayConfig
+ * @property {services} services
+ * @property {locals} locals
  */
 
 /**
  *
  * You can use GraphQLGateway to orchestrate a collection of GraphQLNode's & Schema Appliances exposed over a network.
  *
- * @param {config} config
+ * @param {GraphQLGatewayConfig} config
  * @param {BrokerOptions} brokerOptions
  *
  * @returns {GraphQLGateway}
@@ -99,7 +91,7 @@ const gateway = GraphQLGateway(
 ```
 
 ```javascript
-function GraphQLGateway(config: config, brokerOptions: BrokerOptions);
+new function GraphQLGateway(config: config, brokerOptions: BrokerOptions);
 ```
 
 ## Methods 
