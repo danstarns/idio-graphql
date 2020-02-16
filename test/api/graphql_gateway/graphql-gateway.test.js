@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const proxyquire = require("proxyquire");
 const uuid = require("uuid/v4")();
 
-let nodeId;
+let nodeID;
 
 function createConfig(config) {
     if (!config) {
@@ -33,19 +33,19 @@ function start({ config, broker }) {
         throw new Error("typeOf broker !== object");
     }
 
-    if (!broker.nodeId === nodeId) {
-        throw new Error("nodeId not equal");
+    if (!broker.nodeID === nodeID) {
+        throw new Error("nodeID not equal");
     }
 
     return () => { };
 }
 
 function createBroker({ name }, { brokerOptions: { gateway } }) {
-    nodeId = `${name}:${gateway}:${uuid}`;
+    nodeID = `${name}:${gateway}:${uuid}`;
 
     return {
         options: {
-            nodeId
+            nodeID
         }
     };
 }
@@ -71,8 +71,8 @@ describe("GraphQLGateway", () => {
             .to.be.a("object")
             .to.have.property("options")
             .to.be.a("object")
-            .to.have.property("nodeId")
-            .to.equal(nodeId);
+            .to.have.property("nodeID")
+            .to.equal(nodeID);
 
         expect(gateway)
             .to.have.property("start")

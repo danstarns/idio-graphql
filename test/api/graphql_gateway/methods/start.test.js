@@ -37,7 +37,7 @@ const testingBroker = {
     start: () => true,
     createService: ({ name }) => testingServices.push(name),
     options: {
-        nodeId: "testing"
+        nodeID: "testing"
     }
 };
 
@@ -69,7 +69,7 @@ function checkForServices() {
 function createGatewayService(RUNTIME) {
     validateRuntime(RUNTIME);
 
-    RUNTIME.broker.createService({ name: RUNTIME.broker.options.nodeId });
+    RUNTIME.broker.createService({ name: RUNTIME.broker.options.nodeID });
 }
 
 function createLocalAppliances(RUNTIME) {

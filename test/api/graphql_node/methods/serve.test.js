@@ -54,7 +54,7 @@ function createBroker() {
 
 const brokerOptions = {
     gateway: "gateway",
-    nodeId: "nodeId"
+    nodeID: "nodeID"
 };
 
 const node = {
@@ -132,8 +132,8 @@ describe("serve", () => {
 
         expect(_brokerOptions)
             .to.be.a("object")
-            .to.have.property("nodeId")
-            .to.equal(brokerOptions.nodeId);
+            .to.have.property("nodeID")
+            .to.equal(brokerOptions.nodeID);
 
         expect(_brokerOptions)
             .to.be.a("object")
