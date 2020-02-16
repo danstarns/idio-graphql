@@ -5,10 +5,11 @@
 You can also give someone a shout on [slack](https://idio-graphql.slack.com/).
 
 1. [Picking a existing task](#Picking-a-existing-task)
-1. [Submitting an idea](#Submitting-an-idea)
-1. [Dev Setup](#Dev-Setup)
-1. [Git Commit Style](#Git-commit-style)
-1. [Pull Request Checklist](#Pull-Request-Checklist)
+2. [Submitting an idea](#Submitting-an-idea)
+3. [Dev Setup](#Dev-Setup)
+4. [Code Style](#Code-style)
+5. [Git Commit Style](#Git-commit-style)
+6. [Pull Request Checklist](#Pull-Request-Checklist)
 
 # Picking a existing task 
 There may be existing tasks [here](https://github.com/danstarns/idio-graphql/projects/1). If you want to take it on, file an issue relating to the task, broadcasting your working on it, this is the time to ask any questions.It is picked it up, the card will move into progress. When your done, file a PR and merge into develop. Make sure your branch is same as the task title `idio-000-test-task`.
