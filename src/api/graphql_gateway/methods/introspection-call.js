@@ -46,12 +46,12 @@ module.exports = (RUNTIME) => {
                 INTROSPECTION_CALL,
                 introspectionBody
             );
-
-            if (!introspection) {
-                return;
-            }
         } catch (error) {
             return;
+        }
+
+        if (!RUNTIME.serviceManagers[type]) {
+            RUNTIME.serviceManagers[type] = {};
         }
 
         if (!RUNTIME.serviceManagers[type][serviceName]) {
@@ -67,10 +67,18 @@ module.exports = (RUNTIME) => {
                 ({ singular }) => singular === type
             );
 
+            if (!RUNTIME.waitingServices[name]) {
+                RUNTIME.waitingServices[name] = [];
+            }
+
             if (RUNTIME.waitingServices[name].includes(introspection.name)) {
                 RUNTIME.waitingServices[name] = RUNTIME.waitingServices[
                     name
                 ].filter((x) => x !== introspection.name);
+            }
+
+            if (!RUNTIME.registeredServices[name]) {
+                RUNTIME.registeredServices[name] = [];
             }
 
             RUNTIME.registeredServices[name].push(introspection);
