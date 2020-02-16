@@ -1,8 +1,6 @@
 # idio-graphql
-[![GitHub license](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![Stars](https://img.shields.io/github/stars/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/idio-graphql)
 
-
-Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.
+IdioGraphQL is a Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
 
 
 ```
@@ -12,7 +10,13 @@ $ npm install idio-graphql
 # Docs 
 https://danstarns.github.io/idio-graphql/
 
-## Quick Start
+# Contributing 
+https://github.com/danstarns/idio-graphql/blob/master/contributing.md
+
+# Slack
+Need help? Wanna chat? Come on our [Slack](https://idio-graphql.slack.com)
+
+# Quick Start
 `$ npm install idio-graphql apollo-server graphql-tag`
 
 Examples use **[apollo-server](https://www.npmjs.com/package/apollo-server)** however, feel free to plug into your own solution. 
@@ -47,7 +51,7 @@ const User = new GraphQLNode({
 });
 
 async function main() {
-    const { typeDefs, resolvers } = await combineNodes([ User ]);
+    const { typeDefs, resolvers } = combineNodes([ User ]);
 
     const server = new ApolloServer({ typeDefs, resolvers });
 
