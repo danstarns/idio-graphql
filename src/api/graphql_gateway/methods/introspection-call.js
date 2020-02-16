@@ -13,7 +13,7 @@ const applianceMetadata = [
 ];
 
 /**
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
+ * @typedef {import('./start.js').Runtime} Runtime
  */
 
 /**
