@@ -3,8 +3,7 @@ id: getting-started
 title: Getting Started
 ---
 
-
-idio-graphql provides a set of methods to enable developers to structure and modularize a GraphQL API into individual, maintainable, modules.
+Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
 
 ## Quick Start
 
@@ -44,7 +43,7 @@ const User = new GraphQLNode({
 });
 
 async function main() {
-    const { typeDefs, resolvers } = await combineNodes([ User ]);
+    const { typeDefs, resolvers } = combineNodes([ User ]);
 
     const server = new ApolloServer({ typeDefs, resolvers });
 

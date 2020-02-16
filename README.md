@@ -1,6 +1,6 @@
 # idio-graphql
 
-IdioGraphQL is a Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
+Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
 
 
 ```
