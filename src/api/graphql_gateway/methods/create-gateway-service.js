@@ -4,7 +4,7 @@ const introspectionCall = require("./introspection-call.js");
 const { abort } = require("../../../util/index.js");
 
 /**
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
+ * @typedef {import('./start.js').Runtime} Runtime
  */
 
 /**
@@ -13,7 +13,7 @@ const { abort } = require("../../../util/index.js");
 function createGatewayService(RUNTIME) {
     const { broker } = RUNTIME;
 
-    const [serviceName] = broker.nodeID.split(":");
+    const [serviceName] = broker.options.nodeID.split(":");
 
     const INTROSPECTION_EVENT = `${serviceName}:introspection.request`;
 
@@ -31,29 +31,39 @@ function createGatewayService(RUNTIME) {
                 const ABORT_CALL = `${service}.abort`;
 
                 try {
-                    Object.entries(introspection.locals).forEach(
-                        ([key, values]) => {
-                            values.forEach((value) => {
-                                if (!RUNTIME.locals[key].includes(value)) {
-                                    throw new Error(
-                                        `Introspection is missing a local.${key}.${value}`
-                                    );
-                                }
-                            });
-                        }
-                    );
+                    if (introspection.locals) {
+                        Object.entries(introspection.locals).forEach(
+                            ([key, values]) => {
+                                values.forEach((value) => {
+                                    if (
+                                        !RUNTIME.locals[key]
+                                            .map((x) => x.name)
+                                            .includes(value)
+                                    ) {
+                                        throw new Error(
+                                            `introspection contains a invalid local.${key}.${value}`
+                                        );
+                                    }
+                                });
+                            }
+                        );
+                    }
 
-                    Object.entries(introspection.services).forEach(
-                        ([key, values]) => {
-                            values.forEach((value) => {
-                                if (!RUNTIME.services[key].includes(value)) {
-                                    throw new Error(
-                                        `Introspection is missing a service ${key}.${value}`
-                                    );
-                                }
-                            });
-                        }
-                    );
+                    if (introspection.services) {
+                        Object.entries(introspection.services).forEach(
+                            ([key, values]) => {
+                                values.forEach((value) => {
+                                    if (
+                                        !RUNTIME.services[key].includes(value)
+                                    ) {
+                                        throw new Error(
+                                            `introspection contains a invalid service ${key}.${value}`
+                                        );
+                                    }
+                                });
+                            }
+                        );
+                    }
                 } catch (error) {
                     await broker.call(ABORT_CALL, {
                         message: `'${introspection.name}' trying to join the network with a different hash to an existing. Error: ${error.message}`
