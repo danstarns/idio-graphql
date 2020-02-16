@@ -1,15 +1,12 @@
 const util = require("util");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 const introspectionCall = require("./introspection-call.js");
-const GraphQLNode = require("../../graphql_node/graphql-node.js");
 
 const sleep = util.promisify(setTimeout);
 
 const applianceMetadata = [
     ...APPLIANCE_METADATA,
     {
-        _Constructor: GraphQLNode,
-        kind: "ObjectTypeDefinition",
         singular: "node",
         name: "nodes"
     }

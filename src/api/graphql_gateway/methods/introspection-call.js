@@ -1,12 +1,9 @@
 const { ServicesManager } = require("../../../util/index.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
-const GraphQLNode = require("../../graphql_node/graphql-node.js");
 
 const applianceMetadata = [
     ...APPLIANCE_METADATA,
     {
-        _Constructor: GraphQLNode,
-        kind: "ObjectTypeDefinition",
         singular: "node",
         name: "nodes"
     }
