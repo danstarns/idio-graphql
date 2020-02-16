@@ -114,8 +114,25 @@ const { typeDefs, resolvers, schemaDirectives, broker } = await gateway.start();
 #### Definitions
 ```javascript
 /**
+ * @typedef Runtime
+ * @property {GraphQLGatewayConfig["locals"]} locals
+ * @property {GraphQLGatewayConfig["services"]} services
+ * @property {RegisteredServices} registeredServices
+ * @property {GraphQLGatewayConfig["services"]} waitingServices
+ * @property {Object<string, ServiceManager>} serviceManagers
+ * @property {string} typeDefs
+ * @property {object} resolvers
+ * @property {object} resolvers.Query
+ * @property {object} resolvers.Mutation
+ * @property {object} resolvers.Subscription
+ * @property {object} schemaDirectives
+ * @property {ServiceBroker} broker
+ * @property {GraphQLSchema} schema
+ */
+
+/**
  * @function start
- * @returns {() => Promise.<Schema>}
+ * @returns {() => Promise<Runtime>}
 */
 ```
 
