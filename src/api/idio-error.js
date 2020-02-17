@@ -5,7 +5,7 @@ class IdioError extends Error {
 
         this.name = this.constructor.name;
 
-        this.message = message;
+        this.message = `${message}`;
         this.error = message;
         this.code = code;
         this.readme =
