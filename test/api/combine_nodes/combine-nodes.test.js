@@ -1303,7 +1303,7 @@ describe("combineNodes", () => {
             throw new Error();
         } catch (error) {
             expect(error.message).to.contain(
-                "loading IdioScalar with a name: 'JSON' thats already registered"
+                "IdioScalar with a name: 'JSON' already registered"
             );
         }
     });
