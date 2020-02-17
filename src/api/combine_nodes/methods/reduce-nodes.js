@@ -82,7 +82,9 @@ function reduceNode(r, node, RUNTIME) {
                 }),
                 {}
             ),
-        ...(node.resolvers.Fields ? { [node.name]: inject(node.resolvers.Fields, RUNTIME) } : {})
+        ...(node.resolvers.Fields
+            ? { [node.name]: inject(node.resolvers.Fields, RUNTIME) }
+            : {})
     };
 
     if (node.nodes) {
