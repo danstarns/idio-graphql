@@ -6,14 +6,18 @@ describe("IdioInterface", () => {
     it("should throw name required", () => {
         try {
             const interface = new IdioInterface();
+
+            throw new Error()
         } catch (error) {
             expect(error.message).to.contain("name required");
         }
     });
 
-    it("should throw nma emus tbe of type string", () => {
+    it("should throw name must be of type string", () => {
         try {
             const interface = new IdioInterface({ name: 1678 });
+
+            throw new Error()
         } catch (error) {
             expect(error.message).to.contain("name must be of type 'string'");
         }
@@ -22,6 +26,8 @@ describe("IdioInterface", () => {
     it("should throw creating interface with invalid name", () => {
         try {
             const interface = new IdioInterface({ name: "interface" });
+
+            throw new Error()
         } catch (error) {
             expect(error.message).to.contain(
                 "constructing IdioInterface: 'interface' with invalid name."
@@ -35,6 +41,8 @@ describe("IdioInterface", () => {
                 name: "MyInterface",
                 typeDefs: `some invalid graphql sdl`
             });
+
+            throw new Error()
         } catch (error) {
             expect(error.message).to.contain("cannot resolve typeDefs");
         }
@@ -49,9 +57,10 @@ describe("IdioInterface", () => {
                         message: String
                         code: Int
                     }
-                `,
-                resolver: { __resolveType: () => true }
+                `
             });
+
+            throw new Error()
         } catch (error) {
             expect(error.message).to.contain("without resolver.");
         }
@@ -69,6 +78,8 @@ describe("IdioInterface", () => {
                     abc: () => true
                 }
             });
+
+            throw new Error()
         } catch (error) {
             expect(error.message).to.contain(
                 "must have a __resolveType property."
