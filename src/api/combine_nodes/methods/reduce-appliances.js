@@ -8,6 +8,8 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata");
  * @property {object} schemaDirectives
  */
 
+/** @typedef {import('../combine-nodes.js').appliances} appliances */
+
 /**
  * @param {import('../combine-nodes.js').appliances} _appliances
  */
