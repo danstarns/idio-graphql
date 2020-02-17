@@ -4,7 +4,6 @@ const { parseTypeDefs } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
 
 /**
- *
  * @param {import('../index.js').appliances} appliances
  * @returns {{typeDefs: string, resolvers: object}}
  */
