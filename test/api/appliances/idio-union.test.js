@@ -5,6 +5,8 @@ describe("IdioUnion", () => {
     it("should throw name required", () => {
         try {
             const union = new IdioUnion();
+
+            throw new Error("");
         } catch (error) {
             expect(error.message).to.contain("name required");
         }
@@ -13,6 +15,8 @@ describe("IdioUnion", () => {
     it("should throw nma emus tbe of type string", () => {
         try {
             const union = new IdioUnion({ name: 1678 });
+
+            throw new Error("");
         } catch (error) {
             expect(error.message).to.contain("name must be of type 'string'");
         }
@@ -21,6 +25,8 @@ describe("IdioUnion", () => {
     it("should throw creating union with invalid name", () => {
         try {
             const union = new IdioUnion({ name: "union" });
+
+            throw new Error("");
         } catch (error) {
             expect(error.message).to.contain(
                 "constructing IdioUnion: 'union' with invalid name."
@@ -34,6 +40,8 @@ describe("IdioUnion", () => {
                 name: "MyUnion",
                 typeDefs: `some invalid graphql sdl`
             });
+
+            throw new Error("");
         } catch (error) {
             expect(error.message).to.contain("cannot resolve typeDefs");
         }
@@ -45,6 +53,8 @@ describe("IdioUnion", () => {
                 name: "AOrB",
                 typeDefs: `union AOrB = A | B`
             });
+
+            throw new Error("");
         } catch (error) {
             expect(error.message).to.contain("without resolver.");
         }
@@ -59,6 +69,8 @@ describe("IdioUnion", () => {
                     abc: () => true
                 }
             });
+
+            throw new Error("");
         } catch (error) {
             expect(error.message).to.contain(
                 "must have a __resolveType property."
