@@ -5,11 +5,10 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
 
 /**
  * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
- * @typedef {GraphQLNode[]} nodes
  */
 
 /**
- *  @typedef reducedNodes
+ *  @typedef ReducedNodes
  *  @property {string[]} typeDefs
  *  @property {object} resolvers
  */
@@ -57,7 +56,7 @@ function inject(methods, RUNTIME) {
 
 /**
  *
- * @param {reducedNodes} r
+ * @param {ReducedNodes} r
  * @param {GraphQLNode} node
  */
 function reduceNode(r, node, RUNTIME) {
@@ -83,7 +82,7 @@ function reduceNode(r, node, RUNTIME) {
                 }),
                 {}
             ),
-        ...(node.resolvers.Fields ? { [node.name]: node.resolvers.Fields } : {})
+        ...(node.resolvers.Fields ? { [node.name]: inject(node.resolvers.Fields, RUNTIME) } : {})
     };
 
     if (node.nodes) {
@@ -100,11 +99,12 @@ function reduceNode(r, node, RUNTIME) {
         result = {
             ...result,
             typeDefs: [...result.typeDefs, ...nestedTypeDefs],
-            resolvers: Object.entries(result.resolvers).reduce(
+            resolvers: Object.entries(nestedResolvers).reduce(
                 (res, [key, value]) => ({
+                    ...result.resolvers,
                     ...res,
-                    ...(nestedResolvers[key]
-                        ? { [key]: { ...nestedResolvers[key], ...value } }
+                    ...(result.resolvers[key]
+                        ? { [key]: { ...result.resolvers[key], ...value } }
                         : { [key]: value })
                 }),
                 {}
@@ -116,8 +116,8 @@ function reduceNode(r, node, RUNTIME) {
 }
 
 /**
- * @param {nodes} nodes
- * @returns {reducedNodes}
+ * @param {GraphQLNode[]} nodes
+ * @returns {ReducedNodes}
  */
 function reduceNodes(nodes, RUNTIME) {
     return nodes
