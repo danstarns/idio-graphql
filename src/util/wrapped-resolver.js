@@ -13,7 +13,7 @@ const injectGraphQLArgs = require("./inject-graphql-args.js");
  */
 
 /**
- * @typedef {{execute: execute, dataLoaders?: object, models?: object, broker?: ServiceBroker}} context
+ * @typedef {{injections: {execute: execute, broker?: ServiceBroker}}} context
  */
 
 /**
