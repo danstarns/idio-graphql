@@ -1,5 +1,6 @@
 # Local Example
 This project showcase's the most basic local setup with idio-graphql.
+
 # Dependencies
 1. Port 4000
 
