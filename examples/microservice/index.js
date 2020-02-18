@@ -1,8 +1,8 @@
 const { ApolloServer } = require("apollo-server");
-const { GraphQLGateway } = require("../../../src/api/index.js");
+const { GraphQLGateway } = require("idio-graphql");
 
-const AccountsGateway = GraphQLGateway(
-    { services: { nodes: ["User", "Post"] } },
+const AccountsGateway = new GraphQLGateway(
+    { services: { nodes: ["User"] } },
     {
         transporter: "NATS",
         nodeID: "gateway",

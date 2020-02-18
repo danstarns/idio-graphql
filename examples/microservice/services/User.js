@@ -1,29 +1,7 @@
 const { gql } = require("apollo-server");
-const util = require("util");
-const { GraphQLNode } = require("../../../src/api/index.js");
+const { GraphQLNode } = require("idio-graphql");
 
-const sleep = util.promisify(setImmediate);
-
-const users = [
-    { id: "0", name: "Bob", age: 3, posts: ["0"] },
-    { id: "1", name: "Jane", age: 13, posts: ["1", "2"] },
-    { id: "2", name: "Will", age: 23, posts: ["2"] }
-];
-
-async function* userUpdate() {
-    while (true) {
-        await sleep(1000);
-
-        yield {
-            userUpdate: {
-                id: "0",
-                name: "Bob",
-                age: Math.floor(Math.random() * 20),
-                posts: ["0"]
-            }
-        };
-    }
-}
+const { users } = require("../../data/index.js");
 
 const User = new GraphQLNode({
     name: "User",
@@ -41,10 +19,6 @@ const User = new GraphQLNode({
         type Query {
             user(id: String!): User
             users(ids: [String]): [User]
-        }
-
-        type Subscription {
-            userUpdate: User
         }
     `,
     resolvers: {
@@ -83,11 +57,6 @@ const User = new GraphQLNode({
                 }
 
                 return result.data.posts;
-            }
-        },
-        Subscription: {
-            userUpdate: {
-                subscribe: () => userUpdate()
             }
         }
     }

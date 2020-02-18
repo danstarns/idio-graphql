@@ -5,9 +5,9 @@ This section contains lots of micro applications demonstrating the capability's 
 
 
 1. **Local** -  The application is demonstrating ways to use idio-graphql within the same process.
-2. **Service** -  The application is demonstrating ways to use idio-graphql across multiple process.
+2. **Microservice** -  The application is demonstrating ways to use idio-graphql across multiple process.
 
-> Service applications will require running [NATS](https://nats.io/) server.
+> Microservice applications will require running [NATS](https://nats.io/) server.
 
 Each service will start a graphql playground using [ApolloServer](https://www.apollographql.com/docs/apollo-server/). You will be able to query against, either or a subset of, the following GraphQL schema. 
 
@@ -38,8 +38,8 @@ type Comment {
 >  Go to your desired Applications README.
 
 1. Local
-2. Service
+2. Microservice
 3. Directives
     * Local
-    * Service
+    * Microservice
 4.
