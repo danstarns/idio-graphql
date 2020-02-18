@@ -35,10 +35,10 @@ type Comment {
 ```
 
 # Applications
->  Go to your desired [Application](#Applications) README.
+>  Go to your desired Applications README.
 
-1. Basic Local
-2. Basic Service
+1. Local
+2. Service
 3. Directives
     * Local
     * Service

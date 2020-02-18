@@ -1,11 +1,7 @@
 const { gql } = require("apollo-server");
-const { GraphQLNode } = require("../../../../src/api/index.js");
+const { GraphQLNode } = require("idio-graphql");
 
-const posts = [
-    { id: "0", title: "Food", likes: ["1", "2"] },
-    { id: "1", title: "Beer", likes: ["0"] },
-    { id: "2", title: "Coffee", likes: ["1", "2"] }
-];
+const { posts } = require("../../data/index.js");
 
 const Post = new GraphQLNode({
     name: "Post",
@@ -43,6 +39,7 @@ const Post = new GraphQLNode({
                     gql`
                         query($ids: [String]) {
                             users(ids: $ids) {
+                                id
                                 name
                                 age
                             }
@@ -59,7 +56,7 @@ const Post = new GraphQLNode({
                     throw result.errors;
                 }
 
-                return result.data.user;
+                return result.data.users;
             }
         }
     }
