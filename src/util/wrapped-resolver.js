@@ -75,15 +75,25 @@ const injectGraphQLArgs = require("./inject-graphql-args.js");
  */
 async function resultFunction(input, { direction, name, args }) {
     if (Array.isArray(input)) {
-        for (let i = 0; i < input.length; i += 1) {
-            try {
-                await input[i](...args);
-            } catch (error) {
-                throw new IdioError(
-                    `'${name}.${direction}[${i}]' failed: \n ${error}`
-                );
+        let counter = 0;
+
+        await (async function recursion() {
+            if (counter < input.length) {
+                try {
+                    await input[counter](...args);
+
+                    counter += 1;
+
+                    return recursion();
+                } catch (error) {
+                    throw new IdioError(
+                        `'${name}.${direction}[${counter}]' failed: \n ${error}`
+                    );
+                }
+            } else {
+                return Promise.resolve();
             }
-        }
+        })();
     }
 
     if (isFunction(input)) {
