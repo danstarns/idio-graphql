@@ -53,7 +53,7 @@ const User = new GraphQLNode({
                 );
 
                 if (result.errors) {
-                    throw result.errors;
+                    throw new Error(result.errors[0].message);
                 }
 
                 return result.data.posts;
