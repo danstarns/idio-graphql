@@ -101,4 +101,12 @@ describe("loadAppliances", () => {
 
         expect(resolvers.Test2()).to.eql({ test: true });
     });
+
+    it("should return an empty object is there is not schemaGlobals.length", () => {
+        expect(
+            loadAppliances([], {
+                name: "schemaGlobals"
+            })
+        ).to.eql({});
+    });
 });

@@ -12,6 +12,10 @@ function loadAppliances(appliances, metadata) {
 
     if (name === "schemaGlobals") {
         if (Array.isArray(appliances)) {
+            if (!appliances.length) {
+                return {};
+            }
+
             return {
                 typeDefs: printWithComments(
                     mergeTypeDefs(appliances.map(parseTypeDefs))
@@ -19,7 +23,9 @@ function loadAppliances(appliances, metadata) {
             };
         }
 
-        return { typeDefs: parseTypeDefs(appliances) };
+        return {
+            typeDefs: parseTypeDefs(appliances)
+        };
     }
 
     if (!Array.isArray(appliances)) {
