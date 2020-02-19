@@ -160,7 +160,7 @@ describe("createConfig", () => {
 
         expect(newConfig.locals)
             .to.have.property("schemaGlobals")
-            .to.be.a("string");
+            .to.be.a("array");
 
         expect(newConfig)
             .to.be.a("object")

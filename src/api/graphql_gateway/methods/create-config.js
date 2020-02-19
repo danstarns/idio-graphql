@@ -64,15 +64,19 @@ function validateLocals(locals = {}) {
         throw new IdioError("locals must be of type object.");
     }
 
-    const {
+    let {
         nodes,
         enums,
         scalars,
         directives,
         interfaces,
         unions,
-        schemaGlobals = ""
+        schemaGlobals = []
     } = locals;
+
+    if (typeof schemaGlobals === "string") {
+        schemaGlobals = [schemaGlobals];
+    }
 
     return {
         schemaGlobals,
