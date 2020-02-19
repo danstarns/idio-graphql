@@ -2,6 +2,7 @@ const execute = require("./execute.js");
 
 const introspectionCall = require("./introspection-call.js");
 const { abort } = require("../../../util/index.js");
+const IdioError = require("../../idio-error.js");
 
 /**
  * @typedef {import('./start.js').Runtime} Runtime
@@ -13,7 +14,7 @@ const { abort } = require("../../../util/index.js");
 function createGatewayService(RUNTIME) {
     const { broker } = RUNTIME;
 
-    const [serviceName] = broker.options.nodeID.split(":");
+    const [serviceName, gatewayName] = broker.options.nodeID.split(":");
 
     const INTROSPECTION_EVENT = `${serviceName}:introspection.request`;
 
@@ -27,7 +28,10 @@ function createGatewayService(RUNTIME) {
             [INTROSPECTION_EVENT]: async ({ type }, service) => {
                 await introspectionCall(RUNTIME)(service, type);
             },
-            compare: async (introspection, service) => {
+            [`${serviceName}:${gatewayName}.compare`]: async (
+                introspection,
+                service
+            ) => {
                 const ABORT_CALL = `${service}.abort`;
 
                 try {
@@ -40,11 +44,21 @@ function createGatewayService(RUNTIME) {
                                             .map((x) => x.name)
                                             .includes(value)
                                     ) {
-                                        throw new Error(
-                                            `introspection contains a invalid local.${key}.${value}`
+                                        throw new IdioError(
+                                            `gateway contains a invalid local: '${key}.${value}'`
                                         );
                                     }
                                 });
+
+                                RUNTIME.locals[key]
+                                    .map((x) => x.name)
+                                    .forEach((value) => {
+                                        if (!values.includes(value)) {
+                                            throw new IdioError(
+                                                `gateway is missing a local: '${key}.${value}'`
+                                            );
+                                        }
+                                    });
                             }
                         );
                     }
@@ -56,8 +70,16 @@ function createGatewayService(RUNTIME) {
                                     if (
                                         !RUNTIME.services[key].includes(value)
                                     ) {
-                                        throw new Error(
-                                            `introspection contains a invalid service ${key}.${value}`
+                                        throw new IdioError(
+                                            `gateway contains a invalid service: '${key}.${value}'`
+                                        );
+                                    }
+                                });
+
+                                RUNTIME.services[key].forEach((value) => {
+                                    if (!values.includes(value)) {
+                                        throw new IdioError(
+                                            `gateway is missing service: '${key}.${value}'`
                                         );
                                     }
                                 });

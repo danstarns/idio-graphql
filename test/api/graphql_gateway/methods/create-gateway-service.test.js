@@ -66,7 +66,7 @@ describe("createGatewayService", () => {
 
         const {
             [INTROSPECTION_EVENT]: introspection,
-            compare
+            "gateway:gateway.compare": compare
         } = service.events;
 
         expect(introspection).to.be.a("function");
@@ -78,7 +78,7 @@ describe("createGatewayService", () => {
         expect(_execute).to.be.a("function");
     });
 
-    it("should create gateway services and throw missing local in compare", async () => {
+    it("should create gateway services and throw gateway contains a invalid local in compare", async () => {
         const testServices = [];
 
         const RUNTIME = {
@@ -88,11 +88,7 @@ describe("createGatewayService", () => {
             },
             broker: {
                 call: (abc, { message }) => {
-                    if (
-                        !message.includes(
-                            `'gateway' trying to join the network with a different hash to an existing. Error: introspection contains a invalid local`
-                        )
-                    ) {
+                    if (!message.includes(`gateway contains a invalid local`)) {
                         throw new Error("wrong error");
                     }
                 },
@@ -133,7 +129,7 @@ describe("createGatewayService", () => {
             .to.have.property("actions")
             .to.be.a("object");
 
-        const { compare } = service.events;
+        const { "gateway:gateway.compare": compare } = service.events;
 
         await compare(
             { name: "gateway", locals: { scalars: ["Scalar2"] } },
@@ -147,7 +143,73 @@ describe("createGatewayService", () => {
         );
     });
 
-    it("should create gateway services and throw missing service in compare", async () => {
+    it("should create gateway services and throw gateway is missing a local in compare", async () => {
+        const testServices = [];
+
+        const RUNTIME = {
+            registeredServices: {
+                unions: [{ tested: true }],
+                nodes: [{ tested: true }]
+            },
+            broker: {
+                call: (abc, { message }) => {
+                    if (!message.includes(`gateway is missing a local`)) {
+                        throw new Error("wrong error");
+                    }
+                },
+                options: {
+                    nodeID: "gateway:gateway:uuid"
+                },
+                createService: (service) => testServices.push(service)
+            },
+            serviceManagers: {},
+            locals: { scalars: [{ name: "Scalar" }, { name: "Missing" }] }
+        };
+
+        const createGatewayService = proxyquire(
+            "../../../../src/api/graphql_gateway/methods/create-gateway-service.js",
+            {
+                "./execute.js": execute,
+                "./introspection-call.js": introspectionCall,
+                "../../../util/index.js": { abort }
+            }
+        );
+
+        createGatewayService(RUNTIME);
+
+        const [service] = testServices;
+
+        expect(service)
+            .to.be.a("object")
+            .to.have.property("name")
+            .to.equal(RUNTIME.broker.options.nodeID);
+
+        expect(service)
+            .to.be.a("object")
+            .to.have.property("events")
+            .to.be.a("object");
+
+        expect(service)
+            .to.be.a("object")
+            .to.have.property("actions")
+            .to.be.a("object");
+
+        const { "gateway:gateway.compare": compare } = service.events;
+
+        await compare(
+            { name: "gateway", locals: { scalars: ["Scalar"] } },
+            "gateway:gateway:uuid"
+        );
+
+        await compare({ name: "gateway", locals: {} }, "gateway:gateway:uuid");
+
+        await compare(
+            { name: "gateway", locals: { scalars: ["Scalar"] } },
+            "gateway:gateway:uuid"
+        );
+    });
+
+    it("should create gateway services and throw gateway contains a invalid service in compare", async () => {
         const testServices = [];
 
         const RUNTIME = {
@@ -158,9 +220,7 @@ describe("createGatewayService", () => {
             broker: {
                 call: (abc, { message }) => {
                     if (
-                        !message.includes(
-                            `'gateway' trying to join the network with a different hash to an existing. Error: introspection contains a invalid service`
-                        )
+                        !message.includes(`gateway contains a invalid service`)
                     ) {
                         throw new Error("wrong error");
                     }
@@ -202,10 +262,69 @@ describe("createGatewayService", () => {
             .to.have.property("actions")
             .to.be.a("object");
 
-        const { compare } = service.events;
+        const { "gateway:gateway.compare": compare } = service.events;
 
         await compare(
             { name: "gateway", services: { scalars: ["Scalar2"] } },
+            "gateway:gateway:uuid"
+        );
+    });
+
+    it("should create gateway services and throw gateway is missing service in compare", async () => {
+        const testServices = [];
+
+        const RUNTIME = {
+            registeredServices: {
+                unions: [{ tested: true }],
+                nodes: [{ tested: true }]
+            },
+            broker: {
+                call: (abc, { message }) => {
+                    if (!message.includes(`gateway is missing service`)) {
+                        throw new Error("wrong error");
+                    }
+                },
+                options: {
+                    nodeID: "gateway:gateway:uuid"
+                },
+                createService: (service) => testServices.push(service)
+            },
+            serviceManagers: {},
+            services: { scalars: ["Scalar", "Scalar2"] }
+        };
+
+        const createGatewayService = proxyquire(
+            "../../../../src/api/graphql_gateway/methods/create-gateway-service.js",
+            {
+                "./execute.js": execute,
+                "./introspection-call.js": introspectionCall,
+                "../../../util/index.js": { abort }
+            }
+        );
+
+        createGatewayService(RUNTIME);
+
+        const [service] = testServices;
+
+        expect(service)
+            .to.be.a("object")
+            .to.have.property("name")
+            .to.equal(RUNTIME.broker.options.nodeID);
+
+        expect(service)
+            .to.be.a("object")
+            .to.have.property("events")
+            .to.be.a("object");
+
+        expect(service)
+            .to.be.a("object")
+            .to.have.property("actions")
+            .to.be.a("object");
+
+        const { "gateway:gateway.compare": compare } = service.events;
+
+        await compare(
+            { name: "gateway", services: { scalars: ["Scalar"] } },
             "gateway:gateway:uuid"
         );
     });
@@ -242,7 +361,7 @@ describe("createGatewayService", () => {
 
         const [service] = testServices;
 
-        const { compare } = service.events;
+        const { "gateway:gateway.compare": compare } = service.events;
 
         await compare(
             { name: "gateway", services: { scalars: ["Scalar"] } },
