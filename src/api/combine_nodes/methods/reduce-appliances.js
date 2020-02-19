@@ -31,7 +31,7 @@ function reduceAppliances(_appliances) {
                 metadata
             );
 
-            result.typeDefs.push(typeDefs);
+            result.typeDefs = [...result.typeDefs, typeDefs].filter(Boolean);
 
             if (metadata.name === "directives") {
                 return {
