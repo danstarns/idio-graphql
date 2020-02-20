@@ -121,6 +121,69 @@ describe("createConfig", () => {
         }
     });
 
+    it("should create and return config and turn schemaGlobals into an array", () => {
+        const config = {
+            locals: { nodes: [{}], schemaGlobals: "TEST" },
+            services: { nodes: ["User"] }
+        };
+
+        const newConfig = createConfig(config);
+
+        expect(newConfig)
+            .to.be.a("object")
+            .to.have.property("locals")
+            .to.be.a("object");
+
+        expect(newConfig.locals)
+            .to.have.property("nodes")
+            .to.be.a("array");
+
+        expect(newConfig.locals)
+            .to.have.property("enums")
+            .to.be.a("array");
+
+        expect(newConfig.locals)
+            .to.have.property("interfaces")
+            .to.be.a("array");
+
+        expect(newConfig.locals)
+            .to.have.property("unions")
+            .to.be.a("array");
+
+        expect(newConfig.locals)
+            .to.have.property("directives")
+            .to.be.a("array");
+
+        expect(newConfig.locals)
+            .to.have.property("scalars")
+            .to.be.a("array");
+
+        expect(newConfig.locals)
+            .to.have.property("schemaGlobals")
+            .to.be.a("array");
+
+        expect(newConfig)
+            .to.be.a("object")
+            .to.have.property("services")
+            .to.be.a("object");
+
+        expect(newConfig.services)
+            .to.have.property("nodes")
+            .to.be.a("array");
+
+        expect(newConfig.services)
+            .to.have.property("enums")
+            .to.be.a("array");
+
+        expect(newConfig.services)
+            .to.have.property("interfaces")
+            .to.be.a("array");
+
+        expect(newConfig.services)
+            .to.have.property("unions")
+            .to.be.a("array");
+    });
+
     it("should create and return config", () => {
         const config = {
             locals: { nodes: [{}] },
