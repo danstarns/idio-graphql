@@ -10,6 +10,6 @@
     "scripts": {
         "gateway": "node ./index.js",
         "user": "node ./services/User.js",
-        "Post": "node ./services/Post.js"
+        "post": "node ./services/Post.js"
     }
 }

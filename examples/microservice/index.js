@@ -2,7 +2,7 @@ const { ApolloServer } = require("apollo-server");
 const { GraphQLGateway } = require("idio-graphql");
 
 const AccountsGateway = new GraphQLGateway(
-    { services: { nodes: ["User"] } },
+    { services: { nodes: ["User", "Post"] } },
     {
         transporter: "NATS",
         nodeID: "gateway",
