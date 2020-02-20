@@ -78,7 +78,10 @@ describe("ServiceManager", () => {
     });
 
     it("should get the next service and assign the last output to it ", async () => {
-        let services = [];
+        let services = [
+            { id: "gateway:gateway:uuid2" },
+            { id: "gateway:gateway:uuid3" }
+        ];
 
         const broker = {
             call: () => services,
@@ -92,6 +95,8 @@ describe("ServiceManager", () => {
 
         expect(manager).to.be.a.instanceOf(ServiceManager);
 
+        manager.activeServices = services.map((x) => x.id);
+
         const nextService = await manager.getNextService();
 
         expect(nextService).to.be.a("string");
@@ -100,6 +105,28 @@ describe("ServiceManager", () => {
             .to.have.property("lastOutput")
             .to.be.a("string")
             .to.equal(nextService);
+    });
+
+    it("should catch that there is only 1 active service, return it and assign the last output to it", async () => {
+        let services = [];
+
+        const broker = {
+            call: () => services,
+            options: { heartbeatInterval: 5 }
+        };
+
+        const manager = new ServiceManager("gateway:gateway:uuid", {
+            broker,
+            hash: "test"
+        });
+
+        const found = await manager.getNextService();
+
+        expect(found)
+            .to.be.a("string")
+            .to.contain("gateway:gateway:uuid");
+
+        expect(manager.lastOutput).to.equal(found);
     });
 
     it("should try not to return the same service waiting a second to allow new services to be discovered", async () => {
@@ -118,6 +145,11 @@ describe("ServiceManager", () => {
         expect(manager).to.be.a.instanceOf(ServiceManager);
 
         manager.lastOutput = manager.activeServices[0];
+
+        manager.activeServices = [
+            ...manager.activeServices,
+            "gateway:gateway:uuid"
+        ];
 
         const nextService = await manager.getNextService();
 
