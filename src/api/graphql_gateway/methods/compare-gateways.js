@@ -13,6 +13,7 @@ function compareGateways(RUNTIME) {
     const COMPARE_ACTION = `${serviceName}:${gatewayName}.compare`;
 
     return broker.emit(COMPARE_ACTION, {
+        name: serviceName,
         locals: Object.entries(locals).reduce(
             (result, [key, values]) => ({
                 ...result,
