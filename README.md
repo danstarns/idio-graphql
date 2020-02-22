@@ -10,6 +10,9 @@ $ npm install idio-graphql
 # Docs 
 https://danstarns.github.io/idio-graphql/
 
+# Examples 
+https://github.com/danstarns/idio-graphql/blob/master/examples/README.md
+
 # Contributing 
 https://github.com/danstarns/idio-graphql/blob/master/contributing.md
 
