@@ -1,0 +1,15 @@
+{
+    "name": "microservice",
+    "description": "This project showcase's idio-graphql capability's to gradually adopt a microservices architecture",
+    "dependencies": {
+        "apollo-server": "^2.10.1",
+        "idio-graphql": "file:../..",
+        "moleculer": "^0.14.2",
+        "nats": "^1.4.0"
+    },
+    "scripts": {
+        "gateway": "node ./index.js",
+        "user": "node ./locals/User.js",
+        "post": "node ./services/Post.js"
+    }
+}
