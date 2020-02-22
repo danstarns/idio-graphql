@@ -66,6 +66,9 @@ main();
 
 # Microservices Quick Start
 
+> Requires [nats-server](https://github.com/nats-io/nats-server) @ 0.0.0.0:4222
+
+`$ npm install idio-graphql apollo-server graphql-tag moleculer nats`
 
 ## User Service
 
