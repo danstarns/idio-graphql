@@ -71,11 +71,12 @@ Query: {
 
 ```javascript
 /**
- * @function PreHook
- * @param {any}    root
- * @param {Object} args 
- * @param {Object} context 
- * @param {Object} info 
+ * @typedef {(
+ *      root: any,
+ *      args: object,
+ *      context: context,
+ *      info: DocumentNode
+ *   ) => any} PreHook
  */
 ```
 
@@ -85,11 +86,12 @@ Query: {
 
 ```javascript
 /**
- * @function PreHook
- * @param {any}    root
- * @param {Object} args 
- * @param {Object} context 
- * @param {Object} info 
+ * @typedef {(
+ *      root: any,
+ *      args: object,
+ *      context: context,
+ *      info: DocumentNode
+ *   ) => any} resolve
  */
 ```
 
@@ -99,11 +101,12 @@ Query: {
 
 ```javascript
 /**
- * @function PostHook
- * @param {any}    resolve - The outcome of the resolve method.
- * @param {any}    root 
- * @param {Object} args 
- * @param {Object} context 
- * @param {Object} info 
+ * @typedef {(
+ *      resolve: any,
+ *      root: any,
+ *      args: object,
+ *      context: context,
+ *      info: DocumentNode
+ *   ) => any} PostHook
  */
 ```
