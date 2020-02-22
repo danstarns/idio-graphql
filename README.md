@@ -17,7 +17,7 @@ https://github.com/danstarns/idio-graphql/blob/master/examples/README.md
 https://github.com/danstarns/idio-graphql/blob/master/contributing.md
 
 # Slack
-Need help? Wanna chat? Come on our [Slack](https://idio-graphql.slack.com)
+https://idio-graphql.slack.com
 
 # Quick Start
 `$ npm install idio-graphql apollo-server graphql-tag`
