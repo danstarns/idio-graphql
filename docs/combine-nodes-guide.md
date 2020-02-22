@@ -9,6 +9,8 @@ title: Combine Nodes
 
 Once you have created your **[GraphQLNode's](graphql-node)** you will need to combine them to produce a single GraphQL schema.
 
+> The generated schema will be the outcome of **[makeExecutableSchema](https://github.com/apollographql/graphql-tools)**
+
 ## Nodes
 
 ---
@@ -21,10 +23,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
-    [ User ], 
-    schemaAppliances
-);
+const { typeDefs, resolvers } = combineNodes([ User ]);
 ```
 
 >The nodes should only be top level, if you take the **[nodes example](creating-nodes#nodes)** from the last page. You should only provide the `User` Node. 
@@ -47,10 +46,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
-    [ User ]
-    schemaAppliances
-);
+const { typeDefs, resolvers } =  combineNodes([ User ]);
 ```
 
 ## Schema Appliances
@@ -58,7 +54,7 @@ const { typeDefs, resolvers } = await combineNodes(
 ---
 
 ```javascript
-const { typeDefs, resolvers } = await combineNodes(
+const { typeDefs, resolvers } = combineNodes(
     nodes, 
     {
         enums, 
