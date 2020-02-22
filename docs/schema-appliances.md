@@ -20,7 +20,7 @@ title: Schema Appliances
 
 ---
 
-You can use **[IdioEnums](idio-enum)** to apply **[Enumeration types](https://graphql.org/learn/schema/#enumeration-types)** to your GraphQL schema.
+You can use **[IdioEnum](idio-enum)** to apply **[Enumeration types](https://graphql.org/learn/schema/#enumeration-types)** to your GraphQL schema.
 
 
 ```javascript
@@ -54,7 +54,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
+const { typeDefs, resolvers } = combineNodes(
     [ User ], 
     { enums: [ StatusEnum ] }
 )
@@ -83,7 +83,7 @@ const User = new GraphQLNode({
 
 ---
 
-You can use **[IdioScalars](idio-scalar)** to apply **[Scalar types](https://graphql.org/learn/schema/#scalar-types)** to your GraphQL schema. A scalar does not require `typeDefs`.
+You can use **[IdioScalar](idio-scalar)** to apply **[Scalar types](https://graphql.org/learn/schema/#scalar-types)** to your GraphQL schema. A scalar does not require `typeDefs`.
 
 > You can only specify scalars at [**combineNodes**](combine-nodes).
 
@@ -109,7 +109,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
+const { typeDefs, resolvers } = combineNodes(
     [ User ], 
     { scalars: [ JSONScalar ] }
 );
@@ -119,9 +119,9 @@ const { typeDefs, resolvers } = await combineNodes(
 
 ---
 
-You can use **[IdioDirectives](idio-directive)** to apply **[Directives](https://graphql.org/learn/queries/#directives)** to your GraphQL schema. 
+You can use **[IdioDirective](idio-directive)** to apply **[Directives](https://graphql.org/learn/queries/#directives)** to your GraphQL schema. 
 
-> Ensure your GraphQL implementation supports Directives. 
+> You can only specify directives at [**combineNodes**](combine-nodes).
 
 _example uses **[graphql-auth-directives](https://www.npmjs.com/package/graphql-auth-directives)**._
 
@@ -149,7 +149,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
+const { typeDefs, resolvers } = combineNodes(
     [ User ], 
     { directives: [ hasScopeDirective ] }
 );
@@ -159,7 +159,7 @@ const { typeDefs, resolvers } = await combineNodes(
 
 ---
 
-You can use **[IdioInterfaces](idio-interface)** to apply **[Interface types](https://graphql.org/learn/schema/#interfaces)** to your GraphQL schema.
+You can use **[IdioInterface](idio-interface)** to apply **[Interface types](https://graphql.org/learn/schema/#interfaces)** to your GraphQL schema.
 
 ```javascript
 const PersonInterface = new IdioInterface({
@@ -196,7 +196,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
+const { typeDefs, resolvers } = combineNodes(
     [ User ], 
     { interfaces: [ PersonInterface ] }
 );
@@ -225,7 +225,7 @@ const User = new GraphQLNode({
 
 ---
 
-You can use **[IdioUnions](idio-union)** to apply **[Union types](https://graphql.org/learn/schema/#union-types)** to your GraphQL schema.
+You can use **[IdioUnion](idio-union)** to apply **[Union types](https://graphql.org/learn/schema/#union-types)** to your GraphQL schema.
 
 ```javascript
 const UserUnion = new IdioUnion({
@@ -253,7 +253,7 @@ const User = new GraphQLNode({
     ...
 });
 
-const { typeDefs, resolvers } = await combineNodes(
+const { typeDefs, resolvers } = combineNodes(
     [ User ], 
     { 
         unions: [ UserUnion ],
