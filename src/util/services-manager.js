@@ -68,7 +68,7 @@ ServiceManager.prototype.getNextService = async function getNextService() {
                 return service;
             }
 
-            await sleep(100);
+            await sleep(0);
 
             return getServiceToCall.call(this);
         }

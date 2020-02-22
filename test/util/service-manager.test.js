@@ -129,7 +129,7 @@ describe("ServiceManager", () => {
         expect(manager.lastOutput).to.equal(found);
     });
 
-    it("should try not to return the same service waiting a second to allow new services to be discovered", async () => {
+    it("should try not to return the same service", async () => {
         let services = [];
 
         const broker = {
