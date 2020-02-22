@@ -1,5 +1,5 @@
 # Gradual Adoption Example
-This project showcase's idio-graphql capability's to gradually adopt a microservices architecture
+This project demonstrates how to gradually adopt a microservices architecture with idio-graphql.
 
 # Dependencies
 1. Port 4000
