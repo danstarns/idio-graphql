@@ -1,6 +1,6 @@
 const siteConfig = {
     title: "idio-graphql",
-    tagline: `Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.`,
+    tagline: `Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels.`,
     url: "https://danstarns.github.io",
     baseUrl: "/idio-graphql/",
     projectName: "idio-graphql",
