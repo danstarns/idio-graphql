@@ -63,7 +63,7 @@ A Node allows you to specify the following resolvers;
 3. `Subscription`
 4. `Fields`
 
-Let's implement the `Query` resolver, called `getUser`, defined in our `typeDefs`.
+Let's implement the `getUser` resolver...
 
 ### Query
 
@@ -158,9 +158,7 @@ const User = new GraphQLNode({
 
 ---
 
-It's recommended to inject dependencies into your Node, this helps with testing. For each resolver injections will be a scoped property on `context`.
-
-Injections can either be a value or a function.
+It's recommended to inject dependencies into your Node, this helps with testing. For each resolver injections will be a property on the `context` parameter.
 
 ```javascript
 new GraphQLNode({
@@ -169,19 +167,11 @@ new GraphQLNode({
 ```
 
 ```javascript
-new GraphQLNode({
-    injections: async () => { ... }
-})
-```
-
-```javascript
 const User = new GraphQLNode({
     name: "User",
     typeDefs: "./User.gql",
-    injections: () => {
-        return {
-            UserModel
-        }
+    injections: {
+        UserModel
     },
     resolvers: {
         Query: {
