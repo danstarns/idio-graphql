@@ -60,7 +60,7 @@ async function main() {
 
     await server.listen(4000);
 
-    console.log(`Server up on port 4000 🚀`);
+    console.log(`http://localhost:4000/graphql`);
 }
 
 main();
