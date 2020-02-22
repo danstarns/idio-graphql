@@ -63,3 +63,88 @@ async function main() {
 main();
 
 ```
+
+# Microservices Quick Start
+
+
+## User Service
+
+```javascript
+const gql = require("graphql-tag");
+const { GraphQLNode } = require("idio-graphql");
+
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: gql`
+        type User {
+            id: String
+            name: String
+            age: Int
+        }
+
+        type Query {
+            user(id: String!): User
+            users(ids: [String]): [User]
+        }
+    `,
+    resolvers: {
+        Query: {
+            user: (root, { id }) => { ... },
+            users: (root, { ids }, { injections: { broker } }) => { ... }
+        }
+    }
+});
+
+async function main() {
+    try {
+        await User.serve({
+            gateway: "gateway",
+            transporter: "NATS"
+        });
+
+        console.log("User Online");
+    } catch (error) {
+        console.error(error);
+
+        process.exit(1);
+    }
+}
+
+main();
+```
+
+## Gateway Service
+
+```javascript
+const { ApolloServer } = require("apollo-server");
+const { GraphQLGateway } = require("idio-graphql");
+
+const gateway = new GraphQLGateway(
+    { services: { nodes: ["User"] } },
+    {
+        transporter: "NATS",
+        nodeID: "gateway"
+    }
+);
+
+async function main() {
+    try {
+        const { typeDefs, resolvers } = await gateway.start();
+
+        const server = new ApolloServer({
+            typeDefs,
+            resolvers
+        });
+
+        await server.listen(4000);
+
+        console.log(`http://localhost:4000/graphql`);
+    } catch (error) {
+        console.error(error);
+
+        process.exit(1);
+    }
+}
+
+main();
+```
