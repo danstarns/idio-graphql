@@ -1,4 +1,7 @@
 const { expect } = require("chai");
+const util = require("util");
+
+const sleep = util.promisify(setTimeout);
 
 const ServiceManager = require("../../src/util/services-manager.js");
 
@@ -134,7 +137,7 @@ describe("ServiceManager", () => {
 
         const broker = {
             call: () => services,
-            options: { heartbeatInterval: 5 }
+            options: { heartbeatInterval: 1 }
         };
 
         const manager = new ServiceManager("gateway:gateway:uuid", {
@@ -142,14 +145,15 @@ describe("ServiceManager", () => {
             hash: "test"
         });
 
-        expect(manager).to.be.a.instanceOf(ServiceManager);
-
-        manager.lastOutput = manager.activeServices[0];
+        await sleep(1000);
 
         manager.activeServices = [
-            ...manager.activeServices,
+            "gateway:gateway:uuid",
             "gateway:gateway:uuid"
         ];
+        manager.lastOutput = manager.activeServices[0];
+
+        expect(manager).to.be.a.instanceOf(ServiceManager);
 
         const nextService = await manager.getNextService();
 
