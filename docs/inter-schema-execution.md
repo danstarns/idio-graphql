@@ -10,7 +10,7 @@ GraphQL allows engineers to query and define resolvers for complex relationships
 
 > Subscriptions are not supported with Inter-Schema Execution.
 
-## Dissecting Resolvers
+## Resolvers
 
 ---
 
@@ -28,7 +28,6 @@ GraphQL allows engineers to query and define resolvers for complex relationships
  *   ) => any} resolve
  */
 ```
-Armed with this knowledge we are now prepared to preform our first Inter-Schema execution.
 
 ## Defining Relationships
 
@@ -52,6 +51,8 @@ type Post {
 We will use this schema to demonstrate the capability's of Inter-Schema Execution.
 
 ## Creating Nodes
+
+Now that we have settled on a Schema, Let's create some nodes.
 
 ---
 
@@ -124,7 +125,7 @@ type User {
 }
 ```
 
-You may have established that we already have a query available for `posts(ids: [String]): [Post]` and could be re-used to populate `User.posts`. This is the aim of the `execute` method, to expose the ability to re-use operations.
+You may have established that we already have a query available for `posts(ids: [String]): [Post]` and could be re-used to populate `User.posts`. This is the aim of the `execute` method, to expose the ability to re-use operations, allow nodes to execute against internal & external schemas.
 
 ## Execute
 

@@ -30,7 +30,7 @@ function ServicesManager(service, { broker, hash } = {}) {
     }
 
     this.push = () => true;
-
+    this.hash = hash;
     this.tested = true;
 }
 
@@ -95,14 +95,28 @@ describe("introspectionCall", () => {
                     } else {
                         return {
                             name: "User",
-                            hash: "test"
+                            hash: "test",
+                            services: {
+                                interfaces: ["Person"],
+                                nodes: ["Test"]
+                            }
                         };
                     }
                 }
             },
             serviceManagers: {},
-            waitingServices: {},
-            registeredServices: {}
+            waitingServices: {
+                nodes: [],
+                enums: [],
+                interfaces: [],
+                unions: []
+            },
+            registeredServices: {
+                nodes: [{ name: "Test" }],
+                enums: [],
+                interfaces: [{}],
+                unions: []
+            }
         };
 
         const _introspectionCall = introspectionCall(RUNTIME);
@@ -159,7 +173,10 @@ describe("introspectionCall", () => {
 
         const RUNTIME = {
             serviceManagers: {
-                interface: {}
+                nodes: [],
+                enums: [],
+                interfaces: [],
+                unions: []
             },
             waitingServices: {
                 interfaces: ["Person"]
@@ -270,12 +287,20 @@ describe("introspectionCall", () => {
 
         const RUNTIME = {
             serviceManagers: {
-                interface: { Person: { push: () => true } }
+                interface: { Person: { push: () => true, hash: "test" } }
             },
             waitingServices: {
-                nodes: ["User"]
+                nodes: ["User"],
+                enums: [],
+                interfaces: [],
+                unions: []
             },
-            registeredServices: { interfaces: [], nodes: [] },
+            registeredServices: {
+                interfaces: [],
+                nodes: [],
+                enums: [],
+                unions: []
+            },
             broker: {
                 options: {
                     nodeID: "gateway:gateway:uuid"
@@ -327,7 +352,8 @@ describe("introspectionCall", () => {
 
                     return {
                         name: "User",
-                        hash: "test"
+                        hash: "test",
+                        services: {}
                     };
                 }
             }
@@ -381,5 +407,96 @@ describe("introspectionCall", () => {
             .to.be.a("object")
             .to.have.property("nodes")
             .to.be.a("array");
+    });
+
+    it("should throw node trying to join the network with a different hash to existing", async () => {
+        let counter = 0;
+
+        const RUNTIME = {
+            serviceManagers: {
+                interface: { Person: { push: () => true, hash: "test_fal" } }
+            },
+            waitingServices: {
+                nodes: ["User"]
+            },
+            registeredServices: { interfaces: [], nodes: [] },
+            broker: {
+                options: {
+                    nodeID: "gateway:gateway:uuid"
+                },
+                call: (INTROSPECTION_CALL, body) => {
+                    if (!INTROSPECTION_CALL) {
+                        throw new Error("INTROSPECTION_CALL missing");
+                    }
+
+                    if (!(typeof INTROSPECTION_CALL === "string")) {
+                        throw new Error("INTROSPECTION_CALL must be a string");
+                    }
+
+                    if (INTROSPECTION_CALL.includes("abort")) {
+                        throw new Error(body.message);
+                    }
+
+                    if (
+                        !INTROSPECTION_CALL.includes(
+                            "Person.gateway:introspection"
+                        ) &&
+                        !INTROSPECTION_CALL.includes(
+                            "User.gateway:introspection"
+                        )
+                    ) {
+                        throw new Error("INTROSPECTION_CALL incorrect");
+                    }
+
+                    if (!body) {
+                        throw new Error("body required");
+                    }
+
+                    if (!(typeof body === "object")) {
+                        throw new Error("body must be object");
+                    }
+
+                    if (!body.gateway) {
+                        throw new Error("body.gateway missing");
+                    }
+
+                    if (!body.hash) {
+                        throw new Error("body.hash missing");
+                    }
+
+                    if (counter === 0) {
+                        counter += 1;
+
+                        return {
+                            name: "Person",
+                            hash: "test"
+                        };
+                    }
+
+                    return {
+                        name: "User",
+                        hash: "test"
+                    };
+                }
+            }
+        };
+
+        try {
+            const _introspectionCall = introspectionCall(RUNTIME);
+
+            await _introspectionCall("Person:gateway:uuid", "interface");
+
+            await _introspectionCall("User:gateway:uuid", "node");
+
+            expect(RUNTIME).to.be.a("object");
+
+            throw new Error();
+        } catch ({ message }) {
+            expect(message)
+                .to.be.a("string")
+                .to.contain(
+                    "'Person' trying to join the network with a different hash to an existing"
+                );
+        }
     });
 });

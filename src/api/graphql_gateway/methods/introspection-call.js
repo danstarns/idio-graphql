@@ -20,6 +20,10 @@ module.exports = (RUNTIME) => {
     const { broker } = RUNTIME;
 
     return async function introspectionCall(service, type) {
+        const { name } = applianceMetadata.find(
+            ({ singular }) => singular === type
+        );
+
         /**
          * @typedef introspection
          * @param {string} name
@@ -51,6 +55,14 @@ module.exports = (RUNTIME) => {
             RUNTIME.serviceManagers[type] = {};
         }
 
+        if (!RUNTIME.waitingServices[name]) {
+            RUNTIME.waitingServices[name] = [];
+        }
+
+        if (!RUNTIME.registeredServices[name]) {
+            RUNTIME.registeredServices[name] = [];
+        }
+
         if (!RUNTIME.serviceManagers[type][serviceName]) {
             RUNTIME.serviceManagers[type][serviceName] = new ServicesManager(
                 service,
@@ -60,25 +72,40 @@ module.exports = (RUNTIME) => {
                 }
             );
 
-            const { name } = applianceMetadata.find(
-                ({ singular }) => singular === type
-            );
-
-            if (!RUNTIME.waitingServices[name]) {
-                RUNTIME.waitingServices[name] = [];
-            }
-
             if (RUNTIME.waitingServices[name].includes(introspection.name)) {
                 RUNTIME.waitingServices[name] = RUNTIME.waitingServices[
                     name
                 ].filter((x) => x !== introspection.name);
             }
 
-            if (!RUNTIME.registeredServices[name]) {
-                RUNTIME.registeredServices[name] = [];
-            }
-
             RUNTIME.registeredServices[name].push(introspection);
+        }
+
+        if (
+            introspection.hash !==
+            RUNTIME.serviceManagers[type][serviceName].hash
+        ) {
+            const ABORT_CALL = `${service}.abort`;
+
+            return broker.call(ABORT_CALL, {
+                message: `'${introspection.name}' trying to join the network with a different hash to an existing`
+            });
+        }
+
+        if (type === "node") {
+            Object.entries(introspection.services).forEach(([key, values]) => {
+                RUNTIME.waitingServices[key] = [
+                    ...new Set([
+                        ...RUNTIME.waitingServices[key],
+                        ...values.filter(
+                            (x) =>
+                                !RUNTIME.registeredServices[key]
+                                    .map((y) => y.name)
+                                    .includes(x)
+                        )
+                    ])
+                ];
+            });
         }
 
         RUNTIME.serviceManagers[type][serviceName].push(service);

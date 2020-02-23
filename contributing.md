@@ -12,7 +12,7 @@ You can also give someone a shout on [slack](https://idio-graphql.slack.com/).
 6. [Pull Request Checklist](#Pull-Request-Checklist)
 
 # Picking a existing task 
-There may be existing tasks [here](https://github.com/danstarns/idio-graphql/projects/1). If you want to take it on, file an issue relating to the task, broadcasting your working on it, this is the time to ask any questions.It is picked it up, the card will move into progress. When your done, file a PR and merge into develop. Make sure your branch is same as the task title `idio-000-test-task`.
+There may be existing tasks [here](https://github.com/danstarns/idio-graphql/projects/1). If you want to take it on, file an issue relating to the task, broadcasting your working on it, this is the time to ask any questions. Once it is picked it up, the card will move into progress. When your done, file a PR and merge into develop. Make sure your branch is same as the task title `idio-000-test-task`.
 
 # Submitting an idea
 If you have an idea, you can either come and chat directly in [slack](https://idio-graphql.slack.com/) about it, or submit a issue explaining it. You will need to specify;

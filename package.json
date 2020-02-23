@@ -28,6 +28,7 @@
     "node": ">=8.16.0"
   },
   "repository": "github:danstarns/idio-graphql",
+  "homepage": "https://danstarns.github.io/idio-graphql/",
   "author": "Daniel Starns",
   "license": "MIT",
   "devDependencies": {

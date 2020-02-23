@@ -61,7 +61,21 @@ async function serve(brokerOptions) {
     resolvers: Object.entries(this.resolvers).reduce((result, [name, methods]) => _objectSpread({}, result, {
       [name]: Object.keys(methods)
     }), {}),
-    hash: this.typeDefs
+    hash: this.typeDefs,
+    services: Object.entries({
+      nodes: this.nodes,
+      enums: this.enums,
+      interfaces: this.interfaces,
+      unions: this.unions
+    }).reduce((result, [key, values]) => {
+      if (!values) {
+        return result;
+      }
+
+      return _objectSpread({}, result, {
+        [key]: values.map(x => x.name)
+      });
+    }, {})
   };
   const INTROSPECTION_CALL = `${brokerOptions.gateway}:introspection`;
   RUNTIME.broker.createService({

@@ -1,7 +1,5 @@
 # idio-graphql
 
-> You are currently viewing V3.0.0-rc0 that will be release to npm soon, v2.0.> is considered depreciated.
-
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
 
 

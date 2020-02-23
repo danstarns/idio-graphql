@@ -45,7 +45,22 @@ async function serve(brokerOptions) {
             }),
             {}
         ),
-        hash: this.typeDefs
+        hash: this.typeDefs,
+        services: Object.entries({
+            nodes: this.nodes,
+            enums: this.enums,
+            interfaces: this.interfaces,
+            unions: this.unions
+        }).reduce((result, [key, values]) => {
+            if (!values) {
+                return result;
+            }
+
+            return {
+                ...result,
+                [key]: values.map((x) => x.name)
+            };
+        }, {})
     };
 
     const INTROSPECTION_CALL = `${brokerOptions.gateway}:introspection`;

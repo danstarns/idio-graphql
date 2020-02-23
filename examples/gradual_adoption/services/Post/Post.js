@@ -37,7 +37,7 @@ const Post = new GraphQLNode({
             likes: async (root, args, { injections }) => {
                 const result = await injections.execute(
                     gql`
-                        query($ids: [String]) {
+                        query($ids: [ID]) {
                             users(ids: $ids) {
                                 id
                                 name

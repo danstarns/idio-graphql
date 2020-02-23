@@ -143,7 +143,10 @@ To harness the real power of microservices you should take advantage of the **[S
 
 
 ```javascript
-const { broker } = await User.serve({ transporter: "NATS" });
+const { broker } = await User.serve({ 
+    transporter: "NATS",
+    gateway: "gateway",
+});
 ```
 
 ```javascript
