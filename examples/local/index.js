@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { ApolloServer } = require("apollo-server");
 const { combineNodes } = require("idio-graphql");
 const [User, Post] = require("./nodes/index.js");
