@@ -1,50 +1,21 @@
-let _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+"use strict";
 
-let _defineProperty2 = _interopRequireDefault(
-  require("@babel/runtime/helpers/defineProperty")
-);
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-function ownKeys(object, enumerableOnly) {
-  let keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    let symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly)
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-function _objectSpread(target) {
-  for (let i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        (0, _defineProperty2.default)(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(
-        target,
-        Object.getOwnPropertyDescriptors(source)
-      );
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(
-          target,
-          key,
-          Object.getOwnPropertyDescriptor(source, key)
-        );
-      });
-    }
-  }
-  return target;
-}
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-const { createConfig, start } = require("./methods/index.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-const { createBroker } = require("../../util/index.js");
+const {
+  createConfig,
+  start
+} = require("./methods/index.js");
+
+const {
+  createBroker
+} = require("../../util/index.js");
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
@@ -98,17 +69,16 @@ const { createBroker } = require("../../util/index.js");
  *
  * @returns {GraphQLGateway}
  */
+
+
 function GraphQLGateway(config, brokerOptions = {}) {
-  this.broker = createBroker(
-    {
-      name: brokerOptions.nodeID
-    },
-    {
-      brokerOptions: _objectSpread({}, brokerOptions, {
-        gateway: brokerOptions.nodeID
-      })
-    }
-  );
+  this.broker = createBroker({
+    name: brokerOptions.nodeID
+  }, {
+    brokerOptions: _objectSpread({}, brokerOptions, {
+      gateway: brokerOptions.nodeID
+    })
+  });
   this.start = start({
     config: createConfig(config),
     broker: this.broker

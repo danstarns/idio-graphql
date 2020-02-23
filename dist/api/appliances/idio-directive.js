@@ -1,6 +1,13 @@
-const { parseTypeDefs, validateTypeDefs } = require(`../../util/index.js`);
+"use strict";
 
-const { SchemaDirectiveVisitor } = require("graphql-tools");
+const {
+  parseTypeDefs,
+  validateTypeDefs
+} = require(`../../util/index.js`);
+
+const {
+  SchemaDirectiveVisitor
+} = require("graphql-tools");
 
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 
@@ -29,7 +36,13 @@ const IdioError = require("../idio-error.js");
  *
  * @returns {IdioDirective}
  */
-function IdioDirective({ name, typeDefs, resolver } = {}) {
+
+
+function IdioDirective({
+  name,
+  typeDefs,
+  resolver
+} = {}) {
   const prefix = `constructing IdioDirective`;
   this.name;
   this.typeDefs;
@@ -70,16 +83,8 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
     throw new IdioError(`${prefix}: '${name}' without a resolver.`);
   }
 
-  if (
-    !Object.prototype.isPrototypeOf.call(
-      SchemaDirectiveVisitor.prototype,
-      resolver
-    ) &&
-    !Object.prototype.isPrototypeOf.call(SchemaDirectiveVisitor, resolver)
-  ) {
-    throw new IdioError(
-      `${prefix}: '${name}'.resolver must be a instance of SchemaDirectiveVisitor.`
-    );
+  if (!Object.prototype.isPrototypeOf.call(SchemaDirectiveVisitor.prototype, resolver) && !Object.prototype.isPrototypeOf.call(SchemaDirectiveVisitor, resolver)) {
+    throw new IdioError(`${prefix}: '${name}'.resolver must be a instance of SchemaDirectiveVisitor.`);
   }
 
   this.resolver = resolver;

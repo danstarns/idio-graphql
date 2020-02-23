@@ -13,7 +13,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* eslint-disable global-require */
 const uuid = require("uuid/v4");
 
-const IdioError = require("../../src/api/idio-error.js");
+const IdioError = require("../api/idio-error.js");
 /**
  * @typedef {import('moleculer').BrokerOptions & {gateway: string}} BrokerOptions
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker

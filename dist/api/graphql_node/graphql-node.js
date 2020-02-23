@@ -1,6 +1,11 @@
+"use strict";
+
 require("core-js/modules/es.array.iterator");
 
-const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
+const {
+  parseTypeDefs,
+  validateTypeDefs
+} = require("../../util/index.js");
 
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 
@@ -65,6 +70,8 @@ const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
  *
  * @returns {GraphQLNode}
  */
+
+
 function GraphQLNode(config = {}) {
   const {
     name,
@@ -96,9 +103,7 @@ function GraphQLNode(config = {}) {
   }
 
   if (RESTRICTED_NAMES[name.toLowerCase()]) {
-    throw new IdioError(
-      `${prefix}: creating node '${name}' with invalid name.`
-    );
+    throw new IdioError(`${prefix}: creating node '${name}' with invalid name.`);
   }
 
   this.name = name;
@@ -149,26 +154,22 @@ function GraphQLNode(config = {}) {
   }).forEach(([key, appliances]) => {
     if (appliances) {
       if (!Array.isArray(appliances)) {
-        throw new IdioError(
-          `${prefix}: '${name}' ${key} must be of type 'array'.`
-        );
+        throw new IdioError(`${prefix}: '${name}' ${key} must be of type 'array'.`);
       }
 
-      const { singular, _Constructor } = [
-        ...APPLIANCE_METADATA,
-        {
-          _Constructor: GraphQLNode,
-          kind: "ObjectTypeDefinition",
-          singular: "node",
-          name: "nodes"
-        }
-      ].find((x) => x.name === key);
+      const {
+        singular,
+        _Constructor
+      } = [...APPLIANCE_METADATA, {
+        _Constructor: GraphQLNode,
+        kind: "ObjectTypeDefinition",
+        singular: "node",
+        name: "nodes"
+      }].find(x => x.name === key);
 
       function checkInstanceOfAppliance(appliance) {
         if (!(appliance instanceof _Constructor)) {
-          throw new IdioError(
-            `${prefix}: '${name}' expected ${singular} to be instance of '${_Constructor.name}'.`
-          );
+          throw new IdioError(`${prefix}: '${name}' expected ${singular} to be instance of '${_Constructor.name}'.`);
         }
       }
 
