@@ -6,17 +6,13 @@ title: Inter-Schema Execution
 ## Intro
 
 ---
-
-GraphQL allows engineers to query and define resolvers for complex relationships within a data set. idio-graphql enables the ability to, at runtime, execute a `Query/Mutation`, otherwise known as a **[Document](https://spec.graphql.org/June2018/#sec-Language.Document)**, against the parent and or a specified specified schema, using custom directives. In this guide you will be shown how to utilize the `execute` method, available for both local nodes and service nodes. You will learn how to re-use code simontainsly populating edges in your graph.
+GraphQL allows engineers to query and define resolvers for complex relationships within a data set. idio-graphql enables the ability to, at runtime, execute a `Query/Mutation`, otherwise known as a **[Document](https://spec.graphql.org/June2018/#sec-Language.Document)**, against the parent and or a specified schema, using custom directives. In this guide, you will be shown how to utilize the execute method, available for both local nodes and service nodes. You will learn how to re-use code while simultaneously populating edges in your graph.
 
 > Subscriptions are not supported with Inter-Schema Execution.
 
 ## Dissecting Resolvers
 
 ---
-
-
-Before we dive deeper into the `execute` method we need to take a moment, to reflect on what our resolver functions look like.
 
 ```javascript
 /**
@@ -61,11 +57,11 @@ We will use this schema to demonstrate the capability's of Inter-Schema Executio
 
 > Checkout the **[Creating Nodes](creating-nodes)** guide for more information about creating nodes.
 
-### User
 
----
+<!--DOCUSAURUS_CODE_TABS-->
+<!--User-->
 
-```javascript
+```js
 const User = new GraphQLNode({
     name: "User",
     typeDefs: gql`
@@ -91,10 +87,7 @@ const User = new GraphQLNode({
     }
 });
 ```
-
-### Post
-
----
+<!--Post-->
 
 ```javascript
 const Post = new GraphQLNode({
@@ -116,12 +109,14 @@ const Post = new GraphQLNode({
     }
 });
 ```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 
 ## Field Resolvers
 
 ---
 
-Now we have created our nodes, we need to focus on the field resolvers for both `User` & `Post` types. This is where we define the logic for populating edges in our graph. 
+Now we have created our nodes, we need to focus on the field resolvers for our types. This is where we define the logic for populating edges in our graph. 
 
 ```graphql
 type User {
@@ -132,29 +127,16 @@ type User {
 You may have established that we already have a query available for `posts(ids: [String]): [Post]` and could be re-used to populate `User.posts`. This is the aim of the `execute` method, to expose the ability to re-use operations.
 
 ## Execute
+
+---
+
 You can use this method to preform a `Query/Mutation` against a specified schema.
 
-> Subscriptions are not supported with interservice schema execution.
 
-```javascript
-/**
- * @typedef ExecutionContext
- * @property {object} root
- * @property {object} context
- * @property {object} variables
- * @property {string} operationName
- */
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Example-->
 
-/**
- * @typedef {(
- *      document: (DocumentNode | string),
- *      executionContext: ExecutionContext
- *   ) => Promise<ExecutionResult>
- * } execute
- */
-```
-
-```javascript
+```js
 const User = new GraphQLNode({
     name: "User",
     typeDefs: gql`
@@ -190,9 +172,32 @@ const User = new GraphQLNode({
     }
 });
 ```
+<!--Definitions-->
+
+```javascript
+/**
+ * @typedef ExecutionContext
+ * @property {object} root
+ * @property {object} context
+ * @property {object} variables
+ * @property {string} operationName
+ */
+
+/**
+ * @typedef {(
+ *      document: (DocumentNode | string),
+ *      executionContext: ExecutionContext
+ *   ) => Promise<ExecutionResult>
+ * } execute
+ */
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 > You can also use [**graphql-tag**](https://github.com/apollographql/graphql-tag) when providing the document.
 
 ### Error Handling
+
+---
 
 `execute` returns `ExecutionResult`
 
@@ -250,9 +255,9 @@ directive @gateway(
 
 ```graphql
 query @gateway(name: "gateway-01") {
-    metadata: getMetaData {
-        title
-        content
+    user {
+        name
+        age
     }
 }
 ```
