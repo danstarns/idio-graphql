@@ -81,6 +81,17 @@ module.exports = (RUNTIME) => {
             RUNTIME.registeredServices[name].push(introspection);
         }
 
+        if (
+            introspection.hash !==
+            RUNTIME.serviceManagers[type][serviceName].hash
+        ) {
+            const ABORT_CALL = `${service}.abort`;
+
+            return broker.call(ABORT_CALL, {
+                message: `'${introspection.name}' trying to join the network with a different hash to an existing`
+            });
+        }
+
         RUNTIME.serviceManagers[type][serviceName].push(service);
     };
 };
