@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const { GraphQLNode } = require("idio-graphql");
 
-const { comments } = require("../../../data/index.js");
+const { comments } = require("../../../../data/index.js");
 
 const Comment = new GraphQLNode({
     name: "Comment",
