@@ -42,8 +42,8 @@ const hasScopeDirective = new IdioDirective({
 /**
  * @typedef IdioDirective
  * @property {string} name
- * @property {Promise<string>} typeDefs
- * @property {Object} resolver
+ * @property {string} typeDefs
+ * @property {object} resolver
  */
 
 /**
@@ -51,9 +51,9 @@ const hasScopeDirective = new IdioDirective({
  *
  * You can only specify directives 'top-level' at combineNodes.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
  * @param {SchemaDirectiveVisitor} config.resolver
  *
  * @returns {IdioDirective}
