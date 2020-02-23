@@ -58,5 +58,5 @@ const { typeDefs, resolvers, schemaDirectives } = combineNodes(
 ```
 
 ```javascript
-async function combineNodes(nodes: GraphQLNode, appliances: appliances);
+function combineNodes(nodes: GraphQLNode, appliances: appliances);
 ```
