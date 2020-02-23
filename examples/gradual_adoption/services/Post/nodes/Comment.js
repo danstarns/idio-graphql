@@ -2,50 +2,50 @@
 const { gql } = require("apollo-server");
 const { GraphQLNode } = require("idio-graphql");
 
-const { users } = require("../../data/index.js");
+const { comments } = require("../../../../data/index.js");
 
-const User = new GraphQLNode({
-    name: "User",
+const Comment = new GraphQLNode({
+    name: "Comment",
     typeDefs: gql`
-        type User {
+        type Comment {
             id: ID
-            name: String
-            age: Int
-            posts: [Post]
+            content: String
+            user: User
         }
 
         type Query {
-            user(id: ID!): User
-            users(ids: [ID]): [User]
+            comment(id: ID!): Comment
+            comments(ids: [ID]): [Comment]
         }
     `,
     resolvers: {
         Query: {
-            user: (root, { id }) => {
-                return users.find((x) => x.id === id);
+            comment: (root, { id }) => {
+                return comments.find((x) => x.id === id);
             },
-            users: (root, { ids }) => {
+            comments: (root, { ids }) => {
                 if (ids) {
-                    return users.filter((x) => ids.includes(x.id));
+                    return comments.filter((x) => ids.includes(x.id));
                 }
 
-                return users;
+                return comments;
             }
         },
         Fields: {
-            posts: async (root, args, { injections }) => {
+            user: async (root, args, { injections }) => {
                 const result = await injections.execute(
                     gql`
-                        query($ids: [ID]) {
-                            posts(ids: $ids) {
+                        query($id: ID!) {
+                            user(id: $id) {
                                 id
-                                title
+                                name
+                                age
                             }
                         }
                     `,
                     {
                         variables: {
-                            ids: root.posts
+                            id: root.user.id
                         }
                     }
                 );
@@ -54,10 +54,10 @@ const User = new GraphQLNode({
                     throw new Error(result.errors[0].message);
                 }
 
-                return result.data.posts;
+                return result.data.user;
             }
         }
     }
 });
 
-module.exports = User;
+module.exports = Comment;

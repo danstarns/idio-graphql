@@ -9,7 +9,6 @@
     },
     "scripts": {
         "gateway": "node ./index.js",
-        "user": "node ./locals/User.js",
-        "post": "node ./services/Post.js"
+        "post": "node ./services/Post/Post.js"
     }
 }
