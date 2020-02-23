@@ -1,7 +1,8 @@
 const { gql } = require("apollo-server");
 const { GraphQLNode } = require("idio-graphql");
 
-const { posts } = require("../../data/index.js");
+const { posts } = require("../../../data/index.js");
+const Comment = require("./Comment.js");
 
 const Post = new GraphQLNode({
     name: "Post",
@@ -58,7 +59,8 @@ const Post = new GraphQLNode({
 
                 return result.data.users;
             }
-        }
+        },
+        nodes: [Comment]
     }
 });
 
