@@ -48,7 +48,10 @@ const User = new GraphQLNode({
     }
 });
 
-await User.serve({ transporter: "NATS" });
+await User.serve({ 
+    transporter: "NATS",
+    gateway: "gateway"
+});
 ```
 
 ## Your First Gateway
@@ -124,7 +127,74 @@ resolvers: {
 
 ---
 
-idio-graphql comes with 'effort-less' scaling. 
+idio-graphql comes with 'effort-less' scaling. You can horizontally scale all idio-graphql services & let the package handle the load balancing.
+
+### Load Balancing
+
+---
+
+Taking advantage of **[`$node.list`](https://moleculer.services/docs/0.13/services.html#Internal-services)**  your idio-graphql service will keep track of the active nodes, gateways and schema appliances & deliver messages bases on a pseudo-random algorithm.
+
+### Heartbeat Interval
+
+---
+
+The in-memory active node list will be refreshed based on the **[Moleculer](https://moleculer.services/docs/0.14/configuration.html#Broker-options)** `heartbeatInterval` provided at either `serve` or `start` of a service. Its recommended to experiment with this interval, to achieve maximum reliability, based on the constrains within your distributed system.
+
+> Its recommended to view all the broker options you have available **[here](https://moleculer.services/docs/0.14/configuration.html#Broker-options)**
+
+```javascript
+const gateway = new GraphQLGateway(
+    { services: { nodes: ["User"] } },
+    {
+        transporter: "NATS",
+        nodeID: "gateway",
+        heartbeatInterval: 3 // seconds
+    }
+);
+```
+
+```javascript
+await UserNode.serve({
+    gateway: "gateway",
+    transporter: "NATS",
+    heartbeatInterval: 3
+});
+```
+### Duplicate Services
+
+---
+
+For the load balancing to be able to deliver messages to only one instance of each node,
+each service is set up to be unique by its nodeID.
+
+> Service ID's adhere to the following schema **`<NAME>:<GATEWAY>:<UUID>`**
+
+
+```javascript
+const gateway = new GraphQLGateway(
+    { services: { nodes: ["User"] } },
+    {
+        transporter: "NATS",
+        nodeID: "gateway",
+        heartbeatInterval: 3 // seconds
+    }
+);
+
+const { broker } = await gateway.start();
+
+broker.options.nodeID // "gateway:gateway:uuid123"
+```
+
+```javascript
+const { broker } = await UserNode.serve({
+    gateway: "gateway",
+    transporter: "NATS",
+    heartbeatInterval: 3
+});
+
+broker.options.nodeID // "User:gateway:uuid123"
+```
 
 ## Preserving Parameters
 
