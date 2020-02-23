@@ -1,5 +1,5 @@
-node_modules
-.nyc_output
-example
-.vscode
-.cache
+node_modules/
+.nyc_output/
+.vscode/
+.cache/
+website/

@@ -2,16 +2,24 @@
 require("core-js/stable");
 require("regenerator-runtime/runtime");
 
-const GraphQLNode = require("./graphql-node.js");
-const combineNodes = require("./combine-nodes.js");
-const IdioEnum = require("./idio-enum.js");
-const IdioScalar = require("./idio-scalar.js");
-const IdioDirective = require("./idio-directive.js");
+const {
+    GraphQLNode,
+    combineNodes,
+    GraphQLGateway,
+    IdioEnum,
+    IdioScalar,
+    IdioDirective,
+    IdioInterface,
+    IdioUnion
+} = require("./api/index.js");
 
 module.exports = {
     GraphQLNode,
     combineNodes,
     IdioScalar,
     IdioEnum,
-    IdioDirective
+    IdioDirective,
+    GraphQLGateway,
+    IdioInterface,
+    IdioUnion
 };

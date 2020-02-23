@@ -1,17 +1,18 @@
-/* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
-const { GraphQLNode, combineNodes, IdioDirective } = require(SOURCE_PATH);
+const { AuthDirective } = require("graphql-directive-auth");
+const { GraphQLNode, combineNodes, IdioDirective } = require("../../src");
 
-describe("gists/idio-directive", async () => {
-    it("should verify idio-directive", async () => {
+describe("gists/idio-directive", () => {
+    it("should verify idio-directive", () => {
+        const { isAuthenticated } = AuthDirective();
+
         const hasScopeDirective = new IdioDirective({
             name: "hasScope",
             typeDefs: `
                 directive @hasScope(scopes: [String]!) on FIELD_DEFINITION
             `,
-            resolver: () => true
+            resolver: isAuthenticated
         });
 
         const User = new GraphQLNode({
@@ -33,12 +34,9 @@ describe("gists/idio-directive", async () => {
             }
         });
 
-        const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
-            [User],
-            {
-                directives: [hasScopeDirective]
-            }
-        );
+        const { typeDefs, resolvers, schemaDirectives } = combineNodes([User], {
+            directives: [hasScopeDirective]
+        });
 
         expect(typeDefs)
             .to.be.a("string")

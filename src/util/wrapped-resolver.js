@@ -1,28 +1,99 @@
 /* eslint-disable no-await-in-loop */
 const isFunction = require("./is-function.js");
-const IdioError = require("../idio-error.js");
-const CONTEXT_INDEX = require("../constants/context-index.js");
+const IdioError = require("../api/idio-error.js");
+const INDEX = require("../constants/context-index.js");
+const injectGraphQLArgs = require("./inject-graphql-args.js");
 
 /**
- * @param {(Function|Array.<Function>)} input
- * @param {Object} options
- * @param {String} options.name
- * @param {String} options.direction
- * @param {Array} options.args
+ * @typedef {import('graphql').ExecutionResult} ExecutionResult
+ * @typedef {import('graphql').ExecutionArgs} ExecutionArgs
+ * @typedef {import('graphql').DocumentNode} DocumentNode
+ * @typedef {import('moleculer').ServiceBroker} ServiceBroker
+ * @typedef {import('../util/execute.js').execute} execute
+ */
+
+/**
+ * @typedef {{injections: {execute: execute, broker?: ServiceBroker}}} context
+ */
+
+/**
+ * @typedef {(
+ *      root: any,
+ *      args: object,
+ *      context: context,
+ *      info: DocumentNode
+ *   ) => any} PreHook
+ */
+
+/**
+ * @typedef {(PreHook|PreHook[])} PreUnion
+ */
+
+/**
+ * @typedef {(
+ *      resolve: any,
+ *      root: any,
+ *      args: object,
+ *      context: context,
+ *      info: DocumentNode
+ *   ) => any} PostHook
+ */
+
+/**
+ * @typedef {(PostHook|PostHook[])} PostUnion
+ */
+
+/**
+ * @typedef {(
+ *      root: any,
+ *      args: object,
+ *      context: context,
+ *      info: DocumentNode
+ *   ) => any} resolve
+ */
+
+/**
+ * @typedef ResolverObjectInput
+ * @property {resolve} resolve
+ * @property {PreUnion} pre - Function(s) to call pre the resolve method.
+ * @property {PostUnion} post - Function(s) to call post the resolve method.
+ */
+
+/**
+ * @typedef {(ResolverObjectInput|resolve)} ResolverUnion
+ */
+
+/**
+ * @todo make this use recursion
+ * @param {ResolverUnion} input
+ * @param {object} options
+ * @param {string} options.name
+ * @param {string} options.direction
+ * @param {array} options.args
  *
- * @returns {Promise}
+ * @returns {Promise<any>}
  */
 async function resultFunction(input, { direction, name, args }) {
     if (Array.isArray(input)) {
-        for (let i = 0; i < input.length; i += 1) {
-            try {
-                await input[i](...args);
-            } catch (error) {
-                throw new IdioError(
-                    `'${name}.${direction}[${i}]' failed: \n ${error}`
-                );
+        let counter = 0;
+
+        await (async function recursion() {
+            if (counter < input.length) {
+                try {
+                    await input[counter](...args);
+
+                    counter += 1;
+
+                    return recursion();
+                } catch (error) {
+                    throw new IdioError(
+                        `'${name}.${direction}[${counter}]' failed: \n ${error}`
+                    );
+                }
+            } else {
+                return Promise.resolve();
             }
-        }
+        })();
     }
 
     if (isFunction(input)) {
@@ -35,43 +106,14 @@ async function resultFunction(input, { direction, name, args }) {
 }
 
 /**
- * @callback PreHook
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl Info argument.
- */
-
-/**
- * @typedef {(PreHook|Array.<PreHook>)} PostUnion
- */
-
-/**
- * @callback PostHook
- * @param {any}    resolve - The outcome of the resolve method.
- * @param {any}    root - The GraphQl root argument.
- * @param {Object} args - The GraphQl args argument.
- * @param {Object} context - The GraphQl context argument.
- * @param {Object} info - The GraphQl Info argument.
- */
-
-/**
- * @typedef {(PostHook|Array.<PostHook>)} PreUnion
- */
-
-/**
- * 1. Executes the pre functions(...args)
- * 2. Executes resolve function
- * 3. Executes the post functions(resolve, ...args)
- *
- * @param {Function} resolver
- * @param {Object} options
+ * @param {function} resolver
+ * @param {object} options
  * @param {PreUnion} options.pre
  * @param {PostUnion} options.post
- * @param {String} options.name
- * @param {{(Function|any)}} options.injections
+ * @param {string} options.name
+ * @param {object} options.injections
  *
- * @returns {Promise}
+ * @returns {Promise<any>}
  */
 function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
     if (!resolver) {
@@ -122,29 +164,30 @@ function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
         });
     }
 
-    async function newResolver(...args) {
-        if (injections) {
-            args[CONTEXT_INDEX] = Object(args[CONTEXT_INDEX]);
-            args[CONTEXT_INDEX].injections = injections;
+    async function newResolver(...graphQLArgs) {
+        if (!graphQLArgs[INDEX]) {
+            graphQLArgs[INDEX] = {};
         }
+
+        graphQLArgs = injectGraphQLArgs({ graphQLArgs, injections });
 
         if (pre) {
             await resultFunction(pre, {
                 direction: "pre",
                 name,
-                args
+                args: graphQLArgs
             });
         }
 
-        const resolve = await resolver(...args);
+        const resolve = await resolver(...graphQLArgs);
 
-        args = [resolve, ...args];
+        graphQLArgs = [resolve, ...graphQLArgs];
 
         if (post) {
             await resultFunction(post, {
                 direction: "post",
                 name,
-                args
+                args: graphQLArgs
             });
         }
 

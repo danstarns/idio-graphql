@@ -1,14 +1,13 @@
-/* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
-const { GraphQLNode, combineNodes, IdioScalar } = require(SOURCE_PATH);
+const { GraphQLJSON } = require("graphql-type-json");
+const { GraphQLNode, combineNodes, IdioScalar } = require("../../src");
 
 describe("gists/idio-scalar", async () => {
     it("should verify idio-scalar", async () => {
         const JSONScalar = new IdioScalar({
             name: "JSON",
-            resolver: () => true
+            resolver: GraphQLJSON
         });
 
         const User = new GraphQLNode({

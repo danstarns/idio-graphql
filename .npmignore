@@ -1,0 +1,17 @@
+website/
+test/
+src/
+node_modules/
+examples/
+docs/
+.vscode/
+.nyc_output/
+.github/
+.babelrc
+.dockerignore
+.eslintrc
+.gitignore
+.mocharc.json
+.nycrc.json
+.docker-compose.yml
+DockerFile

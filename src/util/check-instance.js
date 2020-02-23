@@ -1,4 +1,4 @@
-const IdioError = require("../idio-error.js");
+const IdioError = require("../api/idio-error.js");
 
 function checkInstance({ instance, of, name }) {
     if (!(instance instanceof of)) {

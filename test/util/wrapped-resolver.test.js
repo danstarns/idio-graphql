@@ -1,13 +1,7 @@
 /* eslint-disable import/no-dynamic-require */
 const { expect } = require("chai");
-const path = require("path");
 
-const { SOURCE_PATH = "../../src" } = process.env;
-
-const wrappedResolver = require(path.join(
-    SOURCE_PATH,
-    "./util/wrapped-resolver.js"
-));
+const wrappedResolver = require("../../src/util/wrapped-resolver.js");
 
 describe("wrappedResolver", () => {
     it("should throw resolver required", async () => {
@@ -196,7 +190,7 @@ describe("wrappedResolver", () => {
 
         await wrapped();
 
-        expect(result).to.equal(injections);
+        expect(result).to.eql(injections);
     });
 
     it("should inject into the CONTEXT_INDEX from resolve", async () => {
@@ -215,7 +209,7 @@ describe("wrappedResolver", () => {
 
         await wrapped();
 
-        expect(result).to.equal(injections);
+        expect(result).to.eql(injections);
     });
 
     it("should inject into the CONTEXT_INDEX from post", async () => {
@@ -234,7 +228,7 @@ describe("wrappedResolver", () => {
 
         await wrapped();
 
-        expect(result).to.equal(injections);
+        expect(result).to.eql(injections);
     });
 
     it("should provide the result into the post hooks", async () => {

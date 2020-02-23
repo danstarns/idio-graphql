@@ -1,29 +1,62 @@
-const IdioScalar = require("../idio-scalar.js");
-const IdioEnum = require("../idio-enum.js");
-const IdioDirective = require("../idio-directive.js");
+const {
+    IdioScalar,
+    IdioEnum,
+    IdioDirective,
+    IdioUnion,
+    IdioInterface
+} = require("../api/appliances/index.js");
 
+/**
+ * @typedef {import('../api/appliances/index.js').IdioScalar} IdioScalar
+ * @typedef {import('../api/appliances/index.js').IdioEnum} IdioEnum
+ * @typedef {import('../api/appliances/index.js').IdioDirective} IdioDirective
+ * @typedef {import('../api/appliances/index.js').IdioUnion} IdioUnion
+ * @typedef {import('../api/appliances/index.js').IdioInterface} IdioInterface
+ */
+
+/**
+ * @typedef Metadata
+ * @property {(IdioScalar | IdioEnum | IdioDirective | IdioUnion | IdioInterface)} _Constructor
+ * @property {string} kind
+ * @property {string} singular
+ * @property {string} name
+ */
+
+/** @type {Metadata[]} */
 const APPLIANCE_METADATA = [
     {
-        applianceConstructor: IdioScalar,
+        _Constructor: IdioScalar,
         kind: "ScalarTypeDefinition",
-        plural: "scalar",
+        singular: "scalar",
         name: "scalars"
     },
     {
-        applianceConstructor: IdioEnum,
+        _Constructor: IdioEnum,
         kind: "EnumTypeDefinition",
-        plural: "enum",
+        singular: "enum",
         name: "enums"
     },
     {
-        applianceConstructor: IdioDirective,
+        _Constructor: IdioDirective,
         kind: "DirectiveDefinition",
-        plural: "directive",
+        singular: "directive",
         name: "directives"
     },
     {
-        plural: "schemaGlobal",
+        singular: "schemaGlobal",
         name: "schemaGlobals"
+    },
+    {
+        _Constructor: IdioUnion,
+        kind: "UnionTypeDefinition",
+        singular: "union",
+        name: "unions"
+    },
+    {
+        _Constructor: IdioInterface,
+        kind: "InterfaceTypeDefinition",
+        singular: "interface",
+        name: "interfaces"
     }
 ];
 

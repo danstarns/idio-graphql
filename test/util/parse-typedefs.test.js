@@ -2,21 +2,13 @@ const { expect } = require("chai");
 const path = require("path");
 const { parse } = require("graphql/language");
 
-const { SOURCE_PATH = "../../src" } = process.env;
-
-// eslint-disable-next-line import/no-dynamic-require
-const parseTypeDefs = require(path.join(
-    SOURCE_PATH,
-    "/util/parse-typedefs.js"
-));
+const parseTypeDefs = require("../../src/util/parse-typedefs.js");
 
 describe("parseTypeDefs", () => {
-    it("should return a promise that resolves a file", async () => {
+    it("should return a promise that resolves a file", () => {
         const filePath = path.join(__dirname, "../dummy-data/User.gql");
 
-        const resultFunction = parseTypeDefs(filePath);
-
-        const result = await resultFunction();
+        const result = parseTypeDefs(filePath);
 
         expect(result).to.be.a("string");
         expect(result).to.contain("type User");
@@ -42,7 +34,7 @@ describe("parseTypeDefs", () => {
     });
 
     it("should return a promise that resolves the initial string provided", async () => {
-        const resultFunction = parseTypeDefs(`
+        const result = parseTypeDefs(`
             type User {
                 name: String
                 age: Int
@@ -52,8 +44,6 @@ describe("parseTypeDefs", () => {
                 getUserByID(id: ID!): User
             }
         `);
-
-        const result = await resultFunction();
 
         expect(result).to.be.a("string");
         expect(result).to.contain("type User");
@@ -72,9 +62,7 @@ describe("parseTypeDefs", () => {
             }
         `);
 
-        const resultFunction = parseTypeDefs(GQLTagResult);
-
-        const result = await resultFunction();
+        const result = parseTypeDefs(GQLTagResult);
 
         expect(result).to.be.a("string");
         expect(result).to.contain("type User");

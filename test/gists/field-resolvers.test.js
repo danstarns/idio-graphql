@@ -1,11 +1,9 @@
-/* eslint-disable import/no-dynamic-require */
-const { SOURCE_PATH = "../../src" } = process.env;
 const { expect } = require("chai");
 
-const { GraphQLNode, combineNodes } = require(SOURCE_PATH);
+const { GraphQLNode, combineNodes } = require("../../src");
 
-describe("gists/field-resolvers", async () => {
-    it("should verify field-resolvers", async () => {
+describe("gists/field-resolvers", () => {
+    it("should verify field-resolvers", () => {
         const User = new GraphQLNode({
             name: "User",
             typeDefs: `
@@ -50,7 +48,7 @@ describe("gists/field-resolvers", async () => {
             }
         });
 
-        const { typeDefs, resolvers } = await combineNodes([User, Post]);
+        const { typeDefs, resolvers } = combineNodes([User, Post]);
 
         expect(typeDefs)
             .to.be.a("string")

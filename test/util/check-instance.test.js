@@ -1,14 +1,6 @@
 const { expect } = require("chai");
 
-const path = require("path");
-
-const { SOURCE_PATH = "../../src" } = process.env;
-
-// eslint-disable-next-line import/no-dynamic-require
-const checkInstance = require(path.join(
-    SOURCE_PATH,
-    "/util/check-instance.js"
-));
+const checkInstance = require("../../src/util/check-instance.js");
 
 function Cat({ type, color, name }) {
     this.type = type;
