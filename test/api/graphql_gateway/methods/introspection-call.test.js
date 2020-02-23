@@ -95,14 +95,28 @@ describe("introspectionCall", () => {
                     } else {
                         return {
                             name: "User",
-                            hash: "test"
+                            hash: "test",
+                            services: {
+                                interfaces: ["Person"],
+                                nodes: ["Test"]
+                            }
                         };
                     }
                 }
             },
             serviceManagers: {},
-            waitingServices: {},
-            registeredServices: {}
+            waitingServices: {
+                nodes: [],
+                enums: [],
+                interfaces: [],
+                unions: []
+            },
+            registeredServices: {
+                nodes: [{ name: "Test" }],
+                enums: [],
+                interfaces: [{}],
+                unions: []
+            }
         };
 
         const _introspectionCall = introspectionCall(RUNTIME);
@@ -159,7 +173,10 @@ describe("introspectionCall", () => {
 
         const RUNTIME = {
             serviceManagers: {
-                interface: {}
+                nodes: [],
+                enums: [],
+                interfaces: [],
+                unions: []
             },
             waitingServices: {
                 interfaces: ["Person"]
@@ -273,9 +290,17 @@ describe("introspectionCall", () => {
                 interface: { Person: { push: () => true, hash: "test" } }
             },
             waitingServices: {
-                nodes: ["User"]
+                nodes: ["User"],
+                enums: [],
+                interfaces: [],
+                unions: []
             },
-            registeredServices: { interfaces: [], nodes: [] },
+            registeredServices: {
+                interfaces: [],
+                nodes: [],
+                enums: [],
+                unions: []
+            },
             broker: {
                 options: {
                     nodeID: "gateway:gateway:uuid"
@@ -327,7 +352,8 @@ describe("introspectionCall", () => {
 
                     return {
                         name: "User",
-                        hash: "test"
+                        hash: "test",
+                        services: {}
                     };
                 }
             }
