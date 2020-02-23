@@ -29,6 +29,5 @@ type Comment {
     id: ID
     content: String
     user: User
-    likes: [User]
 }
 ```
