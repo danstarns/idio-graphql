@@ -43,15 +43,15 @@ const JSONScalar = new IdioScalar({
  */
 
 /**
- * You can use IdioScalar to modularize an ScalarTypeDefinition, together with its resolver.
- * 
+ * You can use IdioScalar to modularize an ( ScalarTypeDefinition ), together with its resolver.
+ *
  * You can only specify scalars 'top-level' at combineNodes.
- * 
+ *
  * IdioScalar does not require typeDefs, it uses the name to match up the resolver.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {Object} config.resolver
+ * @param {GraphQLScalarType} config.resolver
  *
  * @returns {IdioScalar}
  */
