@@ -10,7 +10,6 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-            - run: npm install cross-env -g
             - run: npm run test:coverage
 workflows:
   build-and-test:
