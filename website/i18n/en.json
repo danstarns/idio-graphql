@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "Methods to enable developers to modularize a GraphQL API into individual, maintainable, modules.",
+    "tagline": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels.",
     "docs": {
       "index": {
         "title": "Index"
@@ -40,6 +40,9 @@
       },
       "idio-union": {
         "title": "IdioUnion"
+      },
+      "inter-schema-execution": {
+        "title": "Inter-Schema Execution"
       },
       "microservices": {
         "title": "Microservices"

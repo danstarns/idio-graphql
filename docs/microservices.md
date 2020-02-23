@@ -9,7 +9,7 @@ title: Microservices
 
 > **https://moleculer.services/**
 
-idio-graphql builds on the foundations created by [**Moleculer**](https://moleculer.services/) & enables developer's to distribute parts of their GraphQL schema over various communication channels. Such integration enables developers to serve [**GraphQLNode's**](graphql-node) & selected **Schema Appliances** through a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**.
+idio-graphql builds on the foundations created by [**Moleculer.js**](https://moleculer.services/) & enables developer's to distribute parts of a GraphQL schema over various communication channels. Such integration enables developers to serve [**GraphQLNode's**](graphql-node) & selected **Schema Appliances** through a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**.
 
 > It's recommended to read the [**previous guides**](getting-started), grasp the fundamentals of idio-graphql, before reading.
 
@@ -59,7 +59,7 @@ await User.serve({ transporter: "NATS" });
 
 
 ```javascript
-const gateway = GraphQLGateway(
+const gateway = new GraphQLGateway(
     {
         services: { 
             nodes: [ "User" ]
@@ -83,7 +83,7 @@ On successful start, you receive merged typeDefs & resolvers, that are mapped to
 You may not need or want to distribute all your Nodes. You can use [**GraphQLGateway**](graphql-gateway) to gradually adopt a microservices architecure.
 
 ```javascript
-const gateway = GraphQLGateway(
+const gateway = new GraphQLGateway(
     {
         services: { 
             nodes: [ "User" ]
@@ -99,22 +99,11 @@ const gateway = GraphQLGateway(
 );
 ```
 
-## Interservice Communication
+## Service Broker
 
 ---
 
-This section describes ways a developer can interact with the other services on the network. 
-
-1. [**Service Broker**](#service-broker)
-2. [**Schema Execution**](#schema-execution)
-2. [**Executions On Different Gateways**](#executions-on-different-gateways)
-2. [**Execute**](#execute)
-
-### Service Broker
-
----
-
-To harness the real power of a microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the context parameter.
+To harness the real power of a microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the `context.injections` parameter.
 
 
 ```javascript
@@ -124,98 +113,12 @@ const broker = await User.serve({ transporter: "NATS" });
 ```javascript
 resolvers: { 
     Query: {
-        getUser: (root, args, { broker }) => { ... }
+        getUser: (root, args, { injections: { broker } }) => { ... }
     }
 }
 ```
 
 > 'Local Services' are initialized as a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**.
-
-### Schema Execution
-
----
-
-Building on our knowledge of the **[Service Broker](#service-broker)**, idio-graphql injects a `execute` method, exposed on `broker.gql`. You can use this method to preform a `Query/Mutation` against the gateways 'complied' schema.
-
-> Subscriptions are not supported with interservice schema execution.
-
-```javascript
-resolvers: {
-    Query: {
-        getUser: async (root, args, { broker }) => {
-            const { data: { metadata } } = await broker.gql.execute(`
-                {
-                    metadata: getMetaData {
-                        title
-                        content
-                    }
-                }
-            `);
-
-            return {
-                ...user,
-                metaData
-            };
-        }
-    }
-}
-```
-> You can also use [**graphql-tag**](https://github.com/apollographql/graphql-tag) when providing the document.
-
-### Executions On Different Gateways
-
----
-
-By default, your execute query will be sent to the specified gateway. It could be useful to execute a query against another gateway on the network.
-To achieve this you can use the `@gateway` directive.
-
-```graphql
-directive @gateway(
-  name: String!
-) on QUERY | MUTATION 
-```
-
-> Make sure you provide an operation name.
-
-```graphql
-query @gateway(name: "gateway-01") {
-    metadata: getMetaData {
-        title
-        content
-    }
-}
-```
-
-### Execute
-
----
-
-```javascript
-/**
- * @typedef {import('graphql').DocumentNode} DocumentNode
- * @typedef {import('graphql').ExecutionResult} ExecutionResult
- */
-
-/**
- * @typedef ExecutionContext
- * @property {Object} root
- * @property {Object} context
- * @property {Object} variables
- * @property {string} operationName
- */
-
-/**
- *
- * @param {(DocumentNode|string)} document
- * @param {ExecutionContext} executionContext
- *
- * @returns {Promise.<ExecutionResult>}
- */
-```
-
-```javascript
-async function execute(document, executionContext = {})
-```
 
 ## Scaling 
 
@@ -252,7 +155,7 @@ const User = new GraphQLNode({
 
 
 ```javascript
-const gateway = GraphQLGateway(
+const gateway = new GraphQLGateway(
     {
         services: { 
             nodes: [ "User" ]
@@ -290,7 +193,7 @@ GraphQL Subscriptions, through your chosen transport layer, will work out the bo
 [**GraphQLGateway**](graphql-gateway) supports [**Schema Appliances**](schema-appliances). 
 
 ```javascript
-const gateway = GraphQLGateway(
+const gateway = new GraphQLGateway(
     {
         services: { ... },
         locals: {
