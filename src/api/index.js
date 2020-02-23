@@ -4,9 +4,11 @@ const GraphQLGateway = require("./graphql_gateway/graphql-gateway.js");
 
 const appliances = require("./appliances/index.js");
 
-module.exports = {
+const api = {
     GraphQLNode,
     combineNodes,
     GraphQLGateway,
     ...appliances
 };
+
+module.exports = api;
