@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
 const uuid = require("uuid/v4");
-const IdioError = require("../../src/api/idio-error.js");
+const IdioError = require("../api/idio-error.js");
 
 /**
  * @typedef {import('moleculer').BrokerOptions & {gateway: string}} BrokerOptions
