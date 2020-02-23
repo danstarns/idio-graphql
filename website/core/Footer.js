@@ -36,11 +36,12 @@ class Footer extends React.Component {
           </div>
           <div>
             <h5>Community</h5>
-            <a href="https://spectrum.chat/idio-graphql?tab=posts">Project Chat</a>
+            <a href="https://idio-graphql.slack.com">Slack</a>
           </div>
           <div>
             <h5>More</h5>
             <a href={this.props.config.repoUrl}>GitHub</a>
+            <a href="https://www.npmjs.com/package/idio-graphql">NPM</a>
             <a
               className="github-button"
               href={this.props.config.repoUrl}
