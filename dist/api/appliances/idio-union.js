@@ -1,13 +1,8 @@
-"use strict";
-
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 
 const IdioError = require("../idio-error.js");
 
-const {
-  parseTypeDefs,
-  validateTypeDefs
-} = require("../../util/index.js");
+const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 
 const serveAppliance = require("./methods/serve-appliance.js");
 /**
@@ -34,14 +29,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  * @param {{__resolveType: () => string}} config.resolver
  *
  * @returns {IdioUnion}
- */
-
-
-function IdioUnion({
-  name,
-  resolver,
-  typeDefs
-} = {}) {
+ */ function IdioUnion({ name, resolver, typeDefs } = {}) {
   const prefix = "constructing IdioUnion";
   this.name;
   this.resolver;
@@ -79,7 +67,9 @@ function IdioUnion({
   }
 
   if (!resolver.__resolveType) {
-    throw new IdioError(`${prefix}: '${name}'.resolver must have a __resolveType property.`);
+    throw new IdioError(
+      `${prefix}: '${name}'.resolver must have a __resolveType property.`
+    );
   }
 
   this.resolver = resolver;

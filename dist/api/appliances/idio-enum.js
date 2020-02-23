@@ -1,9 +1,4 @@
-"use strict";
-
-const {
-  parseTypeDefs,
-  validateTypeDefs
-} = require("../../util/index.js");
+const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 
@@ -36,13 +31,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  *
  * @returns {IdioEnum}
  */
-
-
-function IdioEnum({
-  name,
-  typeDefs,
-  resolver
-} = {}) {
+function IdioEnum({ name, typeDefs, resolver } = {}) {
   const prefix = "constructing IdioEnum";
   this.name;
   this.typeDefs;

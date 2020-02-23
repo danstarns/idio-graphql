@@ -1,8 +1,4 @@
-"use strict";
-
-const {
-  GraphQLScalarType
-} = require("graphql");
+const { GraphQLScalarType } = require("graphql");
 
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 
@@ -30,12 +26,7 @@ const IdioError = require("../idio-error.js");
  *
  * @returns {IdioScalar}
  */
-
-
-function IdioScalar({
-  name,
-  resolver
-} = {}) {
+function IdioScalar({ name, resolver } = {}) {
   const prefix = "constructing IdioScalar";
   this.name;
   this.resolver;
@@ -60,8 +51,16 @@ function IdioScalar({
     throw new IdioError(`${prefix}: '${name}' without resolver.`);
   }
 
-  if (!Object.prototype.isPrototypeOf.call(GraphQLScalarType.prototype, resolver) && !Object.prototype.isPrototypeOf.call(GraphQLScalarType, resolver)) {
-    throw new IdioError(`${prefix}: '${name}'.resolver must be a instance of GraphQLScalarType.`);
+  if (
+    !Object.prototype.isPrototypeOf.call(
+      GraphQLScalarType.prototype,
+      resolver
+    ) &&
+    !Object.prototype.isPrototypeOf.call(GraphQLScalarType, resolver)
+  ) {
+    throw new IdioError(
+      `${prefix}: '${name}'.resolver must be a instance of GraphQLScalarType.`
+    );
   }
 
   this.resolver = resolver;
