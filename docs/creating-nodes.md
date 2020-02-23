@@ -65,11 +65,10 @@ A Node allows you to specify the following resolvers;
 
 Let's implement the `getUser` resolver...
 
-### Query
 
----
-
-```javascript
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Query-->
+```js
 const User = new GraphQLNode({
     name: "User",
     typeDefs: `
@@ -85,13 +84,9 @@ const User = new GraphQLNode({
         }
     }
 });
-``` 
-
-### Mutation
-
----
-
-```javascript
+```
+<!--Mutation-->
+```js
 {
     typeDefs: `
         type User ...
@@ -107,11 +102,8 @@ const User = new GraphQLNode({
     }
 }
 ```
-### Fields
-
----
-
-```javascript
+<!--Fields-->
+```js
 {
     typeDefs: `
         type User {
@@ -128,14 +120,11 @@ const User = new GraphQLNode({
     }
 }
 ```
-
-### Subscription
-
----
+<!--Subscription-->
 
 > Subscriptions must return a 'subscribe' property that resolves to an async iterator!
 
-```javascript
+```js
 {
     typeDefs: `
         type User ...
@@ -153,6 +142,9 @@ const User = new GraphQLNode({
     }
 }
 ```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+
 
 ## Injections
 
