@@ -1,6 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { gql } = require("apollo-server");
 const { GraphQLNode } = require("idio-graphql");
+const util = require("util");
+
+const sleep = util.promisify(setTimeout);
 
 const { users } = require("../../data/index.js");
 
@@ -17,6 +20,10 @@ const User = new GraphQLNode({
         type Query {
             user(id: ID!): User
             users(ids: [ID]): [User]
+        }
+
+        type Subscription {
+            userUpdate: User
         }
     `,
     resolvers: {
@@ -55,6 +62,25 @@ const User = new GraphQLNode({
                 }
 
                 return result.data.posts;
+            }
+        },
+        Subscription: {
+            userUpdate: {
+                async *subscribe() {
+                    while (true) {
+                        // eslint-disable-next-line no-await-in-loop
+                        await sleep(1000);
+
+                        yield {
+                            userUpdate: {
+                                id: "1",
+                                name: "Test Subscriptions",
+                                age: Math.floor(Math.random() * 20),
+                                posts: ["1", "2"]
+                            }
+                        };
+                    }
+                }
             }
         }
     }
