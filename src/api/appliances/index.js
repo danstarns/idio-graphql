@@ -5,11 +5,11 @@ const IdioUnion = require("./idio-union.js");
 const IdioInterface = require("./idio-interface.js");
 
 /**
- * @typedef {import('./idio-scalar.js')} IdioScalar
- * @typedef {import('./idio-enum.js')} IdioEnum
- * @typedef {import('./idio-directive.js')} IdioDirective
- * @typedef {import('./idio-interface')} IdioInterface
- * @typedef {import('./idio-union.js')} IdioUnion
+ * @typedef {import('./idio-scalar.js').IdioScalar} IdioScalar
+ * @typedef {import('./idio-enum.js').IdioEnum} IdioEnum
+ * @typedef {import('./idio-directive.js').IdioDirective} IdioDirective
+ * @typedef {import('./idio-interface').IdioInterface} IdioInterface
+ * @typedef {import('./idio-union.js').IdioUnion} IdioUnion
  */
 
 /**
