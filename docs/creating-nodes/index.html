@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Creating Nodes · idio-graphql</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Intro"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Creating Nodes · idio-graphql"/><meta property="og:type" content="website"/><meta property="og:url" content="https://danstarns.github.io/idio-graphql/"/><meta property="og:description" content="## Intro"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/idio-graphql/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/idio-graphql/js/scrollSpy.js"></script><link rel="stylesheet" href="/idio-graphql/css/main.css"/><script src="/idio-graphql/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/idio-graphql/"><h2 class="headerTitle">idio-graphql</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/idio-graphql/docs/getting-started" target="_self">Get Started</a></li><li class="siteNavGroupActive"><a href="/idio-graphql/docs/" target="_self">API</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Guides</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/">Index</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-node">GraphQLNode</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes">combineNodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-gateway">GraphQLGateway</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-enum">IdioEnum</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-scalar">IdioScalar</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-directive">IdioDirective</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-interface">IdioInterface</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-union">IdioUnion</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Guides</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/getting-started">Getting Started</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/idio-graphql/docs/creating-nodes">Creating Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes-guide">Combine Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/schema-appliances">Schema Appliances</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/resolver-hooks">Resolver Hooks</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/microservices">Microservices</a></li></ul></div></div></section></div><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Creating Nodes · idio-graphql</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Intro"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Creating Nodes · idio-graphql"/><meta property="og:type" content="website"/><meta property="og:url" content="https://danstarns.github.io/idio-graphql/"/><meta property="og:description" content="## Intro"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/idio-graphql/undefined"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/idio-graphql/js/scrollSpy.js"></script><link rel="stylesheet" href="/idio-graphql/css/main.css"/><script src="/idio-graphql/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/idio-graphql/"><h2 class="headerTitle">idio-graphql</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/idio-graphql/docs/getting-started" target="_self">Get Started</a></li><li class="siteNavGroupActive"><a href="/idio-graphql/docs/" target="_self">API</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Guides</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/">Index</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-node">GraphQLNode</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes">combineNodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/graphql-gateway">GraphQLGateway</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-enum">IdioEnum</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-scalar">IdioScalar</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-directive">IdioDirective</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-interface">IdioInterface</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/idio-union">IdioUnion</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Guides</h3><ul class=""><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/getting-started">Getting Started</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/idio-graphql/docs/creating-nodes">Creating Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/combine-nodes-guide">Combine Nodes</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/schema-appliances">Schema Appliances</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/resolver-hooks">Resolver Hooks</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/microservices">Microservices</a></li><li class="navListItem"><a class="navItem" href="/idio-graphql/docs/inter-schema-execution">Inter-Schema Execution</a></li></ul></div></div></section></div><script>
             var coll = document.getElementsByClassName('collapsible');
             var checkActiveCategory = true;
             for (var i = 0; i < coll.length; i++) {
@@ -55,12 +55,14 @@
               }
             });
         </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Creating Nodes</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="intro"></a><a href="#intro" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Intro</h2>
+<hr>
 <p>A &quot;Node&quot; <strong><a href="graphql-node">GraphQLNode</a></strong> is designed to encapsulate a <strong><a href="http://spec.graphql.org/June2018/#ObjectTypeDefinition"><code>ObjectTypeDefinition</code></a></strong> together with its related resolvers &amp; properties. Lets create a <code>User</code> Node.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-keyword">new</span> GraphQLNode({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"User"</span>
 });
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="typedefs"></a><a href="#typedefs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TypeDefs</h2>
+<hr>
 <p>Here is the <strong><a href="http://spec.graphql.org/June2018/#sec-Language"><code>Schema Definition Language (SDL)</code></a></strong> for our Node.</p>
 <pre><code class="hljs css language-graphql"><span class="hljs-keyword">type</span><span class="hljs-type"> User</span> {
     name:<span class="hljs-type"> String</span>
@@ -90,6 +92,7 @@
 });
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="resolvers"></a><a href="#resolvers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Resolvers</h2>
+<hr>
 <p>A Node allows you to specify the following resolvers;</p>
 <ol>
 <li><code>Query</code></li>
@@ -97,8 +100,9 @@
 <li><code>Subscription</code></li>
 <li><code>Fields</code></li>
 </ol>
-<p>Let's implement the <code>Query</code> resolver, called <code>getUser</code>, defined in our <code>typeDefs</code>.</p>
+<p>Let's implement the <code>getUser</code> resolver...</p>
 <h3><a class="anchor" aria-hidden="true" id="query"></a><a href="#query" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Query</h3>
+<hr>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-keyword">new</span> GraphQLNode({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"User"</span>,
     <span class="hljs-attr">typeDefs</span>: <span class="hljs-string">`
@@ -116,6 +120,7 @@
 });
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" id="mutation"></a><a href="#mutation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Mutation</h3>
+<hr>
 <pre><code class="hljs css language-javascript">{
     <span class="hljs-attr">typeDefs</span>: <span class="hljs-string">`
         type User ...
@@ -132,6 +137,7 @@
 }
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" id="fields"></a><a href="#fields" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Fields</h3>
+<hr>
 <pre><code class="hljs css language-javascript">{
     <span class="hljs-attr">typeDefs</span>: <span class="hljs-string">`
         type User {
@@ -149,6 +155,7 @@
 }
 </code></pre>
 <h3><a class="anchor" aria-hidden="true" id="subscription"></a><a href="#subscription" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Subscription</h3>
+<hr>
 <blockquote>
 <p>Subscriptions must return a 'subscribe' property that resolves to an async iterator!</p>
 </blockquote>
@@ -170,23 +177,17 @@
 }
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="injections"></a><a href="#injections" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Injections</h2>
-<p>It's recommended to inject dependencies into your Node, this helps with testing. Most GraphQL implementations work on the concept of <code>context</code>. For each resolver injections will be a scoped property on <code>context</code>.</p>
-<p>Injections can either be a value or a function.</p>
+<hr>
+<p>It's recommended to inject dependencies into your Node, this helps with testing. For each resolver injections will be a property on the <code>context</code> parameter.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">new</span> GraphQLNode({
     <span class="hljs-attr">injections</span>: { ... }
-})
-</code></pre>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">new</span> GraphQLNode({
-    <span class="hljs-attr">injections</span>: <span class="hljs-keyword">async</span> () =&gt; { ... }
 })
 </code></pre>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-keyword">new</span> GraphQLNode({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"User"</span>,
     <span class="hljs-attr">typeDefs</span>: <span class="hljs-string">"./User.gql"</span>,
-    <span class="hljs-attr">injections</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        <span class="hljs-keyword">return</span> {
-            UserModel
-        }
+    <span class="hljs-attr">injections</span>: {
+        UserModel
     },
     <span class="hljs-attr">resolvers</span>: {
         <span class="hljs-attr">Query</span>: {
@@ -198,6 +199,7 @@
 });
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="nodes"></a><a href="#nodes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Nodes</h2>
+<hr>
 <p>You can recursively nest nodes to reflect domains &amp; work with architectural constraints.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> Comment = <span class="hljs-keyword">new</span> GraphQLNode({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"Comment"</span>,
@@ -217,6 +219,7 @@
 });
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="enums"></a><a href="#enums" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Enums</h2>
+<hr>
 <p>You can encapsulate enums within a Node. Checkout the <strong><a href="schema-appliances">Schema Appliances</a></strong> guide and the API for <strong><a href="idio-enum">IdioEnum</a></strong>.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> StatusEnum = <span class="hljs-keyword">new</span> IdioEnum({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"StatusEnum"</span>,
@@ -231,6 +234,7 @@
 });
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="interfaces"></a><a href="#interfaces" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Interfaces</h2>
+<hr>
 <p>You can encapsulate interfaces within a Node. Checkout the <strong><a href="schema-appliances">Schema Appliances</a></strong> guide and the API for <strong><a href="idio-interface">IdioInterface</a></strong>.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> PersonInterface = <span class="hljs-keyword">new</span> IdioInterface({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"PersonInterface"</span>,
@@ -245,6 +249,7 @@
 });
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="unions"></a><a href="#unions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Unions</h2>
+<hr>
 <p>You can encapsulate unions within a Node. Checkout the <strong><a href="schema-appliances">Schema Appliances</a></strong> guide and the API for <strong><a href="idio-union">IdioUnion</a></strong>.</p>
 <pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> UserUnion = <span class="hljs-keyword">new</span> IdioUnion({
     <span class="hljs-attr">name</span>: <span class="hljs-string">"UserUnion"</span>,
@@ -258,4 +263,4 @@
     ...
 });
 </code></pre>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/19/2020</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/idio-graphql/docs/getting-started"><span class="arrow-prev">← </span><span>Getting Started</span></a><a class="docs-next button" href="/idio-graphql/docs/combine-nodes-guide"><span>Combine Nodes</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#intro">Intro</a></li><li><a href="#typedefs">TypeDefs</a></li><li><a href="#resolvers">Resolvers</a><ul class="toc-headings"><li><a href="#query">Query</a></li><li><a href="#mutation">Mutation</a></li><li><a href="#fields">Fields</a></li><li><a href="#subscription">Subscription</a></li></ul></li><li><a href="#injections">Injections</a></li><li><a href="#nodes">Nodes</a></li><li><a href="#enums">Enums</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#unions">Unions</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap center"><div><h5>Docs</h5><a href="/idio-graphql/docs/en/getting-started.html">Getting Started</a><a href="/idio-graphql/docs/en/index.html">API</a></div><div><h5>Community</h5><a href="https://spectrum.chat/idio-graphql?tab=posts">Project Chat</a></div><div><h5>More</h5><a href="https://github.com/danstarns/idio-graphql">GitHub</a><a class="github-button" href="https://github.com/danstarns/idio-graphql" data-icon="octicon-star" data-count-href="/danstarns/idio-graphql/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">MIT</section></footer></div></body></html>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/22/2020</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/idio-graphql/docs/getting-started"><span class="arrow-prev">← </span><span>Getting Started</span></a><a class="docs-next button" href="/idio-graphql/docs/combine-nodes-guide"><span>Combine Nodes</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#intro">Intro</a></li><li><a href="#typedefs">TypeDefs</a></li><li><a href="#resolvers">Resolvers</a><ul class="toc-headings"><li><a href="#query">Query</a></li><li><a href="#mutation">Mutation</a></li><li><a href="#fields">Fields</a></li><li><a href="#subscription">Subscription</a></li></ul></li><li><a href="#injections">Injections</a></li><li><a href="#nodes">Nodes</a></li><li><a href="#enums">Enums</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#unions">Unions</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap center"><div><h5>Docs</h5><a href="/idio-graphql/docs/en/getting-started.html">Getting Started</a><a href="/idio-graphql/docs/en/index.html">API</a></div><div><h5>Community</h5><a href="https://idio-graphql.slack.com">Slack</a></div><div><h5>More</h5><a href="https://github.com/danstarns/idio-graphql">GitHub</a><a href="https://www.npmjs.com/package/idio-graphql">NPM</a><a class="github-button" href="https://github.com/danstarns/idio-graphql" data-icon="octicon-star" data-count-href="/danstarns/idio-graphql/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">MIT</section></footer></div></body></html>
