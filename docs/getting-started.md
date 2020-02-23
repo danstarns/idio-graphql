@@ -24,7 +24,7 @@ $ npm install idio-graphql
 ## Examples 
 ---
 
-**https://github.com/danstarns/idio-graphql/blob/master/examples/README.md**
+**https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md**
 
 ## Contributing
 
