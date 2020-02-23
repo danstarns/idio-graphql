@@ -39,12 +39,20 @@ const AOrB = new IdioUnion({
 
 ```javascript
 /**
+ * @typedef IdioUnion
+ * @property {string} name
+ * @property {string} typeDefs
+ * @property {{__resolveType: () => string}} resolver
+ * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ */
+
+/**
  * You can use IdioUnion to modularize an UnionTypeDefinition, together with its resolver.
  * You can specify unions 'top-level' at combineNodes or at an GraphQLNode level.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
  * @param {{__resolveType: () => string}} config.resolver
  *
  * @returns {IdioUnion}
@@ -70,7 +78,7 @@ new IdioUnion({ name: string, typeDefs: any, resolver: { __resolveType: () => st
 
 #### Example
 ```javascript
-const broker = await AOrB.serve({
+await AOrB.serve({
     transporter: "NATS"
 });
 ```
@@ -78,9 +86,18 @@ const broker = await AOrB.serve({
 #### Definitions
 ```javascript
 /**
+ * @typedef Runtime
+ * @property {IdioBrokerOptions} brokerOptions
+ * @property {ServiceBroker} broker
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {boolean} initialized
+ * @property {Object.<string, object>} introspection
+ */
+
+/**
  * @function serve
  * @param {BrokerOptions} brokerOptions
- * @returns {Promise.<ServiceBroker>}
+ * @returns {Promise<Runtime>}
 */
 ```
 
