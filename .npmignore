@@ -10,6 +10,7 @@ test/
 website/
 .babelrc
 .dockerignore
+docker-compose.yml
 .eslintrc
 .mocharc.json
 .nycrc.json
