@@ -44,18 +44,19 @@ const ErrorInterFace = new IdioInterface({
 /**
  * @typedef IdioInterface
  * @property {string} name
- * @property {Promise<string>} typeDefs
+ * @property {string} typeDefs
  * @property {{__resolveType: () => string}} resolver
- * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ * @property {(brokerOptions: BrokerOptions) => Promise<ServiceBroker>} serve
  */
 
 /**
  * You can use IdioInterface to modularize an InterfaceTypeDefinition, together with its resolver.
+ *
  * You can specify interfaces 'top-level' at combineNodes or at an GraphQLNode level.
  *
- * @param {Object} config
+ * @param {object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
  * @param {{__resolveType: () => string}} config.resolver
  *
  * @returns {IdioInterface}
@@ -80,7 +81,7 @@ new IdioInterface({ name: string, typeDefs: any, resolver: { __resolveType: () =
 
 #### Example
 ```javascript
-const broker = await ErrorInterFace.serve({
+await ErrorInterFace.serve({
     transporter: "NATS"
 });
 ```
@@ -88,9 +89,18 @@ const broker = await ErrorInterFace.serve({
 #### Definitions
 ```javascript
 /**
+ * @typedef Runtime
+ * @property {IdioBrokerOptions} brokerOptions
+ * @property {ServiceBroker} broker
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {boolean} initialized
+ * @property {Object.<string, object>} introspection
+ */
+
+/**
  * @function serve
  * @param {BrokerOptions} brokerOptions
- * @returns {Promise.<ServiceBroker>}
+ * @returns {Promise<Runtime>}
 */
 ```
 
