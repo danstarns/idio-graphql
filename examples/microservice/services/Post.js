@@ -5,9 +5,6 @@ const { posts } = require("../../data/index.js");
 
 const Post = new GraphQLNode({
     name: "Post",
-    injections: {
-        abc: "123"
-    },
     typeDefs: gql`
         type Post {
             id: String
