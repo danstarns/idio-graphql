@@ -8,13 +8,12 @@ const IdioError = require("../../idio-error.js");
 
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 /**
- * @typedef {import('../combine-nodes.js').GraphQLNode} GraphQLNode
- * @typedef {GraphQLNode[]} nodes
+ * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
  * @typedef {import('../combine-nodes.js').RUNTIME} RUNTIME
  */
 
 /**
- * @param {nodes} nodes
+ * @param {GraphQLNode[]} nodes
  * @param {RUNTIME} RUNTIME
  */
 

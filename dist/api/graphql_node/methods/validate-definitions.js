@@ -88,7 +88,9 @@ function validateDefinitions(node) {
           value
         }
       }) => value),
-      JS: Object.keys(node.resolvers[type] || {})
+      JS: Object.keys(node.resolvers[type] ||
+      /* istanbul ignore next */
+      {})
     };
     resolvers.SDL.forEach(field => {
       if (!resolvers.JS.includes(field)) {

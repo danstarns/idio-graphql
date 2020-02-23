@@ -21,14 +21,11 @@ const INDEX = require("../../../constants/context-index.js");
 
 const {
   wrappedResolver,
-  isFunction
+  isFunction,
+  injectGraphQLArgs
 } = require("../../../util/index.js");
 
 const IdioError = require("../../idio-error.js");
-
-const {
-  injectGraphQLArgs
-} = require("../../../util/index.js");
 
 function wrapResolvers(node) {
   const prefix = `GraphQLNode with name: '${node.name}'`;

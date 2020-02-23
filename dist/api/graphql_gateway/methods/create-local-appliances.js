@@ -14,7 +14,7 @@ const {
   createLocalAppliance
 } = require("../../appliances/methods/index.js");
 /**
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
+ * @typedef {import('./start.js').Runtime} Runtime
  */
 
 /**
@@ -29,7 +29,7 @@ module.exports = function createLocalAppliances(RUNTIME) {
     serviceManagers,
     locals
   } = RUNTIME;
-  return _objectSpread({}, ["locals", "directives", "schemaGlobals"].reduce((res, type) => _objectSpread({}, res, {}, locals[type] ? {
+  return _objectSpread({}, ["scalars", "directives", "schemaGlobals"].reduce((res, type) => _objectSpread({}, res, {}, locals[type] ? {
     [type]: locals[type]
   } : {}), {}), {}, Object.entries(registeredServices).filter(([key]) => key !== "nodes").reduce((result, [key, values]) => _objectSpread({}, result, {
     [key]: values.map(createLocalAppliance({

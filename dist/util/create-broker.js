@@ -33,6 +33,10 @@ function createBroker(instance, RUNTIME) {
     brokerOptions
   } = RUNTIME;
 
+  if (!instance.name) {
+    throw new IdioError("instance.name required");
+  }
+
   if (!brokerOptions) {
     throw new IdioError("brokerOptions required.");
   }

@@ -42,6 +42,10 @@ function ServiceManager(service, {
     }) => id);
   }, broker.options.heartbeatInterval * 1000);
 }
+/**
+ * @param {string} service
+ */
+
 
 ServiceManager.prototype.push = function push(service) {
   this.activeServices = [...new Set([...this.activeServices, service])];
@@ -57,6 +61,11 @@ ServiceManager.prototype.getNextService = async function getNextService() {
       return;
     }
 
+    if (this.activeServices.length === 1) {
+      this.lastOutput = this.activeServices[0];
+      return this.activeServices[0];
+    }
+
     const service = this.activeServices[Math.floor(Math.random() * this.activeServices.length)];
 
     if (service === this.lastOutput) {
@@ -64,7 +73,7 @@ ServiceManager.prototype.getNextService = async function getNextService() {
         return service;
       }
 
-      await sleep(100);
+      await sleep(0);
       return getServiceToCall.call(this);
     }
 

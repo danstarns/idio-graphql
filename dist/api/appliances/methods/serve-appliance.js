@@ -33,6 +33,8 @@ module.exports = metadata => {
     const broker = createBroker(this, {
       brokerOptions
     });
+    /** @type {Runtime} */
+
     const RUNTIME = {
       broker,
       brokerOptions,
@@ -59,7 +61,7 @@ module.exports = metadata => {
       }
     });
     RUNTIME.broker.createService({
-      name: RUNTIME.broker.nodeID,
+      name: RUNTIME.broker.options.nodeID,
       actions: {
         abort,
         resolver: ctx => {

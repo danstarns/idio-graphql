@@ -22,11 +22,10 @@ const {
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 /**
  * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
- * @typedef {GraphQLNode[]} nodes
  */
 
 /**
- *  @typedef reducedNodes
+ *  @typedef ReducedNodes
  *  @property {string[]} typeDefs
  *  @property {object} resolvers
  */
@@ -64,7 +63,7 @@ function inject(methods, RUNTIME) {
 }
 /**
  *
- * @param {reducedNodes} r
+ * @param {ReducedNodes} r
  * @param {GraphQLNode} node
  */
 
@@ -77,7 +76,7 @@ function reduceNode(r, node, RUNTIME) {
   } : {
     [key]: inject(methods, RUNTIME)
   }), {}), {}, node.resolvers.Fields ? {
-    [node.name]: node.resolvers.Fields
+    [node.name]: inject(node.resolvers.Fields, RUNTIME)
   } : {});
 
   if (node.nodes) {
@@ -90,8 +89,8 @@ function reduceNode(r, node, RUNTIME) {
     });
     result = _objectSpread({}, result, {
       typeDefs: [...result.typeDefs, ...nestedTypeDefs],
-      resolvers: Object.entries(result.resolvers).reduce((res, [key, value]) => _objectSpread({}, res, {}, nestedResolvers[key] ? {
-        [key]: _objectSpread({}, nestedResolvers[key], {}, value)
+      resolvers: Object.entries(nestedResolvers).reduce((res, [key, value]) => _objectSpread({}, result.resolvers, {}, res, {}, result.resolvers[key] ? {
+        [key]: _objectSpread({}, result.resolvers[key], {}, value)
       } : {
         [key]: value
       }), {})
@@ -101,8 +100,8 @@ function reduceNode(r, node, RUNTIME) {
   return result;
 }
 /**
- * @param {nodes} nodes
- * @returns {reducedNodes}
+ * @param {GraphQLNode[]} nodes
+ * @returns {ReducedNodes}
  */
 
 

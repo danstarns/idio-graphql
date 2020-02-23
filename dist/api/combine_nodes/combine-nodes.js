@@ -66,11 +66,7 @@ function combineNodes(nodes, appliances = {}) {
   const reducedAppliances = reduceAppliances(appliances);
   RUNTIME.typeDefs = printWithComments(mergeTypeDefs([...reducedNodes.typeDefs, ...reducedAppliances.typeDefs]));
   RUNTIME.resolvers = _objectSpread({}, reducedNodes.resolvers, {}, reducedAppliances.resolvers);
-
-  if (reducedAppliances.schemaDirectives) {
-    RUNTIME.schemaDirectives = reducedAppliances.schemaDirectives;
-  }
-
+  RUNTIME.schemaDirectives = reducedAppliances.schemaDirectives;
   RUNTIME.schema = makeExecutableSchema({
     resolvers: RUNTIME.resolvers,
     typeDefs: RUNTIME.typeDefs,

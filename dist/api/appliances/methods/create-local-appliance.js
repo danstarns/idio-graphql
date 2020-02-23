@@ -25,10 +25,10 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  *
- * @param {Object} options
+ * @param {object} options
  * @param {string} options.type
  * @param {ServiceBroker} options.broker
- * @param {Object} options.serviceManagers
+ * @param {object} options.serviceManagers
  */
 
 
@@ -37,6 +37,10 @@ function createLocalAppliance({
   broker,
   serviceManagers
 }) {
+  if (type !== "enums" && type !== "unions" && type !== "interfaces") {
+    throw new IdioError("invalid type");
+  }
+
   const metadata = APPLIANCE_METADATA.find(x => x.name === type);
   const serviceTypeManagers = serviceManagers[metadata.singular];
   return function _createLocalAppliance(introspection) {
@@ -57,8 +61,10 @@ function createLocalAppliance({
         return broker.call(`${serviceToCall}.__resolveType`, {
           graphQLArgs: safeJsonStringify(graphQLArgs)
         });
-      } catch (error) {
-        throw new IdioError(`${introspection.name}.__resolveType failed: Error:\n${error}`);
+      } catch ({
+        message
+      }) {
+        throw new IdioError(`${introspection.name}.__resolveType failed, ${message}`);
       }
     }
 
@@ -70,13 +76,11 @@ function createLocalAppliance({
       }));
     }
 
-    if (type === "interfaces") {
-      return new IdioInterface(_objectSpread({}, introspection, {
-        resolver: {
-          __resolveType
-        }
-      }));
-    }
+    return new IdioInterface(_objectSpread({}, introspection, {
+      resolver: {
+        __resolveType
+      }
+    }));
   };
 }
 

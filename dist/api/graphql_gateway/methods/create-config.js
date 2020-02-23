@@ -26,12 +26,12 @@ const {
   IdioUnion
 } = require("../../appliances/index.js");
 /**
- * @typedef {import('../graphql-gateway.js').config} config
+ * @typedef {import('../graphql-gateway.js').GraphQLGatewayConfig} GraphQLGatewayConfig
  * @typedef {import('../graphql-gateway.js').locals} locals
+ * @typedef {import('../graphql-gateway.js').services} services
  */
 
 /**
- *
  * @param {services} services
  * @returns {services}
  */
@@ -66,7 +66,7 @@ function validateServices(services = {}) {
     unions
   }).reduce((result, [key, values = []]) => {
     if (!Array.isArray(values)) {
-      throw new IdioError(`services.${key} must be of type Array.<string>.`);
+      throw new IdioError(`services.${key} must be of type array`);
     }
 
     values.forEach((value, index) => {
@@ -91,15 +91,20 @@ function validateLocals(locals = {}) {
     throw new IdioError("locals must be of type object.");
   }
 
-  const {
+  let {
     nodes,
     enums,
     scalars,
     directives,
     interfaces,
     unions,
-    schemaGlobals = ""
+    schemaGlobals = []
   } = locals;
+
+  if (typeof schemaGlobals === "string") {
+    schemaGlobals = [schemaGlobals];
+  }
+
   return _objectSpread({
     schemaGlobals
   }, Object.entries({
@@ -146,7 +151,7 @@ function validateLocals(locals = {}) {
   }, {}));
 }
 /**
- * @param {config} config
+ * @param {GraphQLGatewayConfig} config
  */
 
 
@@ -163,7 +168,7 @@ function createConfig(config) {
   const locals = validateLocals(config.locals);
 
   if (!services.nodes.length && !locals.nodes.length) {
-    throw new IdioError(`Found no declared nodes, provide a list of local or remote nodes.`);
+    throw new IdioError(`no declared nodes, provide a list of local or remote nodes.`);
   }
 
   return {

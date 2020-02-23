@@ -1,5 +1,7 @@
 "use strict";
 
+require("core-js/modules/es.promise");
+
 const {
   graphql
 } = require("graphql");
@@ -22,7 +24,7 @@ function execute(RUNTIME) {
   const {
     schema
   } = RUNTIME;
-  return ctx => {
+  return async ctx => {
     const {
       params: {
         operationName,
@@ -34,7 +36,10 @@ function execute(RUNTIME) {
     } = ctx;
 
     try {
-      return graphql({
+      const {
+        data,
+        errors
+      } = await graphql({
         schema,
         source: document,
         rootValue: root,
@@ -42,8 +47,11 @@ function execute(RUNTIME) {
         variableValues: variables,
         operationName
       });
+      return {
+        data,
+        errors
+      };
     } catch (error) {
-      /** @type {ExecutionResult} */
       return {
         errors: [new IdioError(error)]
       };

@@ -31,16 +31,24 @@ const createLocalAppliances = require("./create-local-appliances.js");
 const compareGateways = require("./compare-gateways.js");
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('../graphql-gateway.js').config} config
+ * @typedef {import('../graphql-gateway.js').GraphQLGatewayConfig} GraphQLGatewayConfig
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
  */
 
 /**
+ * @typedef RegisteredServices
+ * @property {GraphQLGatewayConfig["locals"]["nodes"]} nodes
+ * @property {GraphQLGatewayConfig["locals"]["enums"]} enums
+ * @property {GraphQLGatewayConfig["locals"]["interfaces"]} interfaces
+ * @property {GraphQLGatewayConfig["locals"]["unions"]} unions
+ */
+
+/**
  * @typedef Runtime
- * @property {locals} locals
- * @property {services} services
- * @property {services} registeredServices
- * @property {services} waitingServices
+ * @property {GraphQLGatewayConfig["locals"]} locals
+ * @property {GraphQLGatewayConfig["services"]} services
+ * @property {RegisteredServices} registeredServices
+ * @property {GraphQLGatewayConfig["services"]} waitingServices
  * @property {Object<string, ServiceManager>} serviceManagers
  * @property {string} typeDefs
  * @property {object} resolvers
@@ -54,22 +62,19 @@ const compareGateways = require("./compare-gateways.js");
 
 /**
  * @param {object} curry
- * @param {config} curry.config
+ * @param {GraphQLGatewayConfig} curry.config
  * @param {ServiceBroker} curry.broker
+ *
+ * @returns {() => Promise<Runtime>}
  */
 
 
 module.exports = ({
   config,
   broker
-}) => {
-  /**
-   * Builds & orchestrates a schema from multiple sources on the network.
-   *
-   * @returns {Runtime}
-   */
+} = {}) => {
   return async function start() {
-    /** @typedef {RUNTIME} */
+    /** @typedef {Runtime} */
     const RUNTIME = {
       locals: config.locals,
       services: config.services,

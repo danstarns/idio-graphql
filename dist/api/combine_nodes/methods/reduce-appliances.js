@@ -22,6 +22,8 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata");
  * @property {object} schemaDirectives
  */
 
+/** @typedef {import('../combine-nodes.js').appliances} appliances */
+
 /**
  * @param {import('../combine-nodes.js').appliances} _appliances
  */
@@ -45,7 +47,7 @@ function reduceAppliances(_appliances) {
       typeDefs,
       resolvers = {}
     } = loadAppliances(appliances, metadata);
-    result.typeDefs.push(typeDefs);
+    result.typeDefs = [...result.typeDefs, typeDefs].filter(Boolean);
 
     if (metadata.name === "directives") {
       return _objectSpread({}, result, {

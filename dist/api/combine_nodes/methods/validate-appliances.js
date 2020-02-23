@@ -21,6 +21,10 @@ const IdioError = require("../../idio-error.js");
 
 
 function validateAppliances(appliances, RUNTIME) {
+  if (!(typeof appliances === "object")) {
+    throw new IdioError("expected appliances to be of type object");
+  }
+
   Object.entries(appliances).filter(([key]) => APPLIANCE_METADATA.map(({
     name
   }) => name).filter(name => name !== "schemaGlobals").includes(key)).forEach(([key, values]) => {
@@ -40,7 +44,7 @@ function validateAppliances(appliances, RUNTIME) {
       });
 
       if (RUNTIME.REGISTERED_NAMES[value.name]) {
-        throw new IdioError(`loading ${metadata._Constructor.name} with a name: '${value.name}' thats already registered.`);
+        throw new IdioError(`${metadata._Constructor.name} with a name: '${value.name}' already registered.`);
       }
 
       RUNTIME.REGISTERED_NAMES[value.name] = 1;

@@ -21,7 +21,6 @@ const {
 
 const IdioError = require("../../idio-error.js");
 /**
- *
  * @param {import('../index.js').appliances} appliances
  * @returns {{typeDefs: string, resolvers: object}}
  */
@@ -34,6 +33,10 @@ function loadAppliances(appliances, metadata) {
 
   if (name === "schemaGlobals") {
     if (Array.isArray(appliances)) {
+      if (!appliances.length) {
+        return {};
+      }
+
       return {
         typeDefs: printWithComments(mergeTypeDefs(appliances.map(parseTypeDefs)))
       };

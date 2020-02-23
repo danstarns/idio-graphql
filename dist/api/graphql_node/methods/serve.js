@@ -25,7 +25,7 @@ const {
 
 const CONTEXT_INDEX = require("../../../constants/context-index.js");
 /**
- * @typedef {import('./create-node-broker.js').IdioBrokerOptions} IdioBrokerOptions
+ * @typedef {import('../../../util/create-broker.js').BrokerOptions} BrokerOptions
  * @typedef {import('../../../util/services-manager.js').ServiceManager} ServiceManager
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  */
