@@ -30,7 +30,7 @@ const User = new GraphQLNode({
     `,
     resolvers: { Query, Mutation, Subscription, Fields },
     nodes: [ GraphQLNode ],
-    injections: () => ({}),
+    injections: {},
     enums: [ IdioEnum ],
     interfaces: [ IdioInterface ],
     unions: [ IdioUnion ]
@@ -43,18 +43,7 @@ const User = new GraphQLNode({
 
 ```javascript
 /**
- * @typedef ResolverObjectInput
- * @property {Function} resolve
- * @property {PreUnion} pre - Function(s) to call pre the resolve method.
- * @property {PostUnion} post - Function(s) to call post the resolve method.
- */
-
-/**
- * @typedef {(ResolverObjectInput|Function)} ResolverUnion
- */
-
-/**
- * @typedef ResolverType
+ * @typedef Resolvers
  * @property {Object.<string, ResolverUnion>} Query
  * @property {Object.<string, ResolverUnion>} Mutation
  * @property {Object.<string, {subscribe: Function}>} Subscription
@@ -62,32 +51,36 @@ const User = new GraphQLNode({
  */
 
 /**
+ * @typedef {{dataLoaders: object, models: object}} injections
+ */
+
+/**
  * @typedef GraphQLNode
  * @property {string} name
- * @property {Promise<string>} typeDefs
- * @property {ResolverType} resolvers
- * @property {Array.<GraphQLNode>} nodes
- * @property {any} injections
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
- * @property {(brokerOptions: BrokerOptions) => ServiceBroker} serve
+ * @property {string} typeDefs
+ * @property {Resolvers} resolvers
+ * @property {GraphQLNode[]} nodes
+ * @property {injections} injections
+ * @property {IdioEnum[]} enums
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
+ * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
  */
 
 /**
  * @typedef GraphQLNodeInput
  * @property {string} name
  * @property {any} typeDefs - gql-tag, string or filePath.
- * @property {ResolverType} resolvers
- * @property {Array.<GraphQLNode>} nodes
- * @property {any} injections
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
+ * @property {Resolvers} resolvers
+ * @property {GraphQLNode[]} nodes
+ * @property {injections} injections
+ * @property {IdioEnum[]} enums
+ * @property {IdioInterface[]} interfaces
+ * @property {IdioUnion[]} unions
  */
 
 /**
- * Creates a instance of a GraphQLNode.
+ * You can use GraphQLNode to modularize an ObjectTypeDefinition together with its related resolvers & properties.
  *
  * @param {GraphQLNodeInput} config
  *
@@ -113,7 +106,7 @@ new GraphQLNode(config: GraphQLNodeInput)
 
 #### Example
 ```javascript
-const broker = await User.serve({
+await User.serve({
     transporter: "NATS"
 });
 ```
@@ -121,10 +114,18 @@ const broker = await User.serve({
 #### Definitions
 ```javascript
 /**
- * @function serve
- * @param {BrokerOptions} brokerOptions
- * @returns {Promise.<ServiceBroker>}
-*/
+ * @typedef Runtime
+ * @property {ServiceBroker} broker
+ * @property {Object<string, ServiceManager>} gatewayManagers
+ * @property {boolean} initialized
+ * @property {Object<string, object>} introspection
+ * @property {IdioBrokerOptions} brokerOptions
+ */
+
+/**
+ * @param {IdioBrokerOptions} brokerOptions
+ * @returns {Promise<Runtime>}
+ */
 ```
 
 ```javascript
