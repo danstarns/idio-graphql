@@ -85,14 +85,20 @@ On successful start, you receive merged typeDefs & resolvers, that are mapped to
 
 You may not need or want to distribute all your Nodes. You can use [**GraphQLGateway**](graphql-gateway) to gradually adopt a microservices architecure.
 
-```javascript
+
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Gateway-->
+
+```js
+const Post = require("./Post.js");
+
 const gateway = new GraphQLGateway(
     {
         services: { 
             nodes: [ "User" ]
         },
         locals: {
-            nodes: [ PostNode ]
+            nodes: [ Post ]
         }
     },
     {
@@ -100,17 +106,44 @@ const gateway = new GraphQLGateway(
         nodeID: "gateway"
     }
 );
+
+const { typeDefs, resolvers } = await gateway.start();
 ```
+<!--User-->
+```js
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: "...",
+    resolvers: { ... }
+});
+
+await User.serve({
+    gateway: "gateway",
+    transporter: "NATS"
+});
+```
+
+<!--Post-->
+```js
+const Post = new GraphQLNode({
+    name: "Post",
+    typeDefs: "...",
+    resolvers: { ... }
+});
+
+module.exports = Post;
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 ## Service Broker
 
 ---
 
-To harness the real power of a microservices architecture you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the `context.injections` parameter.
+To harness the real power of microservices you should take advantage of the **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, initializing [**Moleculer**](https://moleculer.services/) microservices outside the bounds of GraphQL, to offload long running business logic. [**`GraphQLNode.serve()`**](graphql-node#serve) will return a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)**, you also have access to a **[Service Broker](https://moleculer.services/docs/0.13/api/service-broker.html)** inside each resolver through the `context.injections` parameter.
 
 
 ```javascript
-const broker = await User.serve({ transporter: "NATS" });
+const { broker } = await User.serve({ transporter: "NATS" });
 ```
 
 ```javascript
@@ -141,7 +174,7 @@ Taking advantage of **[`$node.list`](https://moleculer.services/docs/0.13/servic
 
 The in-memory active node list will be refreshed based on the **[Moleculer](https://moleculer.services/docs/0.14/configuration.html#Broker-options)** `heartbeatInterval` provided at either `serve` or `start` of a service. Its recommended to experiment with this interval, to achieve maximum reliability, based on the constrains within your distributed system.
 
-> Its recommended to view all the broker options you have available **[here](https://moleculer.services/docs/0.14/configuration.html#Broker-options)**
+> View all the broker options **[here](https://moleculer.services/docs/0.14/configuration.html#Broker-options)**
 
 ```javascript
 const gateway = new GraphQLGateway(
@@ -200,31 +233,16 @@ broker.options.nodeID // "User:gateway:uuid123"
 
 ---
 
+
+
 [**GraphQLGateway**](graphql-gateway) will forward the GraphQL arguments onto the relevant Node. 
 
-```javascript
-const User = new GraphQLNode({
-    name: "User",
-    typeDefs: `
-        type User ...
+> Arguments passed between services will be sanitized using **[`safe-json-stringify`](https://www.npmjs.com/package/safe-json-stringify)**
 
-        type Query {
-            getUser: User
-        }
-    `,
-    resolvers: { 
-        Query: {
-            getUser: (root, args, { abc }) => { 
-                abc // 123
-                ...
-             }
-        }
-    }
-});
-```
+<!--DOCUSAURUS_CODE_TABS-->
+<!--Gateway-->
 
-
-```javascript
+```js
 const gateway = new GraphQLGateway(
     {
         services: { 
@@ -246,6 +264,21 @@ const apolloServer = new ApolloServer({
     }
 });
 ```
+<!--User Service-->
+```js
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: "...",
+    resolvers: { 
+        Query: {
+            getUser: (root, args, { abc }) => { 
+                abc // 123
+             }
+        }
+    }
+});
+```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 ## Subscriptions
 
