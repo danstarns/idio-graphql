@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { gql } = require("apollo-server");
 const { GraphQLNode } = require("idio-graphql");
 
