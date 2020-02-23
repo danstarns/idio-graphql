@@ -17,7 +17,8 @@
       "combine-nodes-guide",
       "schema-appliances",
       "resolver-hooks",
-      "microservices"
+      "microservices",
+      "inter-schema-execution"
     ]
   }
 }
