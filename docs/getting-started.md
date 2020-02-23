@@ -16,9 +16,10 @@ $ npm install idio-graphql
 
 1. [**Creating Nodes**](creating-nodes)
 2. [**Combine Nodes**](combine-nodes-guide)
-4. [**Schema Appliances**](schema-appliances)
+3. [**Schema Appliances**](schema-appliances)
 4. [**Resolver Hooks**](resolver-hooks)
-3. [**Microservices**](microservices)
+5. [**Microservices**](microservices)
+6. [**Inter-Schema Execution**](inter-schema-execution)
 
 ## Examples 
 ---
