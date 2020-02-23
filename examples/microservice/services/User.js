@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { gql } = require("apollo-server");
 const { GraphQLNode } = require("idio-graphql");
 
@@ -7,15 +8,15 @@ const User = new GraphQLNode({
     name: "User",
     typeDefs: gql`
         type User {
-            id: String
+            id: ID
             name: String
             age: Int
             posts: [Post]
         }
 
         type Query {
-            user(id: String!): User
-            users(ids: [String]): [User]
+            user(id: ID!): User
+            users(ids: [ID]): [User]
         }
     `,
     resolvers: {
@@ -35,7 +36,7 @@ const User = new GraphQLNode({
             posts: async (root, args, { injections }) => {
                 const result = await injections.execute(
                     gql`
-                        query($ids: [String!]) {
+                        query($ids: [ID]) {
                             posts(ids: $ids) {
                                 id
                                 title
