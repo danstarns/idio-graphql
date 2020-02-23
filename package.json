@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels.",
   "main": "./src/index.js",
   "scripts": {
@@ -16,12 +16,16 @@
   },
   "keywords": [
     "graphql",
+    "graphql-api",
+    "nodejs",
+    "node-js",
+    "apollo-server",
+    "idio-graphql",
+    "moleculer",
     "modules",
-    "structure",
     "modularize",
-    "node",
-    "molecular",
     "microservices",
+    "microservice",
     "gateway"
   ],
   "engines": {
