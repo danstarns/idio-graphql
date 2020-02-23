@@ -101,9 +101,11 @@ main();
 $ npm install idio-graphql apollo-server graphql-tag moleculer nats
 ```
 
-### User Service
 
-```javascript
+<!--DOCUSAURUS_CODE_TABS-->
+<!--User Service-->
+
+```js
 const gql = require("graphql-tag");
 const { GraphQLNode } = require("idio-graphql");
 
@@ -147,9 +149,8 @@ async function main() {
 main();
 ```
 
-### Gateway Service
-
-```javascript
+<!--Gateway Service-->
+```js
 const { ApolloServer } = require("apollo-server");
 const { GraphQLGateway } = require("idio-graphql");
 
@@ -182,3 +183,6 @@ async function main() {
 
 main();
 ```
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+
