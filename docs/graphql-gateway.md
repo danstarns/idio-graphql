@@ -98,9 +98,9 @@ new function GraphQLGateway(config: config, brokerOptions: BrokerOptions);
 
 ---
 
-1. [**serve**](#serve)
+1. [**start**](#start)
 
-### Serve 
+### Start 
 
 ---
 
