@@ -45,19 +45,20 @@ const StatusEnum = new IdioEnum({
 /**
  * @typedef IdioEnum
  * @property {string} name
- * @property {Promise.<string>} typeDefs
- * @property {Object} resolver
- * @property {(brokerOptions: BrokerOptions) => Promise.<ServiceBroker>} serve
+ * @property {string} typeDefs
+ * @property {object} resolver
+ * @property {(brokerOptions: BrokerOptions) => Promise<ServiceBroker>} serve
  */
 
 /**
  * You can use IdioEnum to modularize an EnumTypeDefinition, together with its resolver.
+ *
  * You can specify enums 'top-level' at combineNodes or at an GraphQLNode level.
  *
  * @param {Object} config
  * @param {string} config.name
- * @param {any} config.typeDefs - gql-tag, string or filePath.
- * @param {Object} config.resolver
+ * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
+ * @param {object} config.resolver
  *
  * @returns {IdioEnum}
  */
@@ -81,7 +82,7 @@ new IdioEnum({ name: string, typeDefs: any, resolver: {} );
 
 #### Example
 ```javascript
-const broker = await StatusEnum.serve({
+await StatusEnum.serve({
     transporter: "NATS"
 });
 ```
@@ -89,9 +90,18 @@ const broker = await StatusEnum.serve({
 #### Definitions
 ```javascript
 /**
+ * @typedef Runtime
+ * @property {IdioBrokerOptions} brokerOptions
+ * @property {ServiceBroker} broker
+ * @property {Object.<string, ServiceManager>} gatewayManagers
+ * @property {boolean} initialized
+ * @property {Object.<string, object>} introspection
+ */
+
+/**
  * @function serve
  * @param {BrokerOptions} brokerOptions
- * @returns {Promise.<ServiceBroker>}
+ * @returns {Promise<Runtime>}
 */
 ```
 
