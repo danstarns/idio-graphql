@@ -18,7 +18,7 @@ You can use **combineNodes** to snap [**GraphQLNode's**](graphql-node) & [**Sche
 ---
 
 ```javascript 
-const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
+const { typeDefs, resolvers, schemaDirectives } = combineNodes(
     nodes,
     {
         scalars,
@@ -37,32 +37,23 @@ const { typeDefs, resolvers, schemaDirectives } = await combineNodes(
 
 ```javascript
 /**
- * @typedef {Object} Schema
+ * @typedef RUNTIME
+ * @property {object} REGISTERED_NAMES
+ * @property {GraphQLSchema} schema
  * @property {string} typeDefs
- * @property {Object} resolvers
- * @property {Object} resolvers.Query
- * @property {Object} resolvers.Mutation
- * @property {Object} resolvers.Subscription
- * @property {Object} schemaDirectives
+ * @property {object} resolvers
+ * @property {object} resolvers.Query
+ * @property {object} resolvers.Mutation
+ * @property {object} resolvers.Subscription
+ * @property {object} schemaDirectives
  */
 
 /**
- * @typedef {Object} appliances
- * @property {Array.<IdioScalar>} scalars
- * @property {Array.<IdioEnum>} enums
- * @property {Array.<IdioDirective>} directives
- * @property {Array.<IdioInterface>} interfaces
- * @property {Array.<IdioUnion>} unions
- * @property {any} schemaGlobals - an Array or a single instance of Graphql typeDefs, use filePath, string, or gql-tag.
- */
-
-/**
- * combineNodes will combine, GraphQLNode's, Schema Appliances & return typeDefs, resolvers, schemaDirectives.
- * Ready to be passed to your favorite GraphQL implementation.
+ * You can use combineNodes to snap GraphQLNode's & Schema Appliances together into a single Schema.
  *
- * @param {Array.<GraphQLNode>} nodes
+ * @param {GraphQLNode[]} nodes
  * @param {appliances} appliances
- * @returns {Schema}
+ * @returns {RUNTIME}
  */
 ```
 
