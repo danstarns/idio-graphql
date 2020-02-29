@@ -1,8 +1,8 @@
 {
   "name": "idio-graphql",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels.",
-  "main": "./src/index.js",
+  "main": "./dist",
   "scripts": {
     "test": "cross-env ./node_modules/.bin/mocha",
     "test:dev": "cross-env ./node_modules/.bin/mocha --watch",
