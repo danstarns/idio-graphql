@@ -46,11 +46,12 @@ function combineNodes() {
         typeDefs: `testing`,
         resolvers: { test: true },
         schemaDirectives: { test: true },
-        schema: { test: true }
+        schema: { test: true },
+        execute: () => true
     };
 }
 
-function GraphQLNode() { }
+function GraphQLNode() {}
 
 function createLocalNode() {
     return () => ({});
@@ -178,7 +179,8 @@ describe("start", () => {
             resolvers,
             schemaDirectives,
             broker,
-            schema
+            schema,
+            execute
         } = runtime;
 
         expect(broker).to.be.a("object");
@@ -211,5 +213,7 @@ describe("start", () => {
         expect(typeDefs)
             .to.be.a("string")
             .to.contain("testing");
+
+        expect(execute).to.be.a("function");
     });
 });

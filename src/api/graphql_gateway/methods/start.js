@@ -13,6 +13,7 @@ const compareGateways = require("./compare-gateways.js");
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('../graphql-gateway.js').GraphQLGatewayConfig} GraphQLGatewayConfig
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
+ * @typedef {import('../../../util/execute.js').execute} execute
  */
 
 /**
@@ -38,6 +39,7 @@ const compareGateways = require("./compare-gateways.js");
  * @property {object} schemaDirectives
  * @property {ServiceBroker} broker
  * @property {GraphQLSchema} schema
+ * @property {execute} execute
  */
 
 /**
@@ -75,7 +77,8 @@ module.exports = ({ config, broker } = {}) => {
             resolvers: {},
             schemaDirectives: {},
             broker,
-            schema: {}
+            schema: {},
+            execute: () => false
         };
 
         createGatewayService(RUNTIME);
@@ -92,7 +95,8 @@ module.exports = ({ config, broker } = {}) => {
             typeDefs: RUNTIME.typeDefs,
             resolvers: RUNTIME.resolvers,
             schemaDirectives: RUNTIME.schemaDirectives,
-            schema: RUNTIME.schema
+            schema: RUNTIME.schema,
+            execute: RUNTIME.execute
         } = combineNodes(
             RUNTIME.registeredServices.nodes.map(
                 createLocalNode({
