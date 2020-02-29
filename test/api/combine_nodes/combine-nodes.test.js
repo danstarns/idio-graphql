@@ -957,6 +957,64 @@ describe("combineNodes", () => {
             .to.be.a("function");
     });
 
+    it("should combine a node and schema global and return a execute method", () => {
+        const UserNode = new GraphQLNode({
+            name: "User",
+            typeDefs: gql`
+                type User {
+                    name: String
+                    age: Int
+                    address: Address
+                }
+
+                type Query {
+                    getUserByID(id: ID!): User
+                }
+            `,
+            resolvers: {
+                Query: { getUserByID: () => true },
+                Fields: {
+                    age: () => 20
+                }
+            }
+        });
+
+        const { typeDefs, resolvers, schema, execute } = combineNodes(
+            [UserNode],
+            {
+                schemaGlobals: gql`
+                    type Address {
+                        line1: String
+                        line2: String
+                        postcode: String
+                    }
+                `
+            }
+        );
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type User");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Address");
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("schema");
+
+        expect(schema).to.be.a.instanceOf(GraphQLSchema);
+
+        expect(resolvers)
+            .to.be.an("object")
+            .to.have.property("Query")
+            .to.have.property("getUserByID")
+            .to.be.a("function");
+
+        expect(execute).to.be.a("function");
+    });
+
     it("should throw name already registered", () => {
         try {
             const node1 = new GraphQLNode({
