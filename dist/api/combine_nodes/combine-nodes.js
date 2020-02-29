@@ -25,10 +25,15 @@ const {
   reduceNodes,
   reduceAppliances
 } = require("./methods/index.js");
+
+const {
+  execute
+} = require("../../util/index.js");
 /**
  * @typedef {import('../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
  * @typedef {import('../appliances/index.js').appliances} appliances
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
+ * @typedef {import('../../util/execute.js').execute} execute
  */
 
 /**
@@ -41,6 +46,7 @@ const {
  * @property {object} resolvers.Mutation
  * @property {object} resolvers.Subscription
  * @property {object} schemaDirectives
+ * @property {execute} execute
  */
 
 /**
@@ -72,6 +78,7 @@ function combineNodes(nodes, appliances = {}) {
     typeDefs: RUNTIME.typeDefs,
     schemaDirectives: RUNTIME.schemaDirectives
   });
+  RUNTIME.execute = execute.withSchema(RUNTIME.schema);
   return RUNTIME;
 }
 

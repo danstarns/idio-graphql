@@ -128,6 +128,7 @@ const { typeDefs, resolvers, schemaDirectives, broker } = await gateway.start();
  * @property {object} schemaDirectives
  * @property {ServiceBroker} broker
  * @property {GraphQLSchema} schema
+ * @property {execute} execute
  */
 
 /**

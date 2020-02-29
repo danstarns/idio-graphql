@@ -46,6 +46,7 @@ const { typeDefs, resolvers, schemaDirectives } = combineNodes(
  * @property {object} resolvers.Mutation
  * @property {object} resolvers.Subscription
  * @property {object} schemaDirectives
+ * @property {execute} execute
  */
 
 /**
