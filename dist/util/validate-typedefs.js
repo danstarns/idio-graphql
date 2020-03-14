@@ -6,7 +6,7 @@ const {
 
 const {
   printWithComments
-} = require("graphql-toolkit");
+} = require("@graphql-toolkit/schema-merging");
 
 const IdioError = require("../api/idio-error.js");
 

@@ -1,4 +1,7 @@
-const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
+const {
+    mergeTypeDefs,
+    printWithComments
+} = require("@graphql-toolkit/schema-merging");
 const { parseTypeDefs } = require("../../../util/index.js");
 
 const IdioError = require("../../idio-error.js");

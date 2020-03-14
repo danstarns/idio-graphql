@@ -1,6 +1,9 @@
 const { expect } = require("chai");
 const proxyquire = require("proxyquire");
-const { mergeTypeDefs, printWithComments } = require("graphql-toolkit");
+const {
+    printWithComments,
+    mergeTypeDefs
+} = require("@graphql-toolkit/schema-merging");
 
 function loadAppliances(appliances, metadata) {
     if (!appliances) {

@@ -1,5 +1,5 @@
 const { parse } = require("graphql/language");
-const { printWithComments } = require("graphql-toolkit");
+const { printWithComments } = require("@graphql-toolkit/schema-merging");
 const IdioError = require("../api/idio-error.js");
 
 function validateTypeDefs(instance, metadata) {

@@ -13,7 +13,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 const {
   mergeTypeDefs,
   printWithComments
-} = require("graphql-toolkit");
+} = require("@graphql-toolkit/schema-merging");
 
 const {
   makeExecutableSchema
