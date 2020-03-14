@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  test:coverage:
+  test_coverage:
     docker:
       - image: circleci/node:12.16.1
     working_directory: ~/repo
@@ -48,7 +48,7 @@ workflows:
   version: 2
   develop_commit:
     jobs:
-      - test:coverage:
+      - test_coverage:
           filters:
             branches:
               only: /develop/
