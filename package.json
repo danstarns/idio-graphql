@@ -68,6 +68,7 @@
     "core-js": "^3.6.4",
     "graphql": "^14.6.0",
     "graphql-tools": "^4.0.7",
+    "regenerator-runtime": "^0.13.5",
     "safe-json-stringify": "^1.2.0",
     "uuid": "^3.4.0"
   }
