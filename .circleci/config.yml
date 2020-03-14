@@ -2,16 +2,72 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
-    executor:
-      name: node/default
+  test_coverage:
+    docker:
+      - image: circleci/node:12.16.1
+    working_directory: ~/repo
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: npm install
-            - run: npm run test:coverage
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm run test:coverage
+
+  build:
+    docker:
+      - image: circleci/node:12.16.1
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Build Source
+          command: npm run build
+
+  deploy:
+    docker:
+      - image: circleci/node:12.16.1
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with NPM
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
 workflows:
-  build-and-test:
+  version: 2
+  develop_commit:
     jobs:
-      - build-and-test
+      - test_coverage:
+          filters:
+            branches:
+              only: /develop/
+  master_commit:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /master/
+      - hold:
+          filters:
+            branches:
+              only: /master/
+          type: approval
+          requires:
+            - build
+      - deploy:
+          filters:
+            branches:
+              only: /master/
+          requires:
+            - hold

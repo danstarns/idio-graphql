@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels.",
   "main": "./dist",
   "scripts": {
