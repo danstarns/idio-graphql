@@ -259,3 +259,30 @@ const User = new GraphQLNode({
     ...
 });
 ```
+
+## Types
+
+---
+
+You can encapsulate types within a Node. Checkout the **[Schema Appliances](schema-appliances)** guide and the API for **[GraphQLType](graphql-type)**.
+
+```javascript
+const Metadata = new GraphQLType({
+    name: "Metadata",
+    typeDefs: `
+        type Metadata {
+            lastLogin: String
+        }
+    `,
+    resolvers: {
+        lastLogin: () => { ... }
+    }
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    types: [ Metadata ],
+    ...
+});
+```
