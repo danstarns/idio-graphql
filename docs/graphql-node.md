@@ -51,10 +51,6 @@ const User = new GraphQLNode({
  */
 
 /**
- * @typedef {{dataLoaders: object, models: object}} injections
- */
-
-/**
  * @typedef GraphQLNode
  * @property {string} name
  * @property {string} typeDefs
@@ -64,6 +60,7 @@ const User = new GraphQLNode({
  * @property {IdioEnum[]} enums
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
  */
 
@@ -77,10 +74,11 @@ const User = new GraphQLNode({
  * @property {IdioEnum[]} enums
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  */
 
 /**
- * You can use GraphQLNode to modularize an ObjectTypeDefinition together with its related resolvers & properties.
+ * You can use GraphQLNode to modularize a ObjectTypeDefinition together with its related resolvers & properties.
  *
  * @param {GraphQLNodeInput} config
  *
