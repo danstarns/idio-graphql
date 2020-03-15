@@ -11,7 +11,7 @@ const { GraphQLNode } = require("idio-graphql")
 
 ---
 
-You can use **GraphQLNode** to modularize an **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. 
+You can use **GraphQLNode** to modularize a **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. 
 
 ## Example
 

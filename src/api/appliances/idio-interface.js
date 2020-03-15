@@ -18,7 +18,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  */
 
 /**
- * You can use IdioInterface to modularize an InterfaceTypeDefinition, together with its resolver.
+ * You can use IdioInterface to modularize a InterfaceTypeDefinition, together with its resolver.
  *
  * You can specify interfaces 'top-level' at combineNodes or at an GraphQLNode level.
  *

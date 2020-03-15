@@ -16,7 +16,7 @@ const IdioError = require("../idio-error.js");
  */
 
 /**
- * You can use IdioDirective to modularize an DirectiveDefinition, together with its resolver.
+ * You can use IdioDirective to modularize a DirectiveDefinition, together with its resolver.
  *
  * You can only specify directives 'top-level' at combineNodes.
  *

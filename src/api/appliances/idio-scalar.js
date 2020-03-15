@@ -13,7 +13,7 @@ const IdioError = require("../idio-error.js");
  */
 
 /**
- * You can use IdioScalar to modularize an ( ScalarTypeDefinition ), together with its resolver.
+ * You can use IdioScalar to modularize a ( ScalarTypeDefinition ), together with its resolver.
  *
  * You can only specify scalars 'top-level' at combineNodes.
  *

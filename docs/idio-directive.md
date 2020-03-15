@@ -11,7 +11,7 @@ const { IdioDirective } = require("idio-graphql");
 
 ---
 
-You can use **IdioDirective** to modularize an **[`DirectiveDefinition`](http://spec.graphql.org/June2018/#DirectiveDefinition)**, together with its resolver. 
+You can use **IdioDirective** to modularize a **[`DirectiveDefinition`](http://spec.graphql.org/June2018/#DirectiveDefinition)**, together with its resolver. 
 
 > You can only specify directives 'top-level' at **[combineNodes](combine-nodes)**.
 
@@ -47,7 +47,7 @@ const hasScopeDirective = new IdioDirective({
  */
 
 /**
- * You can use IdioDirective to modularize an DirectiveDefinition, together with its resolver.
+ * You can use IdioDirective to modularize a DirectiveDefinition, together with its resolver.
  *
  * You can only specify directives 'top-level' at combineNodes.
  *

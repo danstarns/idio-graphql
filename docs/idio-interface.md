@@ -11,7 +11,7 @@ const { IdioInterface } = require("idio-graphql");
 
 ---
 
-You can use **IdioInterface** to modularize an **[`InterfaceTypeDefinition`](http://spec.graphql.org/June2018/#InterfaceTypeDefinition)**, together with its resolver. You can specify interfaces 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level.
+You can use **IdioInterface** to modularize a **[`InterfaceTypeDefinition`](http://spec.graphql.org/June2018/#InterfaceTypeDefinition)**, together with its resolver. You can specify interfaces 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level.
 
 ## Example
 
@@ -50,7 +50,7 @@ const ErrorInterFace = new IdioInterface({
  */
 
 /**
- * You can use IdioInterface to modularize an InterfaceTypeDefinition, together with its resolver.
+ * You can use IdioInterface to modularize a InterfaceTypeDefinition, together with its resolver.
  *
  * You can specify interfaces 'top-level' at combineNodes or at an GraphQLNode level.
  *
