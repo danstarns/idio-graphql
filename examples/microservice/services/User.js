@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { gql } = require("apollo-server");
-const { GraphQLNode } = require("idio-graphql");
 const util = require("util");
+const { GraphQLNode } = require("../../../src");
 
 const sleep = util.promisify(setTimeout);
 

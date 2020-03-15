@@ -3,7 +3,6 @@
     "description": "This project showcase's the most microservice setup with idio-graphql.",
     "dependencies": {
         "apollo-server": "^2.10.1",
-        "idio-graphql": "file:../..",
         "moleculer": "^0.14.2",
         "nats": "^1.4.0"
     },
