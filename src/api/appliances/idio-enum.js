@@ -18,7 +18,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  */
 
 /**
- * You can use IdioEnum to modularize an EnumTypeDefinition, together with its resolver.
+ * You can use IdioEnum to modularize a EnumTypeDefinition, together with its resolver.
  *
  * You can specify enums 'top-level' at combineNodes or at an GraphQLNode level.
  *

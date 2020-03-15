@@ -6,7 +6,8 @@ const {
     IdioEnum,
     IdioDirective,
     IdioInterface,
-    IdioUnion
+    IdioUnion,
+    GraphQLType
 } = require("../../appliances/index.js");
 
 /**
@@ -24,7 +25,15 @@ function validateServices(services = {}) {
         throw new IdioError("services must be of type object.");
     }
 
-    const { nodes, enums, interfaces, unions, directives, scalars } = services;
+    const {
+        nodes,
+        enums,
+        interfaces,
+        unions,
+        types,
+        directives,
+        scalars
+    } = services;
 
     if (directives) {
         throw new IdioError(`services.directives not supported`);
@@ -34,7 +43,7 @@ function validateServices(services = {}) {
         throw new IdioError(`services.scalars not supported`);
     }
 
-    return Object.entries({ nodes, enums, interfaces, unions }).reduce(
+    return Object.entries({ nodes, enums, interfaces, unions, types }).reduce(
         (result, [key, values = []]) => {
             if (!Array.isArray(values)) {
                 throw new IdioError(`services.${key} must be of type array`);
@@ -71,6 +80,7 @@ function validateLocals(locals = {}) {
         directives,
         interfaces,
         unions,
+        types,
         schemaGlobals = []
     } = locals;
 
@@ -86,7 +96,8 @@ function validateLocals(locals = {}) {
             scalars: { instances: scalars, of: IdioScalar },
             directives: { instances: directives, of: IdioDirective },
             interfaces: { instances: interfaces, of: IdioInterface },
-            unions: { instances: unions, of: IdioUnion }
+            unions: { instances: unions, of: IdioUnion },
+            types: { instances: types, of: GraphQLType }
         }).reduce((result, [key, { instances = [], of }]) => {
             if (!Array.isArray(instances)) {
                 throw new IdioError(`locals.${key} must be of type array.`);

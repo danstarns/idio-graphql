@@ -50,7 +50,8 @@ async function serve(brokerOptions) {
             nodes: this.nodes,
             enums: this.enums,
             interfaces: this.interfaces,
-            unions: this.unions
+            unions: this.unions,
+            types: this.types
         }).reduce((result, [key, values]) => {
             if (!values) {
                 return result;
@@ -96,7 +97,13 @@ async function serve(brokerOptions) {
         })
     );
 
-    const appliances = [this.enums, this.unions, this.interfaces, this.nodes]
+    const appliances = [
+        this.enums,
+        this.unions,
+        this.interfaces,
+        this.nodes,
+        this.types
+    ]
         .filter(Boolean)
         .reduce((result, value) => [...result, ...value], []);
 

@@ -11,7 +11,7 @@ const { IdioScalar } = require("idio-graphql");
 
 ---
 
-You can use **IdioScalar** to modularize an **[`ScalarTypeDefinition`](http://spec.graphql.org/June2018/#ScalarTypeDefinition)**, together with its resolver. 
+You can use **IdioScalar** to modularize a **[`ScalarTypeDefinition`](http://spec.graphql.org/June2018/#ScalarTypeDefinition)**, together with its resolver. 
 
 > You can only apply scalars 'top-level' at **[combineNodes](combine-nodes)**.
 
@@ -43,7 +43,7 @@ const JSONScalar = new IdioScalar({
  */
 
 /**
- * You can use IdioScalar to modularize an ( ScalarTypeDefinition ), together with its resolver.
+ * You can use IdioScalar to modularize a ( ScalarTypeDefinition ), together with its resolver.
  *
  * You can only specify scalars 'top-level' at combineNodes.
  *

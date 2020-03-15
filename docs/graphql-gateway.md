@@ -24,7 +24,8 @@ const gateway = new GraphQLGateway(
             nodes,
             enums,
             interfaces,
-            unions
+            unions,
+            types
         },
         locals: { 
             nodes,
@@ -33,6 +34,7 @@ const gateway = new GraphQLGateway(
             directives,
             interfaces,
             unions,
+            types,
             schemaGlobals
          }
     },
@@ -54,6 +56,7 @@ const gateway = new GraphQLGateway(
  * @property {string[]} enums
  * @property {string[]} interfaces
  * @property {string[]} unions
+ * @property {string[]} types
  */
 
 /**
@@ -64,6 +67,7 @@ const gateway = new GraphQLGateway(
  * @property {IdioDirective[]} directives
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  * @property {(string | DocumentNode | string[] | DocumentNode[])} schemaGlobals
  */
 

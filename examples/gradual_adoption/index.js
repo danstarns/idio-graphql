@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { ApolloServer } = require("apollo-server");
-const { GraphQLGateway } = require("idio-graphql");
+const { GraphQLGateway } = require("../../src");
 const User = require("./locals/User.js");
 
 const gateway = new GraphQLGateway(

@@ -3,7 +3,7 @@
 [![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql)
 
 
-Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
+Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels. 
 
 
 ```

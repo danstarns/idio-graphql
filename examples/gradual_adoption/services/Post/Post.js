@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { gql } = require("apollo-server");
-const { GraphQLNode } = require("idio-graphql");
+const { GraphQLNode } = require("../../../../src");
 
 const { posts } = require("../../../data/index.js");
 const Comment = require("./nodes/Comment.js");

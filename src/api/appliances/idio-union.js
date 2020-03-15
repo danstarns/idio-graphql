@@ -18,7 +18,7 @@ const serveAppliance = require("./methods/serve-appliance.js");
  */
 
 /**
- * You can use IdioUnion to modularize an UnionTypeDefinition, together with its resolver.
+ * You can use IdioUnion to modularize a UnionTypeDefinition, together with its resolver.
  * You can specify unions 'top-level' at combineNodes or at an GraphQLNode level.
  *
  * @param {object} config

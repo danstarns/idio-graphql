@@ -26,6 +26,9 @@
       "graphql-node": {
         "title": "GraphQLNode"
       },
+      "graphql-type": {
+        "title": "GraphQLType"
+      },
       "idio-directive": {
         "title": "IdioDirective"
       },

@@ -20,7 +20,7 @@ const RUNTIME = {
 const createLocalAppliances = proxyquire(
     "../../../../src/api/graphql_gateway/methods/create-local-appliances.js",
     {
-        "../../appliances/methods/index.js": { createLocalAppliance }
+        "../../appliances/methods/create-local-appliance.js": createLocalAppliance
     }
 );
 

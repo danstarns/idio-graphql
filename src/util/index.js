@@ -14,6 +14,7 @@ const validateTypeDefs = require("./validate-typedefs.js");
 const createBroker = require("./create-broker.js");
 const execute = require("./execute.js");
 const injectGraphQLArgs = require("./inject-graphql-args.js");
+const runtimeInjection = require("./runtime-injection.js");
 
 module.exports = {
     parseTypeDefs,
@@ -31,5 +32,6 @@ module.exports = {
     validateTypeDefs,
     createBroker,
     execute,
-    injectGraphQLArgs
+    injectGraphQLArgs,
+    runtimeInjection
 };

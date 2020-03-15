@@ -11,7 +11,7 @@ const { IdioEnum } = require("idio-graphql");
 
 ---
 
-You can use **IdioEnum** to modularize an **[`EnumTypeDefinition`](http://spec.graphql.org/June2018/#EnumTypeDefinition)**, together with its resolver. You can specify enums 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level. 
+You can use **IdioEnum** to modularize a **[`EnumTypeDefinition`](http://spec.graphql.org/June2018/#EnumTypeDefinition)**, together with its resolver. You can specify enums 'top-level' at **[combineNodes](combine-nodes)** or at an **[GraphQLNode](graphql-node)** level. 
 
 ## Example
 
@@ -51,7 +51,7 @@ const StatusEnum = new IdioEnum({
  */
 
 /**
- * You can use IdioEnum to modularize an EnumTypeDefinition, together with its resolver.
+ * You can use IdioEnum to modularize a EnumTypeDefinition, together with its resolver.
  *
  * You can specify enums 'top-level' at combineNodes or at an GraphQLNode level.
  *

@@ -9,11 +9,13 @@ const {
 const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
 
 /**
- * @typedef {import('../appliances/idio-enum.js')} IdioEnum
- * @typedef {import('../appliances/idio-interface.js')} IdioInterface
- * @typedef {import('../appliances/idio-union.js')} IdioUnion
+ * @typedef {import('../appliances/idio-enum.js').IdioEnum} IdioEnum
+ * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
+ * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
+ * @typedef {import('../appliances/graphql-type.js').GraphQLType} GraphQLType
  * @typedef {import('../../util/wrapped-resolver.js').ResolverUnion} ResolverUnion
  * @typedef {import('./methods/serve.js').Runtime} Runtime
+ * @typedef {import('../../util/execute.js').execute} execute
  */
 
 /**
@@ -25,7 +27,11 @@ const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
  */
 
 /**
- * @typedef {{dataLoaders: object, models: object}} injections
+ * @typedef {{
+ *      dataLoaders: object,
+ *      models: object,
+ *      execute: execute
+ * }} injections
  */
 
 /**
@@ -38,6 +44,7 @@ const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
  * @property {IdioEnum[]} enums
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
  */
 
@@ -51,10 +58,11 @@ const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
  * @property {IdioEnum[]} enums
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  */
 
 /**
- * You can use GraphQLNode to modularize an ObjectTypeDefinition together with its related resolvers & properties.
+ * You can use GraphQLNode to modularize a ObjectTypeDefinition together with its related resolvers & properties.
  *
  * @param {GraphQLNodeInput} config
  *
@@ -69,7 +77,8 @@ function GraphQLNode(config = {}) {
         injections,
         enums,
         interfaces,
-        unions
+        unions,
+        types
     } = config;
 
     const prefix = "constructing GraphQLNode";
@@ -82,6 +91,7 @@ function GraphQLNode(config = {}) {
     this.enums;
     this.interfaces;
     this.unions;
+    this.types;
     this.serve;
 
     if (!name) {
@@ -131,7 +141,7 @@ function GraphQLNode(config = {}) {
 
     this.resolvers = wrapResolvers(this);
 
-    Object.entries({ nodes, enums, interfaces, unions }).forEach(
+    Object.entries({ nodes, enums, interfaces, unions, types }).forEach(
         ([key, value]) => {
             if (value) {
                 this[key] = value;
@@ -143,7 +153,8 @@ function GraphQLNode(config = {}) {
         enums: this.enums,
         interfaces: this.interfaces,
         unions: this.unions,
-        nodes: this.nodes
+        nodes: this.nodes,
+        types: this.types
     }).forEach(([key, appliances]) => {
         if (appliances) {
             if (!Array.isArray(appliances)) {
@@ -156,7 +167,7 @@ function GraphQLNode(config = {}) {
                 ...APPLIANCE_METADATA,
                 {
                     _Constructor: GraphQLNode,
-                    kind: "ObjectTypeDefinition",
+                    kind: "ObjectTypeDefinition", // Currently there is a overlap between this & GraphQLType, this is applied here due to a circ module reference :/
                     singular: "node",
                     name: "nodes"
                 }

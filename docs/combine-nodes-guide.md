@@ -62,6 +62,7 @@ const { typeDefs, resolvers } = combineNodes(
         directives, 
         interfaces,
         unions,
+        types,
         schemaGlobals
     }
 );

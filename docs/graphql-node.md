@@ -11,7 +11,7 @@ const { GraphQLNode } = require("idio-graphql")
 
 ---
 
-You can use **GraphQLNode** to modularize an **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. 
+You can use **GraphQLNode** to modularize a **[`ObjectTypeDefinition`](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** together with its related resolvers & properties. 
 
 ## Example
 
@@ -33,7 +33,8 @@ const User = new GraphQLNode({
     injections: {},
     enums: [ IdioEnum ],
     interfaces: [ IdioInterface ],
-    unions: [ IdioUnion ]
+    unions: [ IdioUnion ],
+    types: [ GraphQLType ]
 });
 ```
 
@@ -51,10 +52,6 @@ const User = new GraphQLNode({
  */
 
 /**
- * @typedef {{dataLoaders: object, models: object}} injections
- */
-
-/**
  * @typedef GraphQLNode
  * @property {string} name
  * @property {string} typeDefs
@@ -64,6 +61,7 @@ const User = new GraphQLNode({
  * @property {IdioEnum[]} enums
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
  */
 
@@ -77,10 +75,11 @@ const User = new GraphQLNode({
  * @property {IdioEnum[]} enums
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  */
 
 /**
- * You can use GraphQLNode to modularize an ObjectTypeDefinition together with its related resolvers & properties.
+ * You can use GraphQLNode to modularize a ObjectTypeDefinition together with its related resolvers & properties.
  *
  * @param {GraphQLNodeInput} config
  *

@@ -12,8 +12,9 @@ title: Schema Appliances
 1. [**Enums**](#enums)
 2. [**Scalars**](#scalars)
 3. [**Directives**](#directives)
-3. [**Interfaces**](#interfaces)
-3. [**Unions**](#unions)
+4. [**Interfaces**](#interfaces)
+5. [**Unions**](#unions)
+6. [**Types**](#types)
 4. [**Schema Globals**](#schema-globals)
 
 ## Enums
@@ -202,7 +203,7 @@ const { typeDefs, resolvers } = combineNodes(
 );
 ```
 
-You can encapsulate **[IdioInterfaces](idio-interface)** in a [**GraphQLNode**](graphql-node).
+> You can encapsulate **[IdioInterfaces](idio-interface)** in a [**GraphQLNode**](graphql-node).
 
 ```javascript
 const User = new GraphQLNode({
@@ -268,7 +269,7 @@ const { typeDefs, resolvers } = combineNodes(
 );
 ```
 
-You can encapsulate **[IdioUnions](idio-union)** in a [**GraphQLNode**](graphql-node).
+> You can encapsulate **[IdioUnions](idio-union)** in a [**GraphQLNode**](graphql-node).
 
 ```javascript
 const User = new GraphQLNode({
@@ -283,6 +284,63 @@ const User = new GraphQLNode({
         ...
     `, 
     unions: [ UserUnion ],
+    ...
+});
+```
+
+## Types
+
+---
+
+You can use **[GraphQLType](graphql-type)** to apply **[Object Types](http://spec.graphql.org/June2018/#ObjectTypeDefinition)** to your GraphQL schema.
+
+```javascript
+const Metadata = new GraphQLType({
+    name: "Metadata",
+    typeDefs: `
+        type Metadata {
+            lastLogin: String
+        }
+    `,
+    resolvers: {
+        lastLogin: () => { ... }
+    }
+});
+
+
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            metadata: Metadata
+        }
+
+        type Query ...
+    `, 
+    ...
+});
+
+const { typeDefs, resolvers } = combineNodes(
+    [ User ], 
+    { 
+        types: [ Metadata ]
+    }
+);
+```
+
+> You can encapsulate **[GraphQLTypes](graphql-type)** in a [**GraphQLNode**](graphql-node).
+
+```javascript
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            metadata: Metadata
+        }
+
+        ...
+    `, 
+    types: [ Metadata ],
     ...
 });
 ```

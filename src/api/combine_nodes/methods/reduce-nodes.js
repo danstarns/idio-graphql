@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 const { loadNode } = require("../../graphql_node/methods/index.js");
-const { execute } = require("../../../util/index.js");
-const CONTEXT_INDEX = require("../../../constants/context-index.js");
+const { runtimeInjection } = require("../../../util/index.js");
 
 /**
  * @typedef {import('../../graphql_node/graphql-node.js').GraphQLNode} GraphQLNode
@@ -12,47 +11,6 @@ const CONTEXT_INDEX = require("../../../constants/context-index.js");
  *  @property {string[]} typeDefs
  *  @property {object} resolvers
  */
-
-function inject(methods, RUNTIME) {
-    return Object.entries(methods).reduce((result, [key, method]) => {
-        const createArgs = (graphQLArgs) => {
-            if (!graphQLArgs[CONTEXT_INDEX]) {
-                graphQLArgs[CONTEXT_INDEX] = {};
-            }
-
-            if (!graphQLArgs[CONTEXT_INDEX].injections) {
-                graphQLArgs[CONTEXT_INDEX].injections = {};
-            }
-
-            if (!(typeof graphQLArgs[CONTEXT_INDEX].injections === "object")) {
-                graphQLArgs[CONTEXT_INDEX].injections = {};
-            }
-
-            graphQLArgs[CONTEXT_INDEX].injections = {
-                ...graphQLArgs[CONTEXT_INDEX].injections,
-                execute: execute.withSchema(RUNTIME.schema)
-            };
-
-            return graphQLArgs;
-        };
-
-        return {
-            ...result,
-            ...(method.subscribe
-                ? {
-                    [key]: {
-                        ...method,
-                        subscribe: (...graphQLArgs) =>
-                            method.subscribe(...createArgs(graphQLArgs))
-                    }
-                }
-                : {
-                    [key]: (...graphQLArgs) =>
-                        method(...createArgs(graphQLArgs))
-                })
-        };
-    }, {});
-}
 
 /**
  *
@@ -75,15 +33,15 @@ function reduceNode(r, node, RUNTIME) {
                         ? {
                             [key]: {
                                 ...result.resolvers[key],
-                                ...inject(methods, RUNTIME)
+                                ...runtimeInjection(methods, RUNTIME)
                             }
                         }
-                        : { [key]: inject(methods, RUNTIME) })
+                        : { [key]: runtimeInjection(methods, RUNTIME) })
                 }),
                 {}
             ),
         ...(node.resolvers.Fields
-            ? { [node.name]: inject(node.resolvers.Fields, RUNTIME) }
+            ? { [node.name]: runtimeInjection(node.resolvers.Fields, RUNTIME) }
             : {})
     };
 

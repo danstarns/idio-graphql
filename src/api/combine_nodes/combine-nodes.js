@@ -53,7 +53,7 @@ function combineNodes(nodes, appliances = {}) {
 
     const reducedNodes = reduceNodes(nodes, RUNTIME);
 
-    const reducedAppliances = reduceAppliances(appliances);
+    const reducedAppliances = reduceAppliances(appliances, RUNTIME);
 
     RUNTIME.typeDefs = printWithComments(
         mergeTypeDefs([...reducedNodes.typeDefs, ...reducedAppliances.typeDefs])

@@ -19,12 +19,19 @@ function IdioInterface({ name, typeDefs, resolver }) {
     this.resolver = resolver;
 }
 
+function GraphQLType({ name, typeDefs, resolvers }) {
+    this.name = name;
+    this.typeDefs = typeDefs;
+    this.resolvers = resolvers;
+}
+
 const createLocalAppliance = proxyquire(
     "../../../../src/api/appliances/methods/create-local-appliance.js",
     {
         "../idio-enum.js": IdioEnum,
         "../idio-union.js": IdioUnion,
-        "../idio-interface.js": IdioInterface
+        "../idio-interface.js": IdioInterface,
+        "../graphql-type.js": GraphQLType
     }
 );
 
@@ -203,5 +210,91 @@ describe("createLocalAppliance", () => {
         expect(await result.resolver.__resolveType())
             .to.be.a("object")
             .to.have.property("test");
+    });
+
+    it("should create a local type", () => {
+        const result = createLocalAppliance({
+            type: "types",
+            broker: { call: () => ({ test: true }) },
+            serviceManagers: {
+                type: { User: { getNextService: () => true } }
+            }
+        })({
+            name: "User",
+            typeDefs: `
+                type User {
+                    name: String
+                }
+            `,
+            resolvers: ["name"]
+        });
+
+        expect(result).to.be.a.instanceOf(GraphQLType);
+    });
+
+    it("should create a local type and catch an error when not service is found", async () => {
+        try {
+            const result = createLocalAppliance({
+                type: "types",
+                broker: {
+                    call: () => true
+                },
+                serviceManagers: {
+                    type: { User: { getNextService: () => false } }
+                }
+            })({
+                name: "User",
+                typeDefs: `
+                    type User {
+                        name: String
+                    }
+                `,
+                resolvers: ["name"]
+            });
+
+            expect(result).to.be.a.instanceOf(GraphQLType);
+
+            await result.resolvers.name();
+
+            throw new Error();
+        } catch ({ message }) {
+            expect(message)
+                .to.be.a("string")
+                .to.contain("No service with name: 'User' online");
+        }
+    });
+
+    it("should create a local type and catch an error when it fails", async () => {
+        try {
+            const result = createLocalAppliance({
+                type: "types",
+                broker: {
+                    call: () => {
+                        throw new Error("test");
+                    }
+                },
+                serviceManagers: {
+                    type: { User: { getNextService: () => true } }
+                }
+            })({
+                name: "User",
+                typeDefs: `
+                    type User {
+                        name: String
+                    }
+                `,
+                resolvers: ["name"]
+            });
+
+            expect(result).to.be.a.instanceOf(GraphQLType);
+
+            await result.resolvers.name();
+
+            throw new Error();
+        } catch ({ message }) {
+            expect(message)
+                .to.be.a("string")
+                .to.contain("failed, test");
+        }
     });
 });
