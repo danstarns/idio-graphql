@@ -62,7 +62,7 @@ const APPLIANCE_METADATA = require("../../constants/appliance-metadata.js");
  */
 
 /**
- * You can use GraphQLNode to modularize an ObjectTypeDefinition together with its related resolvers & properties.
+ * You can use GraphQLNode to modularize a ObjectTypeDefinition together with its related resolvers & properties.
  *
  * @param {GraphQLNodeInput} config
  *
