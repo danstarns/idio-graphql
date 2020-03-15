@@ -9,7 +9,8 @@
       "idio-scalar",
       "idio-directive",
       "idio-interface",
-      "idio-union"
+      "idio-union",
+      "graphql-type"
     ],
     "Guides": [
       "getting-started",

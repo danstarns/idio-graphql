@@ -9,9 +9,13 @@ title: Resolver Hooks
 
 Sometimes you might need to run function(s), `pre` or `post` your resolver. You could use **[Schema Directives](schema-appliances#directives)** with **[IdioDirectives](idio-directive)**. Resolver hooks allow you to achieve similar heights.
 
-> Hooks are available on any **[GraphQLNode](graphql-node)** resolver  **exempt from Subscriptions**.
+> Hooks are available on any **[GraphQLNode](graphql-node)** or **[GraphQLType](graphql-type)**  resolver  **exempt from Subscriptions**.
 
-```javascript
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!--GraphQLNode-->
+```js
 new GraphQLNode({
     name: "User",
     typeDefs: gql`
@@ -34,6 +38,27 @@ new GraphQLNode({
     }
 })
 ```
+<!--GraphQLType-->
+```js
+new GraphQLType({
+    name: "Metadata",
+    typeDefs: gql`
+        type Metadata {
+            lastLogin: String
+        }
+    `,
+    resolvers: {
+        lastLogin: {
+            pre: isRequestAdmin,
+            resolve: () => { ... },
+            post: updateAudit
+        }
+    }
+})
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 
 ## Multiple hooks
 

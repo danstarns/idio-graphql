@@ -11,3 +11,4 @@ title: Index
 6. **[IdioDirective](idio-directive)**
 7. **[IdioInterface](idio-interface)**
 8. **[IdioUnion](idio-union)**
+8. **[GraphQLType](graphql-type)**

@@ -309,6 +309,7 @@ const gateway = new GraphQLGateway(
             directives, 
             interfaces,
             unions,
+            types,
             schemaGlobals
         }
     },
