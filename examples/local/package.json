@@ -2,8 +2,7 @@
     "name": "local",
     "description": "This project showcase's the most basic local setup with idio-graphql.",
     "dependencies": {
-        "apollo-server": "^2.10.1",
-        "idio-graphql": "file:../.."
+        "apollo-server": "^2.10.1"
     },
     "scripts": {
         "start": "node ./index.js"
