@@ -37,7 +37,7 @@ const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
  */
 
 /**
- * You can use GraphQLType to modularize an ObjectTypeDefinition, together with its Field resolvers.
+ * You can use GraphQLType to modularize a ObjectTypeDefinition, together with its Field resolvers.
  *
  * You can specify types 'top-level' at combineNodes or at an GraphQLNode level.
  *
