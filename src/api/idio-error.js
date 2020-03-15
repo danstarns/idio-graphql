@@ -8,9 +8,6 @@ class IdioError extends Error {
         this.message = `${message}`;
         this.error = message;
         this.code = code;
-        this.readme =
-            "https://github.com/danstarns/idio-graphql/blob/master/README.md";
-        this.chat = "https://spectrum.chat/idio-graphql";
     }
 }
 
