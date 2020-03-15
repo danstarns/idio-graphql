@@ -10,5 +10,6 @@ module.exports = {
     IdioEnum: require("./api/appliances/idio-enum.js"),
     IdioInterface: require("./api/appliances/idio-interface.js"),
     IdioScalar: require("./api/appliances/idio-scalar.js"),
-    IdioUnion: require("./api/appliances/idio-union.js")
+    IdioUnion: require("./api/appliances/idio-union.js"),
+    GraphQLType: require("./api/appliances/graphql-type.js")
 };

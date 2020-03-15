@@ -1,6 +1,6 @@
-const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 const { checkInstance } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
+const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 
 /**
  * @typedef {import('../combine-nodes.js').appliances} appliances

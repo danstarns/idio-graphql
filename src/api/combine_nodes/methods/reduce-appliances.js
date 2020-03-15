@@ -1,5 +1,6 @@
-const { loadAppliances } = require("../../appliances/methods/index.js");
+const loadAppliances = require("../../appliances/methods/load-appliances.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata");
+const { runtimeInjection } = require("../../../util/index.js");
 
 /**
  * @typedef result
@@ -13,7 +14,7 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata");
 /**
  * @param {import('../combine-nodes.js').appliances} _appliances
  */
-function reduceAppliances(_appliances) {
+function reduceAppliances(_appliances, RUNTIME) {
     return Object.entries(_appliances).reduce(
         (/** @type {result} */ result, [key, appliances]) => {
             if (!appliances.length && key !== "schemaGlobals") {
@@ -26,10 +27,20 @@ function reduceAppliances(_appliances) {
                 return result;
             }
 
-            const { typeDefs, resolvers = {} } = loadAppliances(
+            let { typeDefs, resolvers = {} } = loadAppliances(
                 appliances,
                 metadata
             );
+
+            if (key === "types") {
+                resolvers = Object.entries(resolvers).reduce(
+                    (res, [name, methods]) => ({
+                        ...res,
+                        [name]: runtimeInjection(methods, RUNTIME)
+                    }),
+                    {}
+                );
+            }
 
             result.typeDefs = [...result.typeDefs, typeDefs].filter(Boolean);
 

@@ -1,4 +1,4 @@
-const { createLocalAppliance } = require("../../appliances/methods/index.js");
+const createLocalAppliance = require("../../appliances/methods/create-local-appliance.js");
 
 /**
  * @typedef {import('./start.js').Runtime} Runtime

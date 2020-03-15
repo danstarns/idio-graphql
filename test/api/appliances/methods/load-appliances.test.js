@@ -60,6 +60,40 @@ describe("loadAppliances", () => {
         expect(resolvers.Test()).to.eql({ test: true });
     });
 
+    it("should load a type", () => {
+        const { typeDefs, resolvers } = loadAppliances(
+            [
+                {
+                    name: "Test",
+                    typeDefs: `
+                        type Test {
+                            test: Boolean
+                        }
+                    `,
+                    resolvers: {
+                        test: () => true
+                    }
+                }
+            ],
+            {
+                name: "types"
+            }
+        );
+
+        expect(typeDefs)
+            .to.be.a("string")
+            .to.contain("type Test");
+
+        expect(resolvers)
+            .to.be.a("object")
+            .to.have.property("Test")
+            .to.be.a("object")
+            .to.have.property("test")
+            .to.be.a("function");
+
+        expect(resolvers.Test.test()).to.eql(true);
+    });
+
     it("should load 2 scalars", () => {
         const { typeDefs, resolvers } = loadAppliances(
             [

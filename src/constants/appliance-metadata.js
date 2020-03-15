@@ -3,7 +3,8 @@ const {
     IdioEnum,
     IdioDirective,
     IdioUnion,
-    IdioInterface
+    IdioInterface,
+    GraphQLType
 } = require("../api/appliances/index.js");
 
 /**
@@ -12,11 +13,12 @@ const {
  * @typedef {import('../api/appliances/index.js').IdioDirective} IdioDirective
  * @typedef {import('../api/appliances/index.js').IdioUnion} IdioUnion
  * @typedef {import('../api/appliances/index.js').IdioInterface} IdioInterface
+ * @typedef {import('../api/appliances/index.js').GraphQLType} GraphQLType
  */
 
 /**
  * @typedef Metadata
- * @property {(IdioScalar | IdioEnum | IdioDirective | IdioUnion | IdioInterface)} _Constructor
+ * @property {(IdioScalar | IdioEnum | IdioDirective | IdioUnion | IdioInterface | GraphQLType)} _Constructor
  * @property {string} kind
  * @property {string} singular
  * @property {string} name
@@ -57,6 +59,12 @@ const APPLIANCE_METADATA = [
         kind: "InterfaceTypeDefinition",
         singular: "interface",
         name: "interfaces"
+    },
+    {
+        _Constructor: GraphQLType,
+        kind: "ObjectTypeDefinition", // Currently there is a overlap between this & GraphQLNode
+        singular: "type",
+        name: "types"
     }
 ];
 

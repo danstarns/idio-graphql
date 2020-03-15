@@ -37,12 +37,14 @@ module.exports = (metadata) => {
                 name: this.name,
                 typeDefs: this.typeDefs,
                 resolver: this.resolver,
-                __resolveType: this.__resolveType
+                __resolveType: this.__resolveType,
+                resolvers: this.resolvers
             },
             introspection: {
                 name: this.name,
                 typeDefs: this.typeDefs,
-                resolver: `${broker.options.nodeID}.resolver`
+                resolver: `${broker.options.nodeID}.resolver`,
+                resolvers: Object.keys(this.resolvers || {})
             }
         };
 
@@ -71,7 +73,21 @@ module.exports = (metadata) => {
                         },
                         RUNTIME
                     )(ctx);
-                }
+                },
+                ...Object.entries(this.resolvers || {}).reduce(
+                    (result, [key, method]) => ({
+                        ...result,
+                        [key]: (ctx) =>
+                            createAction(
+                                {
+                                    method,
+                                    contextIndex: CONTEXT_INDEX
+                                },
+                                RUNTIME
+                            )(ctx)
+                    }),
+                    {}
+                )
             }
         });
 

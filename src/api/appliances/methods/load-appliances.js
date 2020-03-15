@@ -40,7 +40,8 @@ function loadAppliances(appliances, metadata) {
             typeDefs: [...result.typeDefs, appliance.typeDefs],
             resolvers: {
                 ...result.resolvers,
-                [appliance.name]: appliance.resolver
+                [appliance.name]:
+                    name === "types" ? appliance.resolvers : appliance.resolver
             }
         }),
         { typeDefs: [], resolvers: {} }

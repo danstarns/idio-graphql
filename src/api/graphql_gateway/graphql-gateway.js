@@ -10,6 +10,7 @@ const { createBroker } = require("../../util/index.js");
  * @typedef {import('../appliances/idio-directive.js').IdioDirective} IdioDirective
  * @typedef {import('../appliances/idio-interface.js').IdioInterface} IdioInterface
  * @typedef {import('../appliances/idio-union.js').IdioUnion} IdioUnion
+ * @typedef {import('../appliances/graphql-type.js').GraphQLType} GraphQLType
  * @typedef {import('./methods/start.js').Runtime} Runtime
  * @typedef {import('graphql').DocumentNode} DocumentNode
  */
@@ -20,6 +21,7 @@ const { createBroker } = require("../../util/index.js");
  * @property {string[]} enums
  * @property {string[]} interfaces
  * @property {string[]} unions
+ * @property {string[]} types
  */
 
 /**
@@ -30,6 +32,7 @@ const { createBroker } = require("../../util/index.js");
  * @property {IdioDirective[]} directives
  * @property {IdioInterface[]} interfaces
  * @property {IdioUnion[]} unions
+ * @property {GraphQLType[]} types
  * @property {(string | DocumentNode | string[] | DocumentNode[])} schemaGlobals
  */
 

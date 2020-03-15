@@ -1,5 +1,5 @@
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
-const { loadAppliances } = require("../../appliances/methods/index.js");
+const loadAppliances = require("../../appliances/methods/load-appliances.js");
 
 /**
  * @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode
@@ -23,7 +23,8 @@ function loadNode(node) {
     const appliances = Object.entries({
         enums: node.enums,
         interfaces: node.interfaces,
-        unions: node.unions
+        unions: node.unions,
+        types: node.types
     })
         .filter(([, value]) => Boolean(value))
         .reduce(

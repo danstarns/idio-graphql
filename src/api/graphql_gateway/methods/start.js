@@ -13,7 +13,6 @@ const compareGateways = require("./compare-gateways.js");
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
  * @typedef {import('../graphql-gateway.js').GraphQLGatewayConfig} GraphQLGatewayConfig
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
- * @typedef {import('../../../util/execute.js').execute} execute
  */
 
 /**
@@ -22,6 +21,7 @@ const compareGateways = require("./compare-gateways.js");
  * @property {GraphQLGatewayConfig["locals"]["enums"]} enums
  * @property {GraphQLGatewayConfig["locals"]["interfaces"]} interfaces
  * @property {GraphQLGatewayConfig["locals"]["unions"]} unions
+ * @property {GraphQLGatewayConfig["locals"]["types"]} types
  */
 
 /**
@@ -39,7 +39,6 @@ const compareGateways = require("./compare-gateways.js");
  * @property {object} schemaDirectives
  * @property {ServiceBroker} broker
  * @property {GraphQLSchema} schema
- * @property {execute} execute
  */
 
 /**
@@ -59,26 +58,28 @@ module.exports = ({ config, broker } = {}) => {
                 nodes: [],
                 enums: [],
                 interfaces: [],
-                unions: []
+                unions: [],
+                types: []
             },
             waitingServices: {
                 nodes: [...(config.services.nodes || [])],
                 enums: [...(config.services.enums || [])],
                 interfaces: [...(config.services.interfaces || [])],
-                unions: [...(config.services.unions || [])]
+                unions: [...(config.services.unions || [])],
+                types: [...(config.services.types || [])]
             },
             serviceManagers: {
                 node: {},
                 enum: {},
                 interface: {},
-                union: {}
+                union: {},
+                types: {}
             },
             typeDefs: "",
             resolvers: {},
             schemaDirectives: {},
             broker,
-            schema: {},
-            execute: () => false
+            schema: {}
         };
 
         createGatewayService(RUNTIME);
