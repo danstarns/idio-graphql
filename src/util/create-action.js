@@ -16,28 +16,26 @@ module.exports = ({ method, contextIndex }, RUNTIME) => {
     return async function createAction(/** @type {Context} */ ctx) {
         const { params: { graphQLArgs = JSON.stringify([]) } = {} } = ctx;
 
-        const decodedArgs = JSON.parse(graphQLArgs);
+        const args = JSON.parse(graphQLArgs);
 
-        if (!decodedArgs[contextIndex]) {
-            decodedArgs[contextIndex] = {};
+        if (!args[contextIndex]) {
+            args[contextIndex] = {};
         }
 
-        if (!decodedArgs[contextIndex].injections) {
-            decodedArgs[contextIndex].injections = {};
+        if (!args[contextIndex].injections) {
+            args[contextIndex].injections = {};
         }
 
-        decodedArgs[contextIndex].injections.broker = broker;
+        args[contextIndex].injections.broker = broker;
 
-        decodedArgs[contextIndex].injections.execute = execute.withBroker(
-            RUNTIME
-        );
+        args[contextIndex].injections.execute = execute.withBroker(RUNTIME);
 
         let result;
 
         if (method.subscribe) {
-            result = iteratorToStream(method.subscribe(...decodedArgs));
+            result = iteratorToStream(method.subscribe(...args));
         } else {
-            result = await method(...decodedArgs);
+            result = await method(...args);
         }
 
         return result;
