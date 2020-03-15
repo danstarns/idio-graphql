@@ -33,7 +33,8 @@ const User = new GraphQLNode({
     injections: {},
     enums: [ IdioEnum ],
     interfaces: [ IdioInterface ],
-    unions: [ IdioUnion ]
+    unions: [ IdioUnion ],
+    types: [ GraphQLType ]
 });
 ```
 
