@@ -4,8 +4,7 @@ title: Getting Started
 ---
 [![CircleCI](https://circleci.com/gh/danstarns/idio-graphql/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/danstarns/idio-graphql?branch=master) 
 
-Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files & or communication channels. 
-
+Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels. 
 
 ```shell
 $ npm install idio-graphql
