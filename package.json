@@ -64,7 +64,7 @@
     "moleculer": "^0.14.4"
   },
   "dependencies": {
-    "@babel/runtime": "^7.8.7",
+    "@babel/runtime": "^7.9.0",
     "@graphql-toolkit/schema-merging": "^0.9.9",
     "core-js": "^3.6.4",
     "graphql": "^14.6.0",
