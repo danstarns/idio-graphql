@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-require("core-js/stable");
+require("core-js");
 require("regenerator-runtime/runtime");
 
 module.exports = {
