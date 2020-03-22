@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.",
   "main": "./dist",
   "scripts": {
@@ -30,7 +30,7 @@
     "modular"
   ],
   "engines": {
-    "node": ">=8.16.0"
+    "node": ">=10.0.0"
   },
   "repository": "github:danstarns/idio-graphql",
   "homepage": "https://danstarns.github.io/idio-graphql/",
