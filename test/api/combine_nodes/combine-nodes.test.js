@@ -88,17 +88,11 @@ describe("combineNodes", () => {
 
         const { typeDefs, resolvers, schema } = combineNodes([UserNode]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Mutation");
+        expect(typeDefs).to.be.a("string").to.contain("type Mutation");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -147,21 +141,13 @@ describe("combineNodes", () => {
 
         const { typeDefs, resolvers, schema } = combineNodes([UserNode]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("enum Status");
+        expect(typeDefs).to.be.a("string").to.contain("enum Status");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -429,21 +415,13 @@ describe("combineNodes", () => {
 
         const { typeDefs, resolvers, schema } = combineNodes([UserNode]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Nested");
+        expect(typeDefs).to.be.a("string").to.contain("type Nested");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -570,17 +548,11 @@ describe("combineNodes", () => {
             enums: [StatusEnum]
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("enum Status");
+        expect(typeDefs).to.be.a("string").to.contain("enum Status");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -683,17 +655,11 @@ describe("combineNodes", () => {
             scalars: [JSONScalar]
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("scalar JSON");
+        expect(typeDefs).to.be.a("string").to.contain("scalar JSON");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -826,17 +792,13 @@ describe("combineNodes", () => {
             }
         );
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
         expect(typeDefs)
             .to.be.a("string")
             .to.contain("directive @hasPermission");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -883,17 +845,11 @@ describe("combineNodes", () => {
             ]
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Address");
+        expect(typeDefs).to.be.a("string").to.contain("type Address");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -936,17 +892,11 @@ describe("combineNodes", () => {
             `
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Address");
+        expect(typeDefs).to.be.a("string").to.contain("type Address");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 
@@ -992,17 +942,11 @@ describe("combineNodes", () => {
             }
         );
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Address");
+        expect(typeDefs).to.be.a("string").to.contain("type Address");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(schema).to.be.a.instanceOf(GraphQLSchema);
 

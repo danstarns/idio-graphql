@@ -159,9 +159,7 @@ describe("GraphQLNode ", () => {
             .to.be.a("string")
             .to.contain("User");
 
-        expect(node)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(node).to.have.property("typeDefs").to.be.a("string");
 
         expect(node)
             .to.have.property("resolvers")
@@ -259,18 +257,14 @@ describe("GraphQLNode ", () => {
             .to.be.a("string")
             .to.contain("User");
 
-        expect(node)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(node).to.have.property("typeDefs").to.be.a("string");
 
         expect(node)
             .to.have.property("resolvers")
             .to.be.a("object")
             .to.have.property("Query");
 
-        expect(node)
-            .to.have.property("enums")
-            .to.be.a("array");
+        expect(node).to.have.property("enums").to.be.a("array");
 
         node.enums.forEach((_enum) => {
             expect(_enum).to.be.a.instanceOf(IdioEnum);
@@ -374,18 +368,14 @@ describe("GraphQLNode ", () => {
             .to.be.a("string")
             .to.contain("User");
 
-        expect(node)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(node).to.have.property("typeDefs").to.be.a("string");
 
         expect(node)
             .to.have.property("resolvers")
             .to.be.a("object")
             .to.have.property("Query");
 
-        expect(node)
-            .to.have.property("nodes")
-            .to.be.a("array");
+        expect(node).to.have.property("nodes").to.be.a("array");
 
         node.nodes.forEach((_node) => {
             expect(_node).to.be.a.instanceOf(GraphQLNode);

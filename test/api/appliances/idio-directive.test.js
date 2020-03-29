@@ -103,13 +103,9 @@ describe("IdioDirective", () => {
             .to.be.a("string")
             .to.contain("hasPermission");
 
-        expect(directive)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(directive).to.have.property("typeDefs").to.be.a("string");
 
-        expect(directive)
-            .to.have.property("resolver")
-            .to.be.a("function");
+        expect(directive).to.have.property("resolver").to.be.a("function");
     });
 
     it("should throw constructing IdioDirective with invalid name", () => {

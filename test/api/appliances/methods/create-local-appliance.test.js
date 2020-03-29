@@ -55,9 +55,7 @@ describe("createLocalAppliance", () => {
             });
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("invalid type");
+            expect(message).to.be.a("string").to.contain("invalid type");
         }
     });
 
@@ -81,9 +79,7 @@ describe("createLocalAppliance", () => {
 
         expect(result.resolver()).to.eql({ test: true });
 
-        expect(result.typeDefs)
-            .to.a("string")
-            .to.contain("enum Test");
+        expect(result.typeDefs).to.a("string").to.contain("enum Test");
     });
 
     it("should create a local union", () => {
@@ -129,9 +125,7 @@ describe("createLocalAppliance", () => {
 
         expect(result.resolver.__resolveType).to.a("function");
 
-        expect(result.typeDefs)
-            .to.a("string")
-            .to.contain("interface ABC");
+        expect(result.typeDefs).to.a("string").to.contain("interface ABC");
     });
 
     it("should create a local interface & throw no service online", async () => {
@@ -292,9 +286,7 @@ describe("createLocalAppliance", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("failed, test");
+            expect(message).to.be.a("string").to.contain("failed, test");
         }
     });
 });

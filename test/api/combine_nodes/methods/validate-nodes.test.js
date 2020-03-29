@@ -19,9 +19,7 @@ describe("validateNodes", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("nodes required");
+            expect(message).to.be.a("string").to.contain("nodes required");
         }
     });
 

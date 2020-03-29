@@ -94,13 +94,9 @@ describe("IdioEnum", () => {
             resolver: {}
         });
 
-        expect(_enum)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(_enum).to.have.property("typeDefs").to.be.a("string");
 
-        expect(_enum)
-            .to.have.property("name")
-            .to.contain("Test");
+        expect(_enum).to.have.property("name").to.contain("Test");
 
         expect(_enum).to.have.property("resolver");
     });

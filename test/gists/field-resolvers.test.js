@@ -50,21 +50,13 @@ describe("gists/field-resolvers", () => {
 
         const { typeDefs, resolvers } = combineNodes([User, Post]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Post");
+        expect(typeDefs).to.be.a("string").to.contain("type Post");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers).to.be.a("object");
 
