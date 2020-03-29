@@ -37,7 +37,7 @@ function start({ config, broker }) {
         throw new Error("nodeID not equal");
     }
 
-    return () => { };
+    return () => {};
 }
 
 function createBroker({ name }, { brokerOptions: { gateway } }) {
@@ -74,8 +74,6 @@ describe("GraphQLGateway", () => {
             .to.have.property("nodeID")
             .to.equal(nodeID);
 
-        expect(gateway)
-            .to.have.property("start")
-            .to.be.a("function");
+        expect(gateway).to.have.property("start").to.be.a("function");
     });
 });

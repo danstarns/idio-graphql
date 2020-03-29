@@ -136,7 +136,7 @@ describe("createLocalNode", () => {
             },
             GraphQLNode,
             broker: {
-                call: () => { }
+                call: () => {}
             }
         };
 

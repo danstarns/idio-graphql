@@ -112,17 +112,11 @@ describe("serve", () => {
 
         const { name, typeDefs, resolvers, hash } = introspection;
 
-        expect(name)
-            .to.be.a("string")
-            .to.equal(node.name);
+        expect(name).to.be.a("string").to.equal(node.name);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.equal(node.typeDefs);
+        expect(typeDefs).to.be.a("string").to.equal(node.typeDefs);
 
-        expect(hash)
-            .to.be.a("string")
-            .to.equal(node.typeDefs);
+        expect(hash).to.be.a("string").to.equal(node.typeDefs);
 
         expect(resolvers)
             .to.be.a("object")

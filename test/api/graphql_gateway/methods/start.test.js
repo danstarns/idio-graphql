@@ -152,9 +152,7 @@ describe("start", () => {
             .to.have.property("test")
             .to.equal(true);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("testing");
+        expect(typeDefs).to.be.a("string").to.contain("testing");
     });
 
     it("should start a gateway", async () => {
@@ -210,9 +208,7 @@ describe("start", () => {
             .to.have.property("test")
             .to.equal(true);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("testing");
+        expect(typeDefs).to.be.a("string").to.contain("testing");
 
         expect(execute).to.be.a("function");
     });

@@ -142,9 +142,7 @@ describe("introspectionCall", () => {
                 call
             } = broker;
 
-            expect(nodeID)
-                .to.be.a("string")
-                .to.equal("gateway:gateway:uuid");
+            expect(nodeID).to.be.a("string").to.equal("gateway:gateway:uuid");
 
             expect(call).to.be.a("function");
         }
@@ -255,9 +253,7 @@ describe("introspectionCall", () => {
                 call
             } = broker;
 
-            expect(nodeID)
-                .to.be.a("string")
-                .to.equal("gateway:gateway:uuid");
+            expect(nodeID).to.be.a("string").to.equal("gateway:gateway:uuid");
 
             expect(call).to.be.a("function");
         }
@@ -382,9 +378,7 @@ describe("introspectionCall", () => {
                 call
             } = broker;
 
-            expect(nodeID)
-                .to.be.a("string")
-                .to.equal("gateway:gateway:uuid");
+            expect(nodeID).to.be.a("string").to.equal("gateway:gateway:uuid");
 
             expect(call).to.be.a("function");
         }

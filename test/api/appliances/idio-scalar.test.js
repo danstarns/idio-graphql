@@ -45,13 +45,9 @@ describe("IdioScalar", () => {
     it("should create and return a instance of IdioScalar", () => {
         const scalar = new IdioScalar({ name: "test", resolver: GraphQLJSON });
 
-        expect(scalar)
-            .to.have.property("name")
-            .to.contain("test");
+        expect(scalar).to.have.property("name").to.contain("test");
 
-        expect(scalar)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(scalar).to.have.property("typeDefs").to.be.a("string");
 
         expect(scalar)
             .to.have.property("resolver")

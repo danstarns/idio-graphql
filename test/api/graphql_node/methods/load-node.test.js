@@ -35,17 +35,11 @@ describe("loadNode", () => {
 
         const { typeDefs, resolvers } = loaded;
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("enum Status");
+        expect(typeDefs).to.be.a("string").to.contain("enum Status");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
         expect(resolvers).to.be.a("object");
 

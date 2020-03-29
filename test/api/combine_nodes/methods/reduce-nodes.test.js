@@ -76,9 +76,7 @@ describe("reduceNodes", () => {
 
         const tested = result.resolvers.Query.user();
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
     });
 
     it("should reduce a node with fields and add existing injections", () => {
@@ -159,13 +157,9 @@ describe("reduceNodes", () => {
         const tested = result.resolvers.Query.user();
         const tested2 = result.resolvers.User.name(...testArgs);
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
 
-        expect(tested2)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested2).to.be.a("object").to.have.property("test");
     });
 
     it("should reduce a node with subscriptions", () => {
@@ -225,9 +219,7 @@ describe("reduceNodes", () => {
             ...testArgs
         );
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
     });
 
     it("should reduce a node and turn injections into empty object if not there", () => {
@@ -285,9 +277,7 @@ describe("reduceNodes", () => {
             ...testArgs
         );
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
     });
 
     it("should reduce a node and turn injections into empty object if not a object", () => {
@@ -347,9 +337,7 @@ describe("reduceNodes", () => {
             ...testArgs
         );
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
     });
 
     it("should reduce a node nested nodes", () => {
@@ -486,13 +474,9 @@ describe("reduceNodes", () => {
         const tested = result.resolvers.Query.user();
         const tested2 = result.resolvers.Post.title(...testArgs);
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
 
-        expect(tested2)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested2).to.be.a("object").to.have.property("test");
     });
 
     it("should reduce multiple nodes", () => {
@@ -623,12 +607,8 @@ describe("reduceNodes", () => {
         const tested = result.resolvers.Query.user();
         const tested2 = result.resolvers.Post.title(...testArgs);
 
-        expect(tested)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested).to.be.a("object").to.have.property("test");
 
-        expect(tested2)
-            .to.be.a("object")
-            .to.have.property("test");
+        expect(tested2).to.be.a("object").to.have.property("test");
     });
 });

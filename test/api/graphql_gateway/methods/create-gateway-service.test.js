@@ -405,10 +405,7 @@ describe("createGatewayService", () => {
 
         const [arg] = result.args;
 
-        expect(arg)
-            .to.be.a("object")
-            .to.have.property("args")
-            .to.equal(true);
+        expect(arg).to.be.a("object").to.have.property("args").to.equal(true);
     });
 
     it("should create gateway services and call introspection", async () => {

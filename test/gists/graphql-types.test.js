@@ -46,25 +46,17 @@ describe("gists/GraphQLTypes", () => {
 
         const { typeDefs, resolvers } = combineNodes([User]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Metadata");
+        expect(typeDefs).to.be.a("string").to.contain("type Metadata");
 
         const user = await resolvers.Query.user();
 
         const { name, age } = user;
 
-        expect(name)
-            .to.be.a("string")
-            .to.contain("Daniel");
+        expect(name).to.be.a("string").to.contain("Daniel");
 
-        expect(age)
-            .to.be.a("number")
-            .to.equal(20);
+        expect(age).to.be.a("number").to.equal(20);
 
         const lastLogin = await resolvers.Metadata.lastLogin();
 
