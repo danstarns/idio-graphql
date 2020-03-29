@@ -93,9 +93,7 @@ describe("serveAppliance", () => {
                 options: { nodeID }
             } = broker;
 
-            expect(nodeID)
-                .to.be.a("string")
-                .to.contain("Name:gateway:uuid");
+            expect(nodeID).to.be.a("string").to.contain("Name:gateway:uuid");
         }
 
         {
@@ -105,13 +103,9 @@ describe("serveAppliance", () => {
 
             const { name, typeDefs, resolver } = introspection;
 
-            expect(name)
-                .to.be.a("string")
-                .to.contain("Status");
+            expect(name).to.be.a("string").to.contain("Status");
 
-            expect(typeDefs)
-                .to.be.a("string")
-                .to.contain(`enum Status`);
+            expect(typeDefs).to.be.a("string").to.contain(`enum Status`);
 
             expect(resolver)
                 .to.be.a("string")
@@ -196,9 +190,7 @@ describe("serveAppliance", () => {
                 options: { nodeID }
             } = broker;
 
-            expect(nodeID)
-                .to.be.a("string")
-                .to.contain("Name:gateway:uuid");
+            expect(nodeID).to.be.a("string").to.contain("Name:gateway:uuid");
         }
 
         {
@@ -208,13 +200,9 @@ describe("serveAppliance", () => {
 
             const { name, typeDefs, resolver } = introspection;
 
-            expect(name)
-                .to.be.a("string")
-                .to.contain("Status");
+            expect(name).to.be.a("string").to.contain("Status");
 
-            expect(typeDefs)
-                .to.be.a("string")
-                .to.contain(`interface Status`);
+            expect(typeDefs).to.be.a("string").to.contain(`interface Status`);
 
             expect(resolver)
                 .to.be.a("string")
@@ -296,9 +284,7 @@ describe("serveAppliance", () => {
                 options: { nodeID }
             } = broker;
 
-            expect(nodeID)
-                .to.be.a("string")
-                .to.contain("Name:gateway:uuid");
+            expect(nodeID).to.be.a("string").to.contain("Name:gateway:uuid");
         }
 
         {
@@ -308,21 +294,15 @@ describe("serveAppliance", () => {
 
             const { name, typeDefs, resolvers } = introspection;
 
-            expect(name)
-                .to.be.a("string")
-                .to.contain("User");
+            expect(name).to.be.a("string").to.contain("User");
 
-            expect(typeDefs)
-                .to.be.a("string")
-                .to.contain(`type User`);
+            expect(typeDefs).to.be.a("string").to.contain(`type User`);
 
             expect(resolvers).to.be.a("array");
 
             const [feet] = resolvers;
 
-            expect(feet)
-                .to.be.a("string")
-                .to.contain("feet");
+            expect(feet).to.be.a("string").to.contain("feet");
         }
 
         expect(result.initialized).to.equal(true);

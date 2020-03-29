@@ -14,7 +14,9 @@
             {
                 "tabWidth": 4,
                 "arrowParens": "always",
-                "singleQuote": false
+                "singleQuote": false,
+                "endOfLine": "auto",
+                "trailingComma": "none"
             }
         ],
         "no-console": 0,
@@ -24,7 +26,11 @@
         "no-inner-declarations": 0,
         "no-unused-expressions": 0,
         "prefer-const": 0,
-        "consistent-return": 0
+        "consistent-return": 0,
+        "comma-dangle": [
+            "error",
+            "never"
+        ]
     },
     "env": {
         "node": true,

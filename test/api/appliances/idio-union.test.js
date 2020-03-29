@@ -94,9 +94,7 @@ describe("IdioUnion", () => {
             .to.be.a("string")
             .to.contain("AOrB");
 
-        expect(AOrB)
-            .to.have.property("typeDefs")
-            .to.be.a("string");
+        expect(AOrB).to.have.property("typeDefs").to.be.a("string");
 
         expect(AOrB)
             .to.have.property("resolver")

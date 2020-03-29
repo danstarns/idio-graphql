@@ -44,9 +44,7 @@ describe("validateDefinitions", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("invalid resolvers");
+            expect(message).to.be.a("string").to.contain("invalid resolvers");
         }
     });
 
@@ -98,9 +96,7 @@ describe("validateDefinitions", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("Field resolver");
+            expect(message).to.be.a("string").to.contain("Field resolver");
 
             expect(message)
                 .to.be.a("string")

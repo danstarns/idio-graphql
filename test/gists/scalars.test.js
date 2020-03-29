@@ -34,21 +34,13 @@ describe("gists/idio-scalar", async () => {
             scalars: [JSONScalar]
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("scalar JSON");
+        expect(typeDefs).to.be.a("string").to.contain("scalar JSON");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers)
             .to.be.a("object")
@@ -57,8 +49,6 @@ describe("gists/idio-scalar", async () => {
             .to.have.property("user")
             .to.be.a("function");
 
-        expect(resolvers)
-            .to.be.a("object")
-            .to.have.property("JSON");
+        expect(resolvers).to.be.a("object").to.have.property("JSON");
     });
 });

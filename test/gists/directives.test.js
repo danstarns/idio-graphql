@@ -38,21 +38,13 @@ describe("gists/idio-directive", () => {
             directives: [hasScopeDirective]
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("directive @hasScope");
+        expect(typeDefs).to.be.a("string").to.contain("directive @hasScope");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers)
             .to.be.a("object")

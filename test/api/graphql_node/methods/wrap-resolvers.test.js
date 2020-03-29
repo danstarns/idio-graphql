@@ -178,6 +178,7 @@ describe("wrapResolvers", () => {
 
         let result;
 
+        // eslint-disable-next-line no-restricted-syntax
         for await (const chunk of await Subscription.user.subscribe(
             {},
             {},
@@ -227,12 +228,12 @@ describe("wrapResolvers", () => {
             .to.be.a("function");
 
         try {
+            // eslint-disable-next-line no-restricted-syntax
+            // eslint-disable-next-line no-empty
             for await (const chunk of await Subscription.user.subscribe()) {
             }
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("testing");
+            expect(message).to.be.a("string").to.contain("testing");
         }
     });
 

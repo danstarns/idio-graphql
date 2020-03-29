@@ -10,9 +10,7 @@ describe("GraphQLType", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("name required");
+            expect(message).to.be.a("string").to.contain("name required");
         }
     });
 
@@ -34,9 +32,7 @@ describe("GraphQLType", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("invalid name");
+            expect(message).to.be.a("string").to.contain("invalid name");
         }
     });
 
@@ -46,9 +42,7 @@ describe("GraphQLType", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("typeDefs required");
+            expect(message).to.be.a("string").to.contain("typeDefs required");
         }
     });
 
@@ -107,9 +101,7 @@ describe("GraphQLType", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("resolvers required");
+            expect(message).to.be.a("string").to.contain("resolvers required");
         }
     });
 

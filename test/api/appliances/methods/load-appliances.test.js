@@ -19,9 +19,7 @@ describe("loadAppliances", () => {
             name: "schemaGlobals"
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
     });
 
     it("should load an array of schemaGlobals", () => {
@@ -29,9 +27,7 @@ describe("loadAppliances", () => {
             name: "schemaGlobals"
         });
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
     });
 
     it("should load a scalar", () => {
@@ -48,9 +44,7 @@ describe("loadAppliances", () => {
             }
         );
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("scalar Test");
+        expect(typeDefs).to.be.a("string").to.contain("scalar Test");
 
         expect(resolvers)
             .to.be.a("object")
@@ -80,9 +74,7 @@ describe("loadAppliances", () => {
             }
         );
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Test");
+        expect(typeDefs).to.be.a("string").to.contain("type Test");
 
         expect(resolvers)
             .to.be.a("object")
@@ -113,13 +105,9 @@ describe("loadAppliances", () => {
             }
         );
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("scalar Test");
+        expect(typeDefs).to.be.a("string").to.contain("scalar Test");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("scalar Test2");
+        expect(typeDefs).to.be.a("string").to.contain("scalar Test2");
 
         expect(resolvers)
             .to.be.a("object")

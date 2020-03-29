@@ -39,17 +39,11 @@ describe("gists/dependency-injection", () => {
 
         const { typeDefs, resolvers } = combineNodes([User]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers)
             .to.be.a("object")
@@ -89,17 +83,11 @@ describe("gists/dependency-injection", () => {
 
         const { typeDefs, resolvers } = combineNodes([User]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Subscription");
+        expect(typeDefs).to.be.a("string").to.contain("type Subscription");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers)
             .to.be.a("object")
@@ -135,7 +123,6 @@ describe("gists/dependency-injection", () => {
                     userUpdate: {
                         subscribe: (...args) => {
                             args[2].injections.song += " jumped over the moon";
-                            result = args[2].injections.song;
                         },
                         otherMethod: () => 1
                     }
@@ -145,17 +132,11 @@ describe("gists/dependency-injection", () => {
 
         const { typeDefs, resolvers } = combineNodes([User]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Subscription");
+        expect(typeDefs).to.be.a("string").to.contain("type Subscription");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers)
             .to.be.a("object")
@@ -205,17 +186,11 @@ describe("gists/dependency-injection", () => {
 
         const { typeDefs, resolvers } = combineNodes([User]);
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type User");
+        expect(typeDefs).to.be.a("string").to.contain("type User");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("type Query");
+        expect(typeDefs).to.be.a("string").to.contain("type Query");
 
-        expect(typeDefs)
-            .to.be.a("string")
-            .to.contain("schema");
+        expect(typeDefs).to.be.a("string").to.contain("schema");
 
         expect(resolvers)
             .to.be.a("object")
