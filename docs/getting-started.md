@@ -24,10 +24,10 @@ $ npm install idio-graphql
 ## Examples 
 ---
 
-1. [RealWorld](https://github.com/danstarns/idio-graphql-realworld-example-app) - You can find a RealWorld example here, alongside a matching React frontend.
-2. [Local](https://github.com/danstarns/idio-graphql/blob/master/examples/local) - This project showcase's the most basic local setup with idio-graphql.
-3. [Microservice](https://github.com/danstarns/idio-graphql/blob/master/examples/microservice) - This project showcase's the most basic microservice setup with idio-graphql.
-4. [Gradual Adoption](https://github.com/danstarns/idio-graphql/blob/master/examples/gradual_adoption) - This project demonstrates how to gradually adopt a microservices architecture with idio-graphql.
+1. [**RealWorld**](https://github.com/danstarns/idio-graphql-realworld-example-app) - You can find a RealWorld example here, alongside a matching React frontend.
+2. [**Local**](https://github.com/danstarns/idio-graphql/blob/master/examples/local) - This project showcase's the most basic local setup with idio-graphql.
+3. [**Microservice**](https://github.com/danstarns/idio-graphql/blob/master/examples/microservice) - This project showcase's the most basic microservice setup with idio-graphql.
+4. [**Gradual Adoption**](https://github.com/danstarns/idio-graphql/blob/master/examples/gradual_adoption) - This project demonstrates how to gradually adopt a microservices architecture with idio-graphql.
 
 ## Contributing
 
