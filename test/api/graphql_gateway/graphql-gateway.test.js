@@ -1,6 +1,8 @@
 const { expect } = require("chai");
 const proxyquire = require("proxyquire");
-const uuid = require("uuid/v4")();
+const { v4: uuidv4 } = require("uuid");
+
+const uuid = uuidv4();
 
 let nodeID;
 

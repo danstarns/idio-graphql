@@ -12,7 +12,9 @@ const moleculer = {
 };
 
 const createBroker = proxyquire("../../src/util/create-broker.js", {
-    "uuid/v4": uuid,
+    uuid: {
+        v4: uuid
+    },
     moleculer
 });
 

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
-const uuid = require("uuid/v4");
+const { v4: uuid } = require("uuid");
 const IdioError = require("../api/idio-error.js");
 
 /**
