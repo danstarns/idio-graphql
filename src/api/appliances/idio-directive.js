@@ -69,18 +69,6 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
         throw new IdioError(`${prefix}: '${name}' without a resolver.`);
     }
 
-    if (
-        !Object.prototype.isPrototypeOf.call(
-            SchemaDirectiveVisitor.prototype,
-            resolver
-        ) &&
-        !Object.prototype.isPrototypeOf.call(SchemaDirectiveVisitor, resolver)
-    ) {
-        throw new IdioError(
-            `${prefix}: '${name}'.resolver must be a instance of SchemaDirectiveVisitor.`
-        );
-    }
-
     this.resolver = resolver;
 }
 

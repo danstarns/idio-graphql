@@ -52,18 +52,6 @@ function IdioScalar({ name, resolver } = {}) {
         throw new IdioError(`${prefix}: '${name}' without resolver.`);
     }
 
-    if (
-        !Object.prototype.isPrototypeOf.call(
-            GraphQLScalarType.prototype,
-            resolver
-        ) &&
-        !Object.prototype.isPrototypeOf.call(GraphQLScalarType, resolver)
-    ) {
-        throw new IdioError(
-            `${prefix}: '${name}'.resolver must be a instance of GraphQLScalarType.`
-        );
-    }
-
     this.resolver = resolver;
 }
 
