@@ -1,5 +1,4 @@
 const { graphql } = require("graphql");
-const IdioError = require("../../idio-error.js");
 
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
@@ -31,8 +30,8 @@ function execute(RUNTIME) {
             });
 
             return { data, errors };
-        } catch (error) {
-            return { errors: [new IdioError(error)] };
+        } catch ({ message, stack }) {
+            return { errors: [{ message, path: stack }] };
         }
     };
 }
