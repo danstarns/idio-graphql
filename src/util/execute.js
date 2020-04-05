@@ -212,9 +212,9 @@ function withBroker(RUNTIME) {
             );
 
             return { data, errors };
-        } catch ({ message }) {
+        } catch ({ message, stack }) {
             return {
-                errors: [new IdioError(message)],
+                errors: [{ message, path: stack }],
                 data: null
             };
         }
