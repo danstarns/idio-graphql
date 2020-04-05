@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.1.16",
+  "version": "3.1.17",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.",
   "main": "./dist",
   "scripts": {
@@ -63,11 +63,14 @@
   "optionalDependencies": {
     "moleculer": "^0.14.5"
   },
+  "peerDependencies": {
+    "graphql": "^0.13.0 || ^14.0.0"
+  },
   "dependencies": {
     "@babel/runtime": "^7.9.2",
     "@graphql-toolkit/schema-merging": "^0.10.2",
     "core-js": "^3.6.4",
-    "graphql": "^15.0.0",
+    "graphql": "^14.6.0",
     "graphql-tools": "^4.0.7",
     "regenerator-runtime": "^0.13.5",
     "safe-json-stringify": "^1.2.0",
