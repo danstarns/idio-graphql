@@ -36,8 +36,11 @@ function createGatewayService(RUNTIME) {
 
                 try {
                     if (introspection.locals) {
-                        Object.entries(introspection.locals).forEach(
-                            ([key, values]) => {
+                        Object.entries(introspection.locals)
+                            .filter(
+                                ([key]) => key !== "schemaGlobals"
+                            ) /* @todo - not the safest check */
+                            .forEach(([key, values]) => {
                                 values.forEach((value) => {
                                     if (
                                         !RUNTIME.locals[key]
@@ -59,8 +62,7 @@ function createGatewayService(RUNTIME) {
                                             );
                                         }
                                     });
-                            }
-                        );
+                            });
                     }
 
                     if (introspection.services) {
