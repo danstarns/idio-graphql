@@ -16,3 +16,6 @@ docker-compose.yml
 .nycrc.json
 .docker-compose.yml
 DockerFile
+CODE_OF_CONDUCT.md
+contributing.md
+README.md
