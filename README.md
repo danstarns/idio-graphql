@@ -1,6 +1,7 @@
 # idio-graphql
 [![CircleCI](https://circleci.com/gh/danstarns/idio-graphql/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/danstarns/idio-graphql?branch=master)
-[![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql)
+[![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues)
+
 
 
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels. 
@@ -15,10 +16,9 @@ https://danstarns.github.io/idio-graphql/
 
 # Examples 
 
-1. [RealWorld](https://github.com/danstarns/idio-graphql-realworld-example-app) - You can find a RealWorld example here, alongside a matching React frontend.
-2. [Local](https://github.com/danstarns/idio-graphql/blob/master/examples/local) - This project showcase's the most basic local setup with idio-graphql.
-3. [Microservice](https://github.com/danstarns/idio-graphql/blob/master/examples/microservice) - This project showcase's the most basic microservice setup with idio-graphql.
-4. [Gradual Adoption](https://github.com/danstarns/idio-graphql/blob/master/examples/gradual_adoption) - This project demonstrates how to gradually adopt a microservices architecture with idio-graphql.
+1. [RealWorld](https://github.com/danstarns/idio-graphql-realworld-example-app) - Node.js GraphQL example server built with modules, authentication, pagination, and more.
+2. [RealWorld Microservice](https://github.com/danstarns/graphql-microservices-realworld-example-system) - Node.js powered distributed GraphQL schema built with modules, authentication, pagination, and more.
+3. [Mini Examples](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of idio-graphql.
 
 # Contributing 
 https://github.com/danstarns/idio-graphql/blob/master/contributing.md
