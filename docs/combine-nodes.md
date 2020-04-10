@@ -32,33 +32,34 @@ const { typeDefs, resolvers, schemaDirectives } = combineNodes(
 );
 ```
 
-## Definitions
+## Definition
 
 ---
 
-```javascript
-/**
- * @typedef RUNTIME
- * @property {object} REGISTERED_NAMES
- * @property {GraphQLSchema} schema
- * @property {string} typeDefs
- * @property {object} resolvers
- * @property {object} resolvers.Query
- * @property {object} resolvers.Mutation
- * @property {object} resolvers.Subscription
- * @property {object} schemaDirectives
- * @property {execute} execute
- */
+```typescript
+interface Appliances {
+    nodes?: GraphQLNode[];
+    enums?: IdioEnum[];
+    interfaces?: IdioInterface[];
+    unions?: IdioUnion[];
+    types?: GraphQLType[];
+    scalars?: IdioScalar[];
+    directives?: IdioDirective[];
+    schemaGlobals?: string | string[] | DocumentNode | DocumentNode[];
+}
 
 /**
- * You can use combineNodes to snap GraphQLNode's & Schema Appliances together into a single Schema.
- *
- * @param {GraphQLNode[]} nodes
- * @param {appliances} appliances
- * @returns {RUNTIME}
+ * You can use combineNodes to snap GraphQLNode's &
+ * Schema Appliances together into a single Schema.
  */
-```
-
-```javascript
-function combineNodes(nodes: GraphQLNode, appliances: appliances);
+function combineNodes(
+    nodes: GraphQLNode[],
+    appliances?: Appliances
+): {
+    schema: GraphQLSchema;
+    typeDefs: string;
+    resolvers: { [k: string]: any };
+    schemaDirectives?: { [k: string]: any };
+    execute: InterSchemaExecute;
+};
 ```

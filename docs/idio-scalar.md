@@ -31,32 +31,27 @@ const JSONScalar = new IdioScalar({
 });
 ```
 
-## Definitions
+## Definition
 
 ---
 
-```javascript
+```typescript
 /**
- * @typedef IdioScalar
- * @property {string} name
- * @property {GraphQLScalarType} resolver
+ * You can use IdioDirective to modularize a DirectiveDefinition,
+ * together with its resolver. You can only specify directives 'top-level'
+ * at combineNodes.
  */
+class IdioScalar {
+    name: string;
 
-/**
- * You can use IdioScalar to modularize a ( ScalarTypeDefinition ), together with its resolver.
- *
- * You can only specify scalars 'top-level' at combineNodes.
- *
- * IdioScalar does not require typeDefs, it uses the name to match up the resolver.
- *
- * @param {object} config
- * @param {string} config.name
- * @param {GraphQLScalarType} config.resolver
- *
- * @returns {IdioScalar}
- */
-```
+    typeDefs: string;
 
-```javascript
-new IdioScalar({ name: string, resolver: GraphQLScalarType });
+    /** @type {GraphQLScalarType} */
+    resolver: any;
+    
+    constructor(input: {
+        name: string;
+        /** @type {GraphQLScalarType} */ resolver: any;
+    });
+}
 ```

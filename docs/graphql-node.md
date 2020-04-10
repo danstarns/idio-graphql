@@ -38,95 +38,48 @@ const User = new GraphQLNode({
 });
 ```
 
-## Definitions
+## Definition
 
 ---
 
-```javascript
+```typescript
 /**
- * @typedef Resolvers
- * @property {Object.<string, ResolverUnion>} Query
- * @property {Object.<string, ResolverUnion>} Mutation
- * @property {Object.<string, {subscribe: Function}>} Subscription
- * @property {Object.<string, ResolverUnion>} Fields
- */
+* You can use GraphQLNode to modularize a ObjectTypeDefinition
+* together with its related resolvers & properties.
+*/
+class GraphQLNode {
+    name: string;
 
-/**
- * @typedef GraphQLNode
- * @property {string} name
- * @property {string} typeDefs
- * @property {Resolvers} resolvers
- * @property {GraphQLNode[]} nodes
- * @property {injections} injections
- * @property {IdioEnum[]} enums
- * @property {IdioInterface[]} interfaces
- * @property {IdioUnion[]} unions
- * @property {GraphQLType[]} types
- * @property {(brokerOptions: IdioBrokerOptions) => Runtime} serve
- */
+    typeDefs: string;
 
-/**
- * @typedef GraphQLNodeInput
- * @property {string} name
- * @property {any} typeDefs - gql-tag, string or filePath.
- * @property {Resolvers} resolvers
- * @property {GraphQLNode[]} nodes
- * @property {injections} injections
- * @property {IdioEnum[]} enums
- * @property {IdioInterface[]} interfaces
- * @property {IdioUnion[]} unions
- * @property {GraphQLType[]} types
- */
+    resolvers: Resolvers;
 
-/**
- * You can use GraphQLNode to modularize a ObjectTypeDefinition together with its related resolvers & properties.
- *
- * @param {GraphQLNodeInput} config
- *
- * @returns {GraphQLNode}
- */
+    nodes?: GraphQLNode[];
+    
+    injections?: { [k: string]: any; execute: InterSchemaExecute };
+
+    enums?: IdioEnum[];
+
+    interfaces?: IdioInterface[];
+
+    unions?: IdioUnion[];
+
+    types?: GraphQLType[];
+
+    constructor(input: {
+        name: string;
+        typeDefs: string | DocumentNode;
+        resolvers: Resolvers;
+        nodes?: GraphQLNode[];
+        injections?: { [k: string]: any };
+        enums?: IdioEnum[];
+        interfaces?: IdioInterface[];
+        unions?: IdioUnion[];
+        types?: GraphQLType[];
+    });
+
+    serve: (brokerOptions: IdioBrokerOptions) => Promise<ServiceBroker>;
+}
 ```
 
-```javascript
-new GraphQLNode(config: GraphQLNodeInput)
-```
 
-## Methods 
-
----
-
-1. [**serve**](#serve)
-
-### Serve 
-
----
-
-> **https://moleculer.services/docs/0.12/broker.html**
-
-#### Example
-```javascript
-await User.serve({
-    transporter: "NATS"
-});
-```
-
-#### Definitions
-```javascript
-/**
- * @typedef Runtime
- * @property {ServiceBroker} broker
- * @property {Object<string, ServiceManager>} gatewayManagers
- * @property {boolean} initialized
- * @property {Object<string, object>} introspection
- * @property {IdioBrokerOptions} brokerOptions
- */
-
-/**
- * @param {IdioBrokerOptions} brokerOptions
- * @returns {Promise<Runtime>}
- */
-```
-
-```javascript
-async function serve(brokerOptions: BrokerOptions);
-```

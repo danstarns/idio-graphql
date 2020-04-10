@@ -34,32 +34,28 @@ const hasScopeDirective = new IdioDirective({
 });
 ```
 
-## Definitions
+## Definition
 
 ---
 
-```javascript
+```typescript
 /**
- * @typedef IdioDirective
- * @property {string} name
- * @property {string} typeDefs
- * @property {object} resolver
- */
+  * You can use IdioDirective to modularize a DirectiveDefinition,
+  * together with its resolver. You can only specify directives 'top-level'
+  * at combineNodes.
+  */
+ class IdioDirective {
+     name: string;
 
-/**
- * You can use IdioDirective to modularize a DirectiveDefinition, together with its resolver.
- *
- * You can only specify directives 'top-level' at combineNodes.
- *
- * @param {object} config
- * @param {string} config.name
- * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
- * @param {SchemaDirectiveVisitor} config.resolver
- *
- * @returns {IdioDirective}
- */
-```
+     typeDefs: string;
 
-```javascript
-new IdioDirective({ name: string, typeDefs: any, resolver: SchemaDirectiveVisitor );
+     /** @type {SchemaDirectiveVisitor} */
+     resolver: any;
+     
+     constructor(input: {
+         name: string;
+         typeDefs: string | DocumentNode;
+         /** @type {SchemaDirectiveVisitor} */ resolver: any;
+     });
+ }
 ```

@@ -14,19 +14,23 @@ GraphQL allows engineers to query and define resolvers for complex relationships
 
 ---
 
-```javascript
-/**
- * @typedef {{injections: {execute: execute, broker?: ServiceBroker}}} context
- */
+```typescript
+type InterSchemaExecute = (
+    document: DocumentNode | string,
+    executionContext?: {
+        root?: any;
+        context?: { [k: string]: any };
+        variables?: { [k: string]: any };
+        operationName?: string;
+    }
+) => Promise<ExecutionResult>;
 
-/**
- * @typedef {(
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} resolve
- */
+interface Context {
+    injections: {
+        execute: InterSchemaExecute;
+        broker?: ServiceBroker;
+    };
+}
 ```
 
 ## Defining Relationships
