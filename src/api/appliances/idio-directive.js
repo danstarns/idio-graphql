@@ -1,5 +1,4 @@
 const { parseTypeDefs, validateTypeDefs } = require(`../../util/index.js`);
-const { SchemaDirectiveVisitor } = require("graphql-tools");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 const IdioError = require("../idio-error.js");
 

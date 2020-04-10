@@ -32,80 +32,32 @@ const Metadata = new GraphQLType({
 });
 ```
 
-## Definitions
+## Definition
 
 ---
 
-```javascript
+```typescript
 /**
- * @typedef {{
- *      name: string,
- *      typeDefs: string | DocumentNode,
- *      resolvers: Object<string, ResolverUnion>,
- *      injections: Object<string, any>
- * }} GraphQLTypeInput
+ * You can use GraphQLType to modularize a ObjectTypeDefinition,
+ * together with its Field resolvers. You can specify types 'top-level'
+ * at combineNodes or at an GraphQLNode level.
  */
+class GraphQLType {
+    name: string;
 
-/**
- * @typedef {{
- *      name: string,
- *      typeDefs: string,
- *      resolvers: Object<string, function>,
- *      injections: Object<string, any>,
- *      serve: (brokerOptions: BrokerOptions) => Promise<ServiceBroker>
- * }} GraphQLType
- */
+    typeDefs: string;
 
-/**
- * You can use GraphQLType to modularize a ObjectTypeDefinition, together with its Field resolvers.
- *
- * You can specify types 'top-level' at combineNodes or at an GraphQLNode level.
- *
- * @param {GraphQLTypeInput} input
- * @returns {GraphQLType}
- */
-```
+    resolvers: { [k: string]: ResolverUnion };
 
-```javascript
-new GraphQLType({ name: string, typeDefs: any, resolvers: Object<string, any> );
-```
+    injections?: { [k: string]: any };
 
-## Methods 
+    constructor(input: {
+        name: string;
+        typeDefs: string | DocumentNode;
+        resolvers: { [k: string]: ResolverUnion };
+        injections?: { [k: string]: any };
+    });
 
----
-
-1. [**serve**](#serve)
-
-### Serve 
-
----
-
-> **https://moleculer.services/docs/0.12/broker.html**
-
-#### Example
-```javascript
-await Metadata.serve({
-    transporter: "NATS"
-});
-```
-
-#### Definitions
-```javascript
-/**
- * @typedef Runtime
- * @property {ServiceBroker} broker
- * @property {Object<string, ServiceManager>} gatewayManagers
- * @property {boolean} initialized
- * @property {Object<string, object>} introspection
- * @property {IdioBrokerOptions} brokerOptions
- */
-
-/**
- * @param {IdioBrokerOptions} brokerOptions
- * @returns {Promise<Runtime>}
- */
-```
-
-```javascript
-async function serve(brokerOptions: BrokerOptions);
+    serve: (brokerOptions: IdioBrokerOptions) => Promise<ServiceBroker>;
+}
 ```

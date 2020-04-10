@@ -94,44 +94,38 @@ Query: {
 
 ---
 
-```javascript
-/**
- * @typedef {(
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} PreHook
- */
+```typescript
+type PreHook = (
+    root: any,
+    args: { [k: string]: any },
+    context: Context,
+    info: DocumentNode
+) => void;
 ```
 
 ## Resolve Hook
 
 ---
 
-```javascript
-/**
- * @typedef {(
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} resolve
- */
+```typescript
+type Resolve = (
+    root: any,
+    args: { [k: string]: any },
+    context: Context,
+    info: DocumentNode
+) => void;
 ```
 
 ## Post Hook
 
 ---
 
-```javascript
-/**
- * @typedef {(
- *      resolve: any,
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} PostHook
- */
+```typescript
+type PostHook = (
+    resolve: any,
+    root: any,
+    args: { [k: string]: any },
+    context: Context,
+    info: DocumentNode
+) => void;
 ```

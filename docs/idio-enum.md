@@ -37,74 +37,29 @@ const StatusEnum = new IdioEnum({
 ```
 
 
-## Definitions
+## Definition
 
 ---
 
-```javascript
+```typescript
 /**
- * @typedef IdioEnum
- * @property {string} name
- * @property {string} typeDefs
- * @property {object} resolver
- * @property {(brokerOptions: BrokerOptions) => Promise<ServiceBroker>} serve
+ * You can use IdioEnum to modularize a EnumTypeDefinition,
+ * together with its resolver. You can specify enums 'top-level'
+ * at combineNodes or at an GraphQLNode level.
  */
+class IdioEnum {
+    name: string;
 
-/**
- * You can use IdioEnum to modularize a EnumTypeDefinition, together with its resolver.
- *
- * You can specify enums 'top-level' at combineNodes or at an GraphQLNode level.
- *
- * @param {Object} config
- * @param {string} config.name
- * @param {(string|DocumentNode)} config.typeDefs - gql-tag, string or filePath.
- * @param {object} config.resolver
- *
- * @returns {IdioEnum}
- */
-```
+    typeDefs: string;
 
-```javascript
-new IdioEnum({ name: string, typeDefs: any, resolver: {} );
-```
+    resolver: { [k: string]: any };
 
-## Methods 
+    constructor(input: {
+        name: string;
+        typeDefs: string | DocumentNode;
+        resolver: { [k: string]: any };
+    });
 
----
-
-1. [**serve**](#serve)
-
-### Serve 
-
----
-
-> **https://moleculer.services/docs/0.12/broker.html**
-
-#### Example
-```javascript
-await StatusEnum.serve({
-    transporter: "NATS"
-});
-```
-
-#### Definitions
-```javascript
-/**
- * @typedef Runtime
- * @property {IdioBrokerOptions} brokerOptions
- * @property {ServiceBroker} broker
- * @property {Object.<string, ServiceManager>} gatewayManagers
- * @property {boolean} initialized
- * @property {Object.<string, object>} introspection
- */
-
-/**
- * @function serve
- * @param {BrokerOptions} brokerOptions
- * @returns {Promise<Runtime>}
-*/
-```
-
-```javascript
-async function serve(brokerOptions: BrokerOptions);
+    serve: (brokerOptions: IdioBrokerOptions) => Promise<ServiceBroker>;
+}
 ```

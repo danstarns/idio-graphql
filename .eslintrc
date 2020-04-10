@@ -8,6 +8,25 @@
         "prettier",
         "import"
     ],
+    "overrides": [
+        {
+            "files": [
+                "*.ts"
+            ],
+            "parser": "@typescript-eslint/parser",
+            "extends": [
+                "plugin:@typescript-eslint/recommended"
+            ],
+            "parserOptions": {
+                "ecmaVersion": 2018,
+                "sourceType": "module"
+            },
+            "rules": {
+                "no-useless-constructor": "off",
+                "@typescript-eslint/no-useless-constructor": "error"
+            }
+        }
+    ],
     "rules": {
         "prettier/prettier": [
             "error",

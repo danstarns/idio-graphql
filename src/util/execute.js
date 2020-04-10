@@ -7,8 +7,6 @@ const ServicesManager = require("./services-manager.js");
 /**
  * @typedef {import('graphql').ExecutionResult} ExecutionResult
  * @typedef {import('graphql').DocumentNode} DocumentNode
- * @typedef {import('graphql').OperationDefinitionNode} OperationDefinitionNode
- * @typedef {import('graphql').DirectiveDefinitionNode} DirectiveDefinitionNode
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
  */
 

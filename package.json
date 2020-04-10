@@ -1,8 +1,9 @@
 {
   "name": "idio-graphql",
-  "version": "3.1.19",
+  "version": "3.2.0",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.",
   "main": "./dist",
+  "types": "./index.d.ts",
   "scripts": {
     "test": "./node_modules/.bin/cross-env ./node_modules/.bin/mocha",
     "test:dev": "./node_modules/.bin/cross-env ./node_modules/.bin/mocha --watch",
@@ -41,6 +42,8 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
     "apollo-server": "^2.12.0",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
@@ -69,7 +72,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.2",
     "@graphql-toolkit/schema-merging": "^0.10.3",
-    "core-js": "^3.6.4",
+    "core-js": "^3.6.5",
     "graphql": "^14.6.0",
     "graphql-tools": "^4.0.7",
     "regenerator-runtime": "^0.13.5",
