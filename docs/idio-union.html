@@ -74,61 +74,31 @@ together with its resolver. You can specify unions 'top-level' at <strong><a hre
     }
 });
 </code></pre>
-<h2><a class="anchor" aria-hidden="true" id="definitions"></a><a href="#definitions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Definitions</h2>
+<h2><a class="anchor" aria-hidden="true" id="definition"></a><a href="#definition" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Definition</h2>
 <hr>
-<pre><code class="hljs css language-javascript"><span class="hljs-comment">/**
- * <span class="hljs-doctag">@typedef <span class="hljs-variable">IdioUnion</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{string}</span> <span class="hljs-variable">name</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{string}</span> <span class="hljs-variable">typeDefs</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{{__resolveType: () =&gt; string}</span></span>} resolver
- * <span class="hljs-doctag">@property <span class="hljs-type">{(brokerOptions: BrokerOptions) =&gt; Promise.&lt;ServiceBroker&gt;}</span> <span class="hljs-variable">serve</span></span>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">/**
+ * You can use IdioUnion to modularize a UnionTypeDefinition,
+ * together with its resolver. You can specify unions 'top-level'
+ * at combineNodes or at an GraphQLNode level.
  */</span>
+<span class="hljs-keyword">class</span> IdioUnion {
+    name: <span class="hljs-built_in">string</span>;
 
-<span class="hljs-comment">/**
- * You can use IdioUnion to modularize a UnionTypeDefinition, together with its resolver.
- * You can specify unions 'top-level' at combineNodes or at an GraphQLNode level.
- *
- * <span class="hljs-doctag">@param <span class="hljs-type">{object}</span> <span class="hljs-variable">config</span></span>
- * <span class="hljs-doctag">@param <span class="hljs-type">{string}</span> </span>config.name
- * <span class="hljs-doctag">@param <span class="hljs-type">{(string|DocumentNode)}</span> </span>config.typeDefs - gql-tag, string or filePath.
- * <span class="hljs-doctag">@param <span class="hljs-type">{{__resolveType: () =&gt; string}</span></span>} config.resolver
- *
- * <span class="hljs-doctag">@returns <span class="hljs-type">{IdioUnion}</span></span>
- */</span>
-</code></pre>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">new</span> IdioUnion({ <span class="hljs-attr">name</span>: string, <span class="hljs-attr">typeDefs</span>: any, <span class="hljs-attr">resolver</span>: { <span class="hljs-attr">__resolveType</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> string } );
-</code></pre>
-<h2><a class="anchor" aria-hidden="true" id="methods"></a><a href="#methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Methods</h2>
-<hr>
-<ol>
-<li><a href="#serve"><strong>serve</strong></a></li>
-</ol>
-<h3><a class="anchor" aria-hidden="true" id="serve"></a><a href="#serve" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Serve</h3>
-<hr>
-<blockquote>
-<p><strong><a href="https://moleculer.services/docs/0.12/broker.html">https://moleculer.services/docs/0.12/broker.html</a></strong></p>
-</blockquote>
-<h4><a class="anchor" aria-hidden="true" id="example-1"></a><a href="#example-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example</h4>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">await</span> AOrB.serve({
-    <span class="hljs-attr">transporter</span>: <span class="hljs-string">"NATS"</span>
-});
-</code></pre>
-<h4><a class="anchor" aria-hidden="true" id="definitions-1"></a><a href="#definitions-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Definitions</h4>
-<pre><code class="hljs css language-javascript"><span class="hljs-comment">/**
- * <span class="hljs-doctag">@typedef <span class="hljs-variable">Runtime</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{IdioBrokerOptions}</span> <span class="hljs-variable">brokerOptions</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{ServiceBroker}</span> <span class="hljs-variable">broker</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{Object.&lt;string, ServiceManager&gt;}</span> <span class="hljs-variable">gatewayManagers</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{boolean}</span> <span class="hljs-variable">initialized</span></span>
- * <span class="hljs-doctag">@property <span class="hljs-type">{Object.&lt;string, object&gt;}</span> <span class="hljs-variable">introspection</span></span>
- */</span>
+    typeDefs: <span class="hljs-built_in">string</span>;
 
-<span class="hljs-comment">/**
- * <span class="hljs-doctag">@function <span class="hljs-variable">serve</span></span>
- * <span class="hljs-doctag">@param <span class="hljs-type">{BrokerOptions}</span> <span class="hljs-variable">brokerOptions</span></span>
- * <span class="hljs-doctag">@returns <span class="hljs-type">{Promise&lt;Runtime&gt;}</span></span>
-*/</span>
+    resolver: {
+        __resolveType: ResolveType;
+    };
+
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">input: {
+        name: <span class="hljs-built_in">string</span>;
+        typeDefs: <span class="hljs-built_in">string</span> | DocumentNode;
+        resolver: {
+            __resolveType: ResolveType;
+        };
+    }</span>);
+
+    serve: <span class="hljs-function">(<span class="hljs-params">brokerOptions: IdioBrokerOptions</span>) =&gt;</span> <span class="hljs-built_in">Promise</span>&lt;ServiceBroker&gt;;
+}
 </code></pre>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serve</span>(<span class="hljs-params">brokerOptions: BrokerOptions</span>);
-</span></code></pre>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 3/15/2020</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/idio-graphql/docs/idio-interface"><span class="arrow-prev">← </span><span class="function-name-prevnext">IdioInterface</span></a><a class="docs-next button" href="/idio-graphql/docs/graphql-type"><span class="function-name-prevnext">GraphQLType</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#intro">Intro</a></li><li><a href="#example">Example</a></li><li><a href="#definitions">Definitions</a></li><li><a href="#methods">Methods</a><ul class="toc-headings"><li><a href="#serve">Serve</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap center"><div><h5>Docs</h5><a href="/idio-graphql/docs/en/getting-started.html">Getting Started</a><a href="/idio-graphql/docs/en/index.html">API</a></div><div><h5>Community</h5><a href="https://idio-graphql.slack.com">Slack</a></div><div><h5>More</h5><a href="https://github.com/danstarns/idio-graphql">GitHub</a><a href="https://www.npmjs.com/package/idio-graphql">NPM</a><a class="github-button" href="https://github.com/danstarns/idio-graphql" data-icon="octicon-star" data-count-href="/danstarns/idio-graphql/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">MIT</section></footer></div></body></html>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 4/10/2020</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/idio-graphql/docs/idio-interface"><span class="arrow-prev">← </span><span class="function-name-prevnext">IdioInterface</span></a><a class="docs-next button" href="/idio-graphql/docs/graphql-type"><span class="function-name-prevnext">GraphQLType</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#intro">Intro</a></li><li><a href="#example">Example</a></li><li><a href="#definition">Definition</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap center"><div><h5>Docs</h5><a href="/idio-graphql/docs/en/getting-started.html">Getting Started</a><a href="/idio-graphql/docs/en/index.html">API</a></div><div><h5>Community</h5><a href="https://idio-graphql.slack.com">Slack</a></div><div><h5>More</h5><a href="https://github.com/danstarns/idio-graphql">GitHub</a><a href="https://www.npmjs.com/package/idio-graphql">NPM</a><a class="github-button" href="https://github.com/danstarns/idio-graphql" data-icon="octicon-star" data-count-href="/danstarns/idio-graphql/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">MIT</section></footer></div></body></html>
