@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.",
   "main": "./dist",
   "types": "./index.d.ts",
@@ -45,6 +45,7 @@
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
     "apollo-server": "^2.12.0",
+    "babel-minify": "^0.5.1",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
     "docusaurus": "^1.14.3",
