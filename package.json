@@ -75,7 +75,7 @@
     "@graphql-toolkit/schema-merging": "^0.10.3",
     "core-js": "^3.6.5",
     "graphql": "^14.6.0",
-    "graphql-tools": "^4.0.7",
+    "graphql-tools": "^5.0.0",
     "regenerator-runtime": "^0.13.5",
     "safe-json-stringify": "^1.2.0",
     "uuid": "^7.0.3"
