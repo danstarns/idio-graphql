@@ -1,6 +1,6 @@
 const safeJsonStringify = require("safe-json-stringify");
+const forEmitOf = require("for-emit-of");
 const IdioError = require("../../idio-error.js");
-const { streamToIterator } = require("../../../util/index.js");
 
 /**
  * @typedef {import('../graphql-node.js').Runtime} Runtime
@@ -54,8 +54,12 @@ module.exports = (RUNTIME) => {
                                 ...res,
                                 [resolver]: {
                                     subscribe: async (...graphQLArgs) =>
-                                        streamToIterator(
-                                            await operation(...graphQLArgs)
+                                        forEmitOf(
+                                            await operation(...graphQLArgs),
+                                            {
+                                                transform: (buff) =>
+                                                    JSON.parse(buff.toString())
+                                            }
                                         )
                                 }
                             };
