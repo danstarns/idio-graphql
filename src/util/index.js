@@ -4,7 +4,6 @@ const checkInstance = require("./check-instance.js");
 const wrappedResolver = require("./wrapped-resolver.js");
 const isAsyncIterator = require("./is-async-iterator.js");
 const iteratorToStream = require("./iterator-to-stream.js");
-const streamToIterator = require("./stream-to-iterator.js");
 const abort = require("./abort.js");
 const ServicesManager = require("./services-manager.js");
 const handleIntrospection = require("./handle-introspection.js");
@@ -23,7 +22,6 @@ module.exports = {
     wrappedResolver,
     isAsyncIterator,
     iteratorToStream,
-    streamToIterator,
     abort,
     ServicesManager,
     handleIntrospection,
