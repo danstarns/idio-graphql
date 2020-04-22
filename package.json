@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.",
   "main": "./dist",
   "types": "./index.d.ts",
@@ -42,8 +42,8 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
-    "@typescript-eslint/eslint-plugin": "^2.28.0",
-    "@typescript-eslint/parser": "^2.28.0",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
     "apollo-server": "^2.12.0",
     "babel-minify": "^0.5.1",
     "chai": "^4.2.0",
@@ -51,7 +51,7 @@
     "docusaurus": "^1.14.3",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-prettier": "^3.1.3",
     "graphql-directive-auth": "^0.3.2",
@@ -60,12 +60,12 @@
     "mocha": "^7.1.0",
     "nats": "^1.4.8",
     "nyc": "^15.0.1",
-    "prettier": "^2.0.4",
+    "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1",
     "proxyquire": "^2.1.3"
   },
   "optionalDependencies": {
-    "moleculer": "^0.14.5"
+    "moleculer": "^0.14.6"
   },
   "peerDependencies": {
     "graphql": "^0.13.0 || ^14.0.0 || ^15.0.0"
