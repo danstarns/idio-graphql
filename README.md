@@ -8,15 +8,15 @@ $ npm install idio-graphql
 
 # Index
 1. [About](#About)
-    * [Integrations](##Integrate-with)
-    * [Aim](##Aim)
-    * [Examples](##Examples)
-    * [Links](##Links)
-    * [FAQ](##FAQ)
+    * [Integrations](#Integrate-with)
+    * [Aim](#Aim)
+    * [Examples](#Examples)
+    * [Links](#Links)
+    * [FAQ](#FAQ)
     * [Contributing](https://github.com/danstarns/idio-graphql/blob/master/contributing.md)
 2. [Quick Start](#Quick-Start)
     * [Modules](#Quick-Start)
-    * [Microservices](##Microservices-Quick-Start)
+    * [Microservices](#Microservices-Quick-Start)
 
 # About
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
