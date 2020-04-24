@@ -7,16 +7,16 @@ $ npm install idio-graphql
 ```
 
 # Index
-1. [About](#About)
-    * [Integrations](#Integrate-with)
-    * [Aim](#Aim)
-    * [Examples](#Examples)
-    * [Links](#Links)
-    * [FAQ](#FAQ)
+1. [About](#about)
+    * [Integrations](#integrate-with)
+    * [Aim](#aim)
+    * [Examples](#examples)
+    * [Links](#links)
+    * [FAQ](#faq)
     * [Contributing](https://github.com/danstarns/idio-graphql/blob/master/contributing.md)
-2. [Quick Start](#Quick-Start)
-    * [Modules](#Quick-Start)
-    * [Microservices](#Microservices-Quick-Start)
+2. [Quick Start](#quick-start)
+    * [Modules](#quick-start)
+    * [Microservices](#microservices-quick-start)
 
 # About
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
@@ -35,8 +35,8 @@ Provide a clean & structured API where engineers can prototype, build and integr
 ## Examples
 > Got an application you want to showcase? Make a PR and edit the README [here](https://github.com/danstarns/idio-graphql)
 
-1. [Realworld Monolith GraphQL API](https://github.com/danstarns/idio-graphql-realworld-example-app)
-2. [Realworld GraphQL Microservices](https://github.com/danstarns/graphql-microservices-realworld-example-system)
+1. [Real world Monolith GraphQL API](https://github.com/danstarns/idio-graphql-realworld-example-app)
+2. [Real world GraphQL Microservices System](https://github.com/danstarns/graphql-microservices-realworld-example-system)
 3. [Mini Examples](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of this package.
 
 ## Links
@@ -50,6 +50,34 @@ Provide a clean & structured API where engineers can prototype, build and integr
 ### How do I integrate with my Apollo server ?
 This package generates its schema with the help from [makeExecutableSchema](https://www.apollographql.com/docs/graphql-tools/generate-schema/). The result of `makeExecutableSchema` is returned from `combineNodes` & `GraphQLSchema`.
 
+Using [combineNodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes)
+
+```javascript
+const { typeDefs, resolvers } = combineNodes(nodes);
+
+const apolloServer = new ApolloServer({ typeDefs, resolvers });
+```
+Using [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
+
+```javascript
+const { typeDefs, resolvers } = combineNodes(nodes);
+
+const gateway = new GraphQLGateway(
+    {
+        services: {
+            nodes: ["User"]
+        }
+    },
+    {
+        transporter: "redis://localhost",
+        nodeID: "gateway"
+    }
+);
+
+const { typeDefs, resolvers } = await gateway.start();
+
+const apolloServer = new ApolloServer({ typeDefs, resolvers });
+```
 ### How do I get started with microservices ?
 
 This package builds its microservices features on top of a package [Molecular](https://moleculer.services/), this means you can integrate with Moleculer's features. 
@@ -67,6 +95,25 @@ await User.serve({
     transporter: "nats://localhost"
 });
 ```
+
+> Do not forget to start your [gateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
+
+```javascript
+const gateway = new GraphQLGateway(
+    {
+        services: {
+            nodes: ["User"]
+        }
+    },
+    {
+        transporter: "nats://localhost",
+        nodeID: "gateway"
+    }
+);
+```
+
+> Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices)
+
 
 # Quick Start
 ```
@@ -143,33 +190,19 @@ const User = new GraphQLNode({
 
         type Query {
             user(id: String!): User
-            users(ids: [String]): [User]
         }
     `,
     resolvers: {
         Query: {
-            user: (root, { id }) => { ... },
-            users: (root, { ids }, { injections: { broker } }) => { ... }
+            user: (root, { id }) => { ... }
         }
     }
 });
 
-async function main() {
-    try {
-        await User.serve({
-            gateway: "gateway",
-            transporter: "NATS"
-        });
-
-        console.log("User Online");
-    } catch (error) {
-        console.error(error);
-
-        process.exit(1);
-    }
-}
-
-main();
+await User.serve({
+    gateway: "gateway",
+    transporter: "NATS"
+});
 ```
 
 ## Gateway Service
@@ -186,24 +219,12 @@ const gateway = new GraphQLGateway(
     }
 );
 
-async function main() {
-    try {
-        const { typeDefs, resolvers } = await gateway.start();
+const { typeDefs, resolvers } = await gateway.start();
 
-        const server = new ApolloServer({
-            typeDefs,
-            resolvers
-        });
+const server = new ApolloServer({
+    typeDefs,
+    resolvers
+});
 
-        await server.listen(4000);
-
-        console.log(`http://localhost:4000/graphql`);
-    } catch (error) {
-        console.error(error);
-
-        process.exit(1);
-    }
-}
-
-main();
+await server.listen(4000);
 ```
