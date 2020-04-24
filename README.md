@@ -8,7 +8,7 @@ $ npm install idio-graphql
 
 # Index
 1. [About](#about)
-    * [Integrations](#integrate-with)
+    * [Integrations](#integrates-with)
     * [Aim](#aim)
     * [Examples](#examples)
     * [Links](#links)
