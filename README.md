@@ -17,11 +17,29 @@ $ npm install idio-graphql
 2. [Quick Start](#quick-start)
     * [Modules](#quick-start)
     * [Microservices](#microservices-quick-start)
+3. [Guides](https://danstarns.github.io/idio-graphql/docs/getting-started#guides)
+    * [Creating Nodes](https://danstarns.github.io/idio-graphql/docs/creating-nodes)
+    * [Combining Nodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes-guide)
+    * [Schema Appliances](https://danstarns.github.io/idio-graphql/docs/schema-appliances)
+    * [Resolver Hooks](https://danstarns.github.io/idio-graphql/docs/resolver-hooks)
+    * [Microservices](https://danstarns.github.io/idio-graphql/docs/microservices)
+    * [Inter-Schema Execution](https://danstarns.github.io/idio-graphql/docs/inter-schema-execution)
+4. [API](https://danstarns.github.io/idio-graphql/docs/)
+    * [GraphQLNode](https://danstarns.github.io/idio-graphql/docs/graphql-node)
+    * [combineNodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes)
+    * [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
+    * [IdioEnum](https://danstarns.github.io/idio-graphql/docs/idio-enum)
+    * [IdioScalar](https://danstarns.github.io/idio-graphql/docs/idio-scalar)
+    * [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive)
+    * [IdioInterface](https://danstarns.github.io/idio-graphql/docs/idio-interface)
+    * [IdioUnion](https://danstarns.github.io/idio-graphql/docs/idio-union)
+    * [GraphQLType](https://danstarns.github.io/idio-graphql/docs/graphql-type)
+
 
 # About
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
 
-## Integrate with 
+## Integrates with 
 1. [apollo-server](https://github.com/apollographql/apollo-server) ✔
 2. [molecular](https://moleculer.services/) ✔
 3. [graphql-tools](https://github.com/Urigo/graphql-tools) ✔
@@ -170,8 +188,6 @@ main();
 ```
 $ npm install idio-graphql apollo-server graphql-tag moleculer nats
 ```
-
-> Read more [here](https://danstarns.github.io/idio-graphql/docs/microservices)
 
 ## User Service
 
