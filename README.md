@@ -53,9 +53,9 @@ Provide a clean & structured API where engineers can prototype, build and integr
 ## Examples
 > Got an application you want to showcase? Make a PR and edit the README [here](https://github.com/danstarns/idio-graphql)
 
-1. [Real world Monolith GraphQL API](https://github.com/danstarns/idio-graphql-realworld-example-app)
-2. [Real world GraphQL Microservices System](https://github.com/danstarns/graphql-microservices-realworld-example-system)
-3. [Mini Examples](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of this package.
+1. [Real world monolith](https://github.com/danstarns/idio-graphql-realworld-example-app)
+2. [Real world microservices system](https://github.com/danstarns/graphql-microservices-realworld-example-system)
+3. [Mini examples](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of this package.
 
 ## Links
 1. [Documentation](https://danstarns.github.io/idio-graphql/)
@@ -78,8 +78,6 @@ const apolloServer = new ApolloServer({ typeDefs, resolvers });
 Using [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
 
 ```javascript
-const { typeDefs, resolvers } = combineNodes(nodes);
-
 const gateway = new GraphQLGateway(
     {
         services: {
