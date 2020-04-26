@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.2.6",
+  "version": "3.2.7",
   "description": "Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.",
   "main": "./dist",
   "types": "./index.d.ts",
@@ -57,7 +57,7 @@
     "graphql-directive-auth": "^0.3.2",
     "graphql-tag": "^2.10.3",
     "graphql-type-json": "^0.3.1",
-    "mocha": "^7.1.0",
+    "mocha": "^7.1.2",
     "nats": "^1.4.8",
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",

@@ -10,11 +10,7 @@ const applianceMetadata = [
 ];
 
 /**
- * @typedef {import('./start.js').Runtime} Runtime
- */
-
-/**
- * @param {Runtime} RUNTIME
+ * @param {import('./start.js').Runtime} RUNTIME
  */
 module.exports = (RUNTIME) => {
     const { broker } = RUNTIME;

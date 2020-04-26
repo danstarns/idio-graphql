@@ -11,25 +11,27 @@ const compareGateways = require("./compare-gateways.js");
 
 /**
  * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('../graphql-gateway.js').GraphQLGatewayConfig} GraphQLGatewayConfig
  * @typedef {import('graphql').GraphQLSchema} GraphQLSchema
+ * @typedef {import('../../../../index').Locals} Locals
+ * @typedef {import('../../../../index').Services} Services
+ *
  */
 
 /**
  * @typedef RegisteredServices
- * @property {GraphQLGatewayConfig["locals"]["nodes"]} nodes
- * @property {GraphQLGatewayConfig["locals"]["enums"]} enums
- * @property {GraphQLGatewayConfig["locals"]["interfaces"]} interfaces
- * @property {GraphQLGatewayConfig["locals"]["unions"]} unions
- * @property {GraphQLGatewayConfig["locals"]["types"]} types
+ * @property {Locals["nodes"]} nodes
+ * @property {Locals["enums"]} enums
+ * @property {Locals["interfaces"]} interfaces
+ * @property {Locals["unions"]} unions
+ * @property {Locals["types"]} types
  */
 
 /**
  * @typedef Runtime
- * @property {GraphQLGatewayConfig["locals"]} locals
- * @property {GraphQLGatewayConfig["services"]} services
+ * @property {Locals} locals
+ * @property {Services} services
  * @property {RegisteredServices} registeredServices
- * @property {GraphQLGatewayConfig["services"]} waitingServices
+ * @property {Services} waitingServices
  * @property {Object<string, ServiceManager>} serviceManagers
  * @property {string} typeDefs
  * @property {object} resolvers
@@ -43,7 +45,7 @@ const compareGateways = require("./compare-gateways.js");
 
 /**
  * @param {object} curry
- * @param {GraphQLGatewayConfig} curry.config
+ * @param {{services: Services, locals: Locals}} curry.config
  * @param {ServiceBroker} curry.broker
  *
  * @returns {() => Promise<Runtime>}

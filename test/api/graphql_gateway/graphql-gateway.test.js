@@ -61,12 +61,19 @@ const GraphQLGateway = proxyquire(
 );
 
 describe("GraphQLGateway", () => {
-    it("should satisfy nyc with default paramter", () => {
-        GraphQLGateway({});
+    it("should throw brokerOptions.nodeId required", () => {
+        try {
+            // eslint-disable-next-line no-new
+            new GraphQLGateway({});
+
+            throw new Error();
+        } catch (error) {
+            expect(error.message).to.equal("brokerOptions.nodeID required");
+        }
     });
 
     it("should create and return a instance of graphql-gateway", () => {
-        const gateway = new GraphQLGateway({}, {});
+        const gateway = new GraphQLGateway({}, { nodeID: "test" });
 
         expect(gateway)
             .to.have.property("broker")
@@ -77,5 +84,13 @@ describe("GraphQLGateway", () => {
             .to.equal(nodeID);
 
         expect(gateway).to.have.property("start").to.be.a("function");
+
+        expect(gateway)
+            .to.have.property("broker")
+            .to.be.a("object")
+            .to.have.property("options")
+            .to.be.a("object")
+            .to.have.property("nodeID")
+            .to.contain("test");
     });
 });

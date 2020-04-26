@@ -1,9 +1,5 @@
 /**
- * @typedef {import('./start.js').Runtime} Runtime
- */
-
-/**
- * @param {Runtime} RUNTIME
+ * @param {import('./start.js').Runtime} RUNTIME
  */
 function compareGateways(RUNTIME) {
     const { broker, locals, services } = RUNTIME;

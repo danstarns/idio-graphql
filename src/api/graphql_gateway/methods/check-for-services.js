@@ -13,11 +13,7 @@ const applianceMetadata = [
 ];
 
 /**
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
- */
-
-/**
- * @param {Runtime} RUNTIME
+ * @param {import('./start.js').Runtime} RUNTIME
  */
 module.exports = (RUNTIME) => {
     const { broker } = RUNTIME;
