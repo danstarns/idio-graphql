@@ -5,11 +5,7 @@ const { abort } = require("../../../util/index.js");
 const IdioError = require("../../idio-error.js");
 
 /**
- * @typedef {import('./start.js').Runtime} Runtime
- */
-
-/**
- * @param {Runtime} RUNTIME
+ * @param {import('./start.js').Runtime} RUNTIME
  */
 function createGatewayService(RUNTIME) {
     const { broker } = RUNTIME;

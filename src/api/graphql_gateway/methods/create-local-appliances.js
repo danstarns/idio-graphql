@@ -1,11 +1,7 @@
 const createLocalAppliance = require("../../appliances/methods/create-local-appliance.js");
 
 /**
- * @typedef {import('./start.js').Runtime} Runtime
- */
-
-/**
- * @param {Runtime} RUNTIME
+ * @param {import('./start.js').Runtime} RUNTIME
  */
 module.exports = function createLocalAppliances(RUNTIME) {
     const { registeredServices, broker, serviceManagers, locals } = RUNTIME;

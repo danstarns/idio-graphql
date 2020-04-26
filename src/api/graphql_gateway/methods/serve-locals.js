@@ -1,9 +1,5 @@
 /**
- * @typedef {import('../graphql-gateway.js').Runtime} Runtime
- */
-
-/**
- * @param {Runtime} RUNTIME
+ * @param {import('./start.js').Runtime} RUNTIME
  */
 function serveLocals(RUNTIME) {
     const { locals, broker } = RUNTIME;

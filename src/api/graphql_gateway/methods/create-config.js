@@ -11,14 +11,13 @@ const {
 } = require("../../appliances/index.js");
 
 /**
- * @typedef {import('../graphql-gateway.js').GraphQLGatewayConfig} GraphQLGatewayConfig
- * @typedef {import('../graphql-gateway.js').locals} locals
- * @typedef {import('../graphql-gateway.js').services} services
+ * @typedef {import('../../../../index').Locals} Locals
+ * @typedef {import('../../../../index').Services} Services
  */
 
 /**
- * @param {services} services
- * @returns {services}
+ * @param {Services} services
+ * @returns {Services}
  */
 function validateServices(services = {}) {
     if (!(typeof services === "object")) {
@@ -65,8 +64,8 @@ function validateServices(services = {}) {
 
 /**
  *
- * @param {locals} locals
- * @returns {locals}
+ * @param {Locals} locals
+ * @returns {Locals}
  */
 function validateLocals(locals = {}) {
     if (!(typeof locals === "object")) {
@@ -120,7 +119,7 @@ function validateLocals(locals = {}) {
 }
 
 /**
- * @param {GraphQLGatewayConfig} config
+ * @param {{services: Services, locals: Locals}} config
  */
 function createConfig(config) {
     if (!config) {
