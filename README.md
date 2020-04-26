@@ -43,6 +43,7 @@ $ npm install idio-graphql
 2. [molecular](https://moleculer.services/) ✔
 3. [graphql-tools](https://github.com/Urigo/graphql-tools) ✔
 4. [graphql-upload](https://github.com/jaydenseric/graphql-upload) 🏗
+5. [graphql-tag](https://github.com/apollographql/graphql-tag) ✔
 
 > This package is inspired by and or build's upon; Apollo Federation, GraphQL Modules & Moleculer.
 
@@ -52,8 +53,8 @@ Provide a clean & structured API where engineers can prototype, build and integr
 ## Examples
 > Got an application you want to showcase? Make a PR and edit the README [here](https://github.com/danstarns/idio-graphql)
 
-1. [Real world monolith](https://github.com/danstarns/idio-graphql-realworld-example-app)
-2. [Real world microservices system](https://github.com/danstarns/graphql-microservices-realworld-example-system)
+1. [Monolith](https://github.com/danstarns/idio-graphql-realworld-example-app)
+2. [Microservice](https://github.com/danstarns/graphql-microservices-realworld-example-system)
 3. [Mini examples](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of this package.
 
 ## Links
@@ -64,7 +65,16 @@ Provide a clean & structured API where engineers can prototype, build and integr
 
 ## FAQ
 
+1. [How do I integrate with my Apollo server ?](#how-do-i-integrate-with-my-apollo-server-?)
+2. [How do I get started with microservices ?](#how-do-i-get-started-with-microservices-?)
+3. [Can I use schema directives ?](#can-i-use-schema-directives-?)
+4. [How can my services talk with each other ?](#how-can-my-services-talk-with-each-other-?)
+4. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag)
+
 ### How do I integrate with my Apollo server ?
+
+---
+
 This package generates its schema with the help from [makeExecutableSchema](https://www.apollographql.com/docs/graphql-tools/generate-schema/). The result of `makeExecutableSchema` is returned from `combineNodes` & `GraphQLSchema`.
 
 Using [combineNodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes)
@@ -93,13 +103,18 @@ const { typeDefs, resolvers } = await gateway.start();
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 ```
+
 ### How do I get started with microservices ?
+
+---
 
 This package builds its microservices features on top of a package [Molecular](https://moleculer.services/), this means you can integrate with Moleculer's features. 
 
 > Molecular is a optional dependency 
 
 You don't need to change much code & you can 'spin up' a service with as little as;
+
+> Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices)
 
 ```javascript
 const User = new GraphQLNode({
@@ -111,23 +126,48 @@ await User.serve({
 });
 ```
 
-> Do not forget to start your [gateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
+> Do not forget to create your [gateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
+
+### Can I use schema directives ?
+
+---
+
+Yes! you should use [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive) and apply it at `combineNodes` or `GraphQLGateway`.
 
 ```javascript
-const gateway = new GraphQLGateway(
-    {
-        services: {
-            nodes: ["User"]
-        }
-    },
-    {
-        transporter: "nats://localhost",
-        nodeID: "gateway"
-    }
-);
+const MyDirective = new IdioDirective({
+    name: "...",
+    typeDefs: ` ... `,
+    resolver: SchemaDirectiveVisitor
+});
+
+const { typeDefs, resolvers } = combineNodes(nodes, { directives: [MyDirective] });
 ```
 
-> Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices)
+### How can my services talk with each other ?
+
+---
+
+This package introduces a powerful feature [Inter-Schema Execution](https://danstarns.github.io/idio-graphql/docs/inter-schema-execution). You can use this to make GraphQL powered Queries & Mutations against your own or specified schema. We use dependency injection to provide useful functions, at runtime, for your disposal. 
+
+```javascript
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `...`
+    resolvers: {
+        Query: {
+            user: (root, args, { injections }) => { ... }
+        }
+    }
+});
+```
+
+
+### Does it support graphql files or graphql tag ?
+
+---
+
+Of Course! Wherever you need to provide `typeDefs` you can use strings, [graphql-tag](https://github.com/apollographql/graphql-tag) or file paths.
 
 
 # Quick Start
