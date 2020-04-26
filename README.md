@@ -264,7 +264,7 @@ Remember the initial schema & keep track of services with the corresponding name
 
 Your gateway will;
 1. Not throw if it loses connection to a service
-2. Allow unlimited services with the same name join the swarm
+2. Allow unlimited services, with the same name, to join the swarm
 3. Load balance requests to each service
 4. Not start until all services are connected
 5. Ensure no other gateway has the same name but different schema
