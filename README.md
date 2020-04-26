@@ -177,6 +177,9 @@ await User.serve({
 
 > Do not forget to create your [gateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
 
+#### Gradual Adoption
+You don't have to have all your nodes as a service. You can have some nodes hosted on the same instances as the gateway. Use `locals` & `services` in [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway) to merge all nodes together. Read more about gradual adoption [here](https://danstarns.github.io/idio-graphql/docs/microservices#gradual-adoption).
+
 ### Can I use schema directives ?
 
 ---
