@@ -69,7 +69,7 @@ Provide a clean & structured API where engineers can prototype, build and integr
 2. [How do I integrate with my Apollo server ?](#how-do-i-integrate-with-my-apollo-server-)
 3. [How do I get started with microservices ?](#how-do-i-get-started-with-microservices-)
 4. [Can I use schema directives ?](#can-i-use-schema-directives-)
-5. [How can my services talk with each other ?](#how-can-my-services-talk-with-each-other-)
+5. [How can my nodes talk with each other ?](#how-can-my-nodes-talk-with-each-other-)
 6. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag-)
 
 ### What is a node ?
@@ -116,6 +116,9 @@ const User = new GraphQLNode({
     ...
 });
 ```
+
+#### Is it all about nodes?
+No! There is plenty of other classes to help you construct your GraphQL schema start reading about schemaAppliances [here](https://danstarns.github.io/idio-graphql/docs/schema-appliances).
 
 ### How do I integrate with my Apollo server ?
 
@@ -187,22 +190,60 @@ const MyDirective = new IdioDirective({
     resolver: SchemaDirectiveVisitor
 });
 
-const { typeDefs, resolvers } = combineNodes(nodes, { directives: [MyDirective] });
+const { typeDefs, resolvers, schemaDirectives } = combineNodes(nodes, { directives: [MyDirective] });
 ```
 
-### How can my services talk with each other ?
+### How can my nodes talk with each other ?
 
 ---
 
 This package introduces a powerful feature [Inter-Schema Execution](https://danstarns.github.io/idio-graphql/docs/inter-schema-execution). You can use this to make GraphQL powered Queries & Mutations against your own or specified schema. We use dependency injection to provide useful functions, at runtime, for your disposal. 
 
+> Inter-Schema Execution works with your served nodes, this will allow you to accomplish GraphQL powered service-service communication.
+
 ```javascript
-const User = new GraphQLNode({
-    name: "User",
-    typeDefs: `...`
+const Post = new GraphQLNode({
+    name: "Post",
+    typeDefs: `
+        type Post {
+            posts: {
+                title
+            }
+        }
+        
+        type Query {
+            posts: [Post]
+        }
+    `,
     resolvers: {
         Query: {
             user: (root, args, { injections }) => { ... }
+        }
+    }
+});
+
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            posts: [Post]
+        }
+    `,
+    resolvers: {
+        Fields: {
+            post: async (root, args, { injections }) => {
+                const { data, errors } = await injections.execute(
+                    `
+                        query {
+                            posts {
+                                title
+                            }
+                        }
+                    `
+                );
+
+                return data.posts;
+            }
         }
     }
 });
@@ -261,7 +302,6 @@ async function main() {
 }
 
 main();
-
 ```
 
 # Microservices Quick Start
