@@ -71,6 +71,7 @@ Provide a clean & structured API where engineers can prototype, build and integr
 4. [Can I use schema directives ?](#can-i-use-schema-directives-)
 5. [How can my nodes talk with each other ?](#how-can-my-nodes-talk-with-each-other-)
 6. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag-)
+7. [What is the role of the gateway ?](#what-is-the-role-of-the-gateway-)
 
 ### What is a node ?
 
@@ -117,8 +118,8 @@ const User = new GraphQLNode({
 });
 ```
 
-#### Is it all about nodes?
-No! There is plenty of other classes to help you construct your GraphQL schema start reading about schemaAppliances [here](https://danstarns.github.io/idio-graphql/docs/schema-appliances).
+#### Is it all about nodes ?
+No! There are plenty of classes to help you construct your GraphQL schema start reading about schemaAppliances [here](https://danstarns.github.io/idio-graphql/docs/schema-appliances).
 
 ### How do I integrate with my Apollo server ?
 
@@ -157,13 +158,11 @@ const apolloServer = new ApolloServer({ typeDefs, resolvers });
 
 ---
 
-This package builds its microservices features on top of a package [Molecular](https://moleculer.services/), this means you can integrate with Moleculer's features. 
+This package builds its microservices features on top of a package [Molecular](https://moleculer.services/), this means you can integrate with Moleculer's features. Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices).
 
 > Molecular is a optional dependency 
 
 You don't need to change much code & you can 'spin up' a service with as little as;
-
-> Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices)
 
 ```javascript
 const User = new GraphQLNode({
@@ -178,13 +177,13 @@ await User.serve({
 > Do not forget to create your [gateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
 
 #### Gradual Adoption
-You don't have to have all your nodes as a service. You can have some nodes hosted on the same instances as the gateway. Use `locals` & `services` in [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway) to merge all nodes together. Read more about gradual adoption [here](https://danstarns.github.io/idio-graphql/docs/microservices#gradual-adoption).
+You don't need have to have all your nodes as a service. You can have some nodes hosted on the same instance as the gateway. Use `locals` & `services` in [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway) to merge all nodes together. Read more about gradual adoption [here](https://danstarns.github.io/idio-graphql/docs/microservices#gradual-adoption).
 
 ### Can I use schema directives ?
 
 ---
 
-Yes! you should use [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive) and apply it at `combineNodes` or `GraphQLGateway`.
+Yes! You should use a [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive) and apply it at `combineNodes` or `GraphQLGateway`.
 
 ```javascript
 const MyDirective = new IdioDirective({
@@ -255,8 +254,25 @@ const User = new GraphQLNode({
 
 Of Course! Wherever you need to provide `typeDefs` you can use strings, [graphql-tag](https://github.com/apollographql/graphql-tag) or file paths.
 
+### What is the role of the gateway ?
+
+---
+
+Remember the initial schema & keep track of services with the corresponding names. Produce a Graphql schema after introspecting each supplied service.
+
+> `GraphQLGateway` acts as a reverse proxy when using Inter-Schema execution.
+
+Your gateway will;
+1. Not throw if it loses connection to a service
+2. Allow unlimited services with the same name join the swarm
+3. Load balance requests to each service
+4. Not start until all services are connected
+5. Ensure no other gateway has the same name but different schema
+
+> You can spawn multiple instances of the same gateway 
 
 # Quick Start
+
 ```
 $ npm install idio-graphql apollo-server graphql-tag
 ```
