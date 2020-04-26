@@ -65,11 +65,57 @@ Provide a clean & structured API where engineers can prototype, build and integr
 
 ## FAQ
 
-1. [How do I integrate with my Apollo server ?](#how-do-i-integrate-with-my-apollo-server-?)
-2. [How do I get started with microservices ?](#how-do-i-get-started-with-microservices-?)
-3. [Can I use schema directives ?](#can-i-use-schema-directives-?)
-4. [How can my services talk with each other ?](#how-can-my-services-talk-with-each-other-?)
-4. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag)
+1. [What is a node ?](#what-is-a-node-)
+2. [How do I integrate with my Apollo server ?](#how-do-i-integrate-with-my-apollo-server-)
+3. [How do I get started with microservices ?](#how-do-i-get-started-with-microservices-)
+4. [Can I use schema directives ?](#can-i-use-schema-directives-)
+5. [How can my services talk with each other ?](#how-can-my-services-talk-with-each-other-)
+6. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag-)
+
+### What is a node ?
+
+---
+
+A [Node](https://danstarns.github.io/idio-graphql/docs/graphql-node) is designed to modularize a [ObjectTypeDefinition](http://spec.graphql.org/June2018/#ObjectTypeDefinition) together with its related resolvers & properties. You can think of a node as a module.
+
+```javascript
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User ...
+
+        type Query {
+            getUser: User
+        }
+    `,
+    resolvers: {
+        Query: {
+            getUser: (root, args, ctx) => { ... }
+        }
+    }
+});
+```
+
+> You can compose nodes
+
+```javascript
+const Comment = new GraphQLNode({
+    name: "Comment",
+    ...
+});
+
+const Post = new GraphQLNode({
+    name: "Post",
+    nodes: [ Comment ],
+    ...
+});
+
+const User = new GraphQLNode({
+    name: "User",
+    nodes: [ Post ]
+    ...
+});
+```
 
 ### How do I integrate with my Apollo server ?
 
