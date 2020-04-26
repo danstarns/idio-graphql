@@ -215,11 +215,7 @@ const Post = new GraphQLNode({
             posts: [Post]
         }
     `,
-    resolvers: {
-        Query: {
-            user: (root, args, { injections }) => { ... }
-        }
-    }
+    resolvers: { ... }
 });
 
 const User = new GraphQLNode({
