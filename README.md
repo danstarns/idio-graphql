@@ -2,6 +2,11 @@
 [![CircleCI](https://circleci.com/gh/danstarns/idio-graphql/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/danstarns/idio-graphql?branch=master)
 [![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues) [![TypeScript Compatible](https://img.shields.io/npm/types/scrub-js.svg)](https://github.com/danstarns/idio-graphql/blob/master/index.d.ts)
 
+![banner](./assets/logo/banner.png)
+
+# About
+Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
+
 ```
 $ npm install idio-graphql
 ```
@@ -34,10 +39,6 @@ $ npm install idio-graphql
     * [IdioInterface](https://danstarns.github.io/idio-graphql/docs/idio-interface)
     * [IdioUnion](https://danstarns.github.io/idio-graphql/docs/idio-union)
     * [GraphQLType](https://danstarns.github.io/idio-graphql/docs/graphql-type)
-
-
-# About
-Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
 
 ## Integrates with 
 1. [apollo-server](https://github.com/apollographql/apollo-server) ✔
