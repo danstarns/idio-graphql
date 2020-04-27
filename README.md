@@ -72,6 +72,7 @@ Provide a clean & structured API where engineers can prototype, build and integr
 5. [How can my nodes talk with each other ?](#how-can-my-nodes-talk-with-each-other-)
 6. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag-)
 7. [What is the role of the gateway ?](#what-is-the-role-of-the-gateway-)
+8. [Does it support subscriptions ?](#does-it-support-subscriptions-)
 
 ### What is a node ?
 
@@ -208,9 +209,7 @@ const Post = new GraphQLNode({
     name: "Post",
     typeDefs: `
         type Post {
-            posts: {
-                title
-            }
+            title: String
         }
         
         type Query {
@@ -229,7 +228,7 @@ const User = new GraphQLNode({
     `,
     resolvers: {
         Fields: {
-            post: async (root, args, { injections }) => {
+            posts: async (root, args, { injections }) => {
                 const { data, errors } = await injections.execute(
                     `
                         query {
@@ -270,6 +269,35 @@ Your gateway will;
 5. Ensure no other gateway has the same name but different schema
 
 > You can spawn multiple instances of the same gateway 
+
+### Does it support subscriptions ?
+
+---
+
+Yes! You can setup subscriptions in a [node](https://danstarns.github.io/idio-graphql/docs/graphql-node). Subscriptions will work with microservices.
+
+```javascript
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User ...
+
+        type Subscription {
+            userUpdate: User
+        }
+    `,
+    resolvers: {
+        Subscription: {
+            userUpdate: {
+                subscribe: async function* (){} // AsyncGenerator
+            }
+        }
+    }
+});
+```
+
+> Subscriptions will not work service-service communication.
+
 
 # Quick Start
 

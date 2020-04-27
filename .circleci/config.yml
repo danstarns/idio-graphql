@@ -69,16 +69,7 @@ workflows:
           filters:
             branches:
               only: /master/
-      - hold:
-          filters:
-            branches:
-              only: /master/
-          type: approval
-          requires:
-            - build
       - deploy:
           filters:
             branches:
               only: /master/
-          requires:
-            - hold
