@@ -208,9 +208,7 @@ const Post = new GraphQLNode({
     name: "Post",
     typeDefs: `
         type Post {
-            posts: {
-                title
-            }
+            title: String
         }
         
         type Query {
