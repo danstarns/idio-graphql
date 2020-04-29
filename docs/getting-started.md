@@ -33,11 +33,11 @@ $ npm install idio-graphql
 
 **https://github.com/danstarns/idio-graphql/blob/master/contributing.md**
 
-## Slack
+## Gitter
 
 ---
 
-**https://idio-graphql.slack.com**
+**https://gitter.im/idio-graphql/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link**
 
 ## Quick Start
 
