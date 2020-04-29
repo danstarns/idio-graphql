@@ -1,12 +1,34 @@
 # idio-graphql
 [![CircleCI](https://circleci.com/gh/danstarns/idio-graphql/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/danstarns/idio-graphql?branch=master)
-[![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues) [![TypeScript Compatible](https://img.shields.io/npm/types/scrub-js.svg)](https://github.com/danstarns/idio-graphql/blob/master/index.d.ts)
+[![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues) [![TypeScript Compatible](https://img.shields.io/npm/types/scrub-js.svg)](https://github.com/danstarns/idio-graphql/blob/master/index.d.ts) [![Gitter](https://badges.gitter.im/idio-graphql/community.svg)](https://gitter.im/idio-graphql/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # About
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
 
 ```
 $ npm install idio-graphql
+```
+
+```javascript
+const User = new GraphQLNode({
+    name: "User",
+    typeDefs: `
+        type User {
+            id: ID
+            name: String
+            age: Int
+        }
+
+        type Query {
+            user(id: ID!): User
+        }
+    `,
+    resolvers: { ... }
+});
+
+const { typeDefs, resolvers } = combineNodes([ User ]);
+
+const server = new ApolloServer({ typeDefs, resolvers });
 ```
 
 # Index
@@ -21,22 +43,7 @@ $ npm install idio-graphql
     * [Modules](#quick-start)
     * [Microservices](#microservices-quick-start)
 3. [Guides](https://danstarns.github.io/idio-graphql/docs/getting-started#guides)
-    * [Creating Nodes](https://danstarns.github.io/idio-graphql/docs/creating-nodes)
-    * [Combining Nodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes-guide)
-    * [Schema Appliances](https://danstarns.github.io/idio-graphql/docs/schema-appliances)
-    * [Resolver Hooks](https://danstarns.github.io/idio-graphql/docs/resolver-hooks)
-    * [Microservices](https://danstarns.github.io/idio-graphql/docs/microservices)
-    * [Inter-Schema Execution](https://danstarns.github.io/idio-graphql/docs/inter-schema-execution)
 4. [API](https://danstarns.github.io/idio-graphql/docs/)
-    * [GraphQLNode](https://danstarns.github.io/idio-graphql/docs/graphql-node)
-    * [combineNodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes)
-    * [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
-    * [IdioEnum](https://danstarns.github.io/idio-graphql/docs/idio-enum)
-    * [IdioScalar](https://danstarns.github.io/idio-graphql/docs/idio-scalar)
-    * [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive)
-    * [IdioInterface](https://danstarns.github.io/idio-graphql/docs/idio-interface)
-    * [IdioUnion](https://danstarns.github.io/idio-graphql/docs/idio-union)
-    * [GraphQLType](https://danstarns.github.io/idio-graphql/docs/graphql-type)
 
 ## Integrates with 
 1. [apollo-server](https://github.com/apollographql/apollo-server) ✔
@@ -59,7 +66,7 @@ Provide a clean & structured API where engineers can prototype, build and integr
 
 ## Links
 1. [Documentation](https://danstarns.github.io/idio-graphql/)
-2. [Slack](https://idio-graphql.slack.com)
+2. [Gitter](https://gitter.im/idio-graphql/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 3. [GitHub](https://github.com/danstarns/idio-graphql)
 4. [NPM](https://www.npmjs.com/package/idio-graphql)
 
