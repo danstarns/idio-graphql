@@ -80,6 +80,6 @@
     "graphql-tools": "^5.0.0",
     "regenerator-runtime": "^0.13.5",
     "safe-json-stringify": "^1.2.0",
-    "uuid": "^7.0.3"
+    "uuid": "^8.0.0"
   }
 }
