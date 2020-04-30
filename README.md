@@ -1,6 +1,7 @@
 # idio-graphql
 [![CircleCI](https://circleci.com/gh/danstarns/idio-graphql/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/danstarns/idio-graphql?branch=master)
-[![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues) [![TypeScript Compatible](https://img.shields.io/npm/types/scrub-js.svg)](https://github.com/danstarns/idio-graphql/blob/master/index.d.ts) [![Gitter](https://badges.gitter.im/idio-graphql/community.svg)](https://gitter.im/idio-graphql/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues) [![TypeScript Compatible](https://img.shields.io/npm/types/scrub-js.svg)](https://github.com/danstarns/idio-graphql/blob/master/index.d.ts) [![Gitter](https://badges.gitter.im/idio-graphql/community.svg)](https://gitter.im/idio-graphql/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![GitHub stars](https://img.shields.io/github/stars/danstarns/idio-graphql.svg?style=social&label=Star&maxAge=2592000)](https://github.com/danstarns/idio-graphql)
+
 
 # About
 Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
@@ -165,6 +166,8 @@ const apolloServer = new ApolloServer({ typeDefs, resolvers });
 ### How do I get started with microservices ?
 
 ---
+
+> Watch tutorial [here](https://youtu.be/LqMpIfib0JU)
 
 This package builds its microservices features on top of a package [Molecular](https://moleculer.services/), this means you can integrate with Moleculer's features. Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices).
 
