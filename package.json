@@ -77,7 +77,7 @@
     "core-js": "^3.6.5",
     "for-emit-of": "^1.0.4",
     "graphql": "^14.6.0",
-    "graphql-tools": "^5.0.0",
+    "graphql-tools": "^6.0.0",
     "regenerator-runtime": "^0.13.5",
     "safe-json-stringify": "^1.2.0",
     "uuid": "^8.1.0"
