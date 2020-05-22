@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { makeExecutableSchema } = require("graphql-tools");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
 const gql = require("graphql-tag");
 const proxyquire = require("proxyquire");
 const execute = require("../../src/util/execute.js");
@@ -137,13 +137,9 @@ describe("execute", () => {
                 }
             } = result;
 
-            expect(name)
-                .to.be.a("string")
-                .to.equal("Dan");
+            expect(name).to.be.a("string").to.equal("Dan");
 
-            expect(age)
-                .to.be.a("number")
-                .to.equal(20);
+            expect(age).to.be.a("number").to.equal(20);
         });
 
         it("should query against the schema throw hardcoded execution result", async () => {
