@@ -4,8 +4,6 @@ const {
 } = require("@graphql-toolkit/schema-merging");
 const { parseTypeDefs } = require("../../../util/index.js");
 
-const IdioError = require("../../idio-error.js");
-
 /**
  * @param {import('../index.js').appliances} appliances
  * @returns {{typeDefs: string, resolvers: object}}
@@ -32,7 +30,7 @@ function loadAppliances(appliances, metadata) {
     }
 
     if (!Array.isArray(appliances)) {
-        throw new IdioError(`expected '${name}' to be an array.`);
+        throw new Error(`expected '${name}' to be an array.`);
     }
 
     const { typeDefs, resolvers } = appliances.reduce(

@@ -1,6 +1,5 @@
 const { parseTypeDefs, validateTypeDefs } = require(`../../util/index.js`);
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
-const IdioError = require("../idio-error.js");
 
 /**
  * @typedef {import('graphql-tools').SchemaDirectiveVisitor} SchemaDirectiveVisitor
@@ -34,27 +33,27 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
     this.resolver;
 
     if (!name) {
-        throw new IdioError(`${prefix} name required.`);
+        throw new Error(`${prefix} name required.`);
     }
 
     if (typeof name !== `string`) {
-        throw new IdioError(`${prefix} name must be of type 'string'.`);
+        throw new Error(`${prefix} name must be of type 'string'.`);
     }
 
     if (RESTRICTED_NAMES[name.toLowerCase()]) {
-        throw new IdioError(`${prefix}: '${name}' with invalid name.`);
+        throw new Error(`${prefix}: '${name}' with invalid name.`);
     }
 
     this.name = name;
 
     if (!typeDefs) {
-        throw new IdioError(`${prefix}: '${name}' typeDefs required.`);
+        throw new Error(`${prefix}: '${name}' typeDefs required.`);
     }
 
     try {
         this.typeDefs = parseTypeDefs(typeDefs);
     } catch (error) {
-        throw new IdioError(`${prefix}: '${name}' \n${error}.`);
+        throw new Error(`${prefix}: '${name}' \n${error}.`);
     }
 
     this.typeDefs = validateTypeDefs(this, {
@@ -65,7 +64,7 @@ function IdioDirective({ name, typeDefs, resolver } = {}) {
     });
 
     if (!resolver) {
-        throw new IdioError(`${prefix}: '${name}' without a resolver.`);
+        throw new Error(`${prefix}: '${name}' without a resolver.`);
     }
 
     this.resolver = resolver;

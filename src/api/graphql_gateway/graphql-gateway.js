@@ -1,6 +1,5 @@
 const { createConfig, start } = require("./methods/index.js");
 const { createBroker } = require("../../util/index.js");
-const IdioError = require("../idio-error.js");
 
 /**
  * @typedef {import('moleculer').BrokerOptions} BrokerOptions
@@ -18,7 +17,7 @@ class GraphQLGateway {
      */
     constructor(config, brokerOptions = {}) {
         if (!brokerOptions.nodeID) {
-            throw new IdioError("brokerOptions.nodeID required");
+            throw new Error("brokerOptions.nodeID required");
         }
 
         this.broker = createBroker(

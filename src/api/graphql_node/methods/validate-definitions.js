@@ -1,5 +1,4 @@
 const { parse } = require("graphql/language");
-const IdioError = require("../../idio-error.js");
 
 /** @typedef {import('../graphql-node.js').GraphQLNode} GraphQLNode */
 
@@ -12,13 +11,13 @@ function validateDefinitions(node) {
     const typeOfResolvers = typeof node.resolvers;
 
     if (typeOfResolvers !== "object") {
-        throw new IdioError(
+        throw new Error(
             `${prefix} expected node resolvers to be of type 'object' but received '${typeOfResolvers}'.`
         );
     }
 
     if (!Object.keys(node.resolvers).length) {
-        throw new IdioError(
+        throw new Error(
             `${prefix} at least one resolver required. Consider using 'schemaGlobals' if '${node.name}' does not require a resolver.`
         );
     }
@@ -30,7 +29,7 @@ function validateDefinitions(node) {
     );
 
     if (notAllowedResolvers.length) {
-        throw new IdioError(
+        throw new Error(
             `${prefix} invalid resolvers '[ ${notAllowedResolvers} ]'.`
         );
     }
@@ -39,7 +38,7 @@ function validateDefinitions(node) {
         Object.entries(node.resolvers.Subscription).forEach(
             ([key, resolver]) => {
                 if (!resolver.subscribe) {
-                    throw new IdioError(
+                    throw new Error(
                         `${prefix} resolvers.Subscription.${key} must contain a subscribe method.`
                     );
                 }
@@ -52,7 +51,7 @@ function validateDefinitions(node) {
     try {
         ast = parse(node.typeDefs);
     } catch (error) {
-        throw new IdioError(`${prefix} could not parse typeDefs \n${error}.`);
+        throw new Error(`${prefix} could not parse typeDefs \n${error}.`);
     }
 
     const nodeAst = ast.definitions
@@ -63,7 +62,7 @@ function validateDefinitions(node) {
 
     Object.keys(node.resolvers.Fields || {}).forEach((key) => {
         if (!nodeFields.includes(key)) {
-            throw new IdioError(
+            throw new Error(
                 `${prefix} has a Field resolver called '${key}' thats not defined in typeDefs.`
             );
         }
@@ -92,7 +91,7 @@ function validateDefinitions(node) {
 
         resolvers.SDL.forEach((field) => {
             if (!resolvers.JS.includes(field)) {
-                throw new IdioError(
+                throw new Error(
                     `${prefix} has a ${type} in the typeDefs called '${field}' thats not defined in resolvers.`
                 );
             }
@@ -100,7 +99,7 @@ function validateDefinitions(node) {
 
         resolvers.JS.forEach((method) => {
             if (!resolvers.SDL.includes(method)) {
-                throw new IdioError(
+                throw new Error(
                     `${prefix} has a ${type} resolver called '${method}' thats not defined in typeDefs.`
                 );
             }

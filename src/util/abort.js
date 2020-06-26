@@ -1,8 +1,6 @@
-const IdioError = require("../api/idio-error.js");
-
 /* istanbul ignore next */
 function abort({ params: { message } }) {
-    console.error(new IdioError(message));
+    console.error(new Error(message));
 
     process.exit(1);
 }

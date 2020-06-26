@@ -1,6 +1,4 @@
-const { GraphQLScalarType } = require("graphql");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
-const IdioError = require("../idio-error.js");
 
 /**
  * @typedef {import('graphql').GraphQLScalarType} GraphQLScalarType
@@ -33,15 +31,15 @@ function IdioScalar({ name, resolver } = {}) {
     this.typeDefs;
 
     if (!name) {
-        throw new IdioError(`${prefix} name required.`);
+        throw new Error(`${prefix} name required.`);
     }
 
     if (typeof name !== "string") {
-        throw new IdioError(`${prefix} name must be of type 'string'.`);
+        throw new Error(`${prefix} name must be of type 'string'.`);
     }
 
     if (RESTRICTED_NAMES[name.toLowerCase()]) {
-        throw new IdioError(`${prefix}: '${name}' with invalid name.`);
+        throw new Error(`${prefix}: '${name}' with invalid name.`);
     }
 
     this.name = name;
@@ -49,7 +47,7 @@ function IdioScalar({ name, resolver } = {}) {
     this.typeDefs = `scalar ${name}`;
 
     if (!resolver) {
-        throw new IdioError(`${prefix}: '${name}' without resolver.`);
+        throw new Error(`${prefix}: '${name}' without resolver.`);
     }
 
     this.resolver = resolver;

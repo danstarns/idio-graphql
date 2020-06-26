@@ -5,7 +5,6 @@ const {
     isFunction,
     injectGraphQLArgs
 } = require("../../../util/index.js");
-const IdioError = require("../../idio-error.js");
 
 function wrapResolvers(node) {
     const prefix = `GraphQLNode with name: '${node.name}'`;
@@ -59,7 +58,7 @@ function wrapResolvers(node) {
                                         yield next;
                                     }
                                 } catch (error) {
-                                    throw new IdioError(
+                                    throw new Error(
                                         `${prefix} resolvers.${type}.${name} failed:\n${error}`
                                     );
                                 }
@@ -82,7 +81,7 @@ function wrapResolvers(node) {
                         return;
                     }
 
-                    throw new IdioError(
+                    throw new Error(
                         `${prefix} has resolver.${type}.${name} that requires a 'resolve' method.`
                     );
                 });

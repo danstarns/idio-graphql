@@ -1,6 +1,5 @@
 const { parse } = require("graphql/language");
 const { printWithComments } = require("@graphql-toolkit/schema-merging");
-const IdioError = require("../api/idio-error.js");
 
 function validateTypeDefs(instance, metadata) {
     let ast;
@@ -8,7 +7,7 @@ function validateTypeDefs(instance, metadata) {
     try {
         ast = parse(instance.typeDefs);
     } catch (error) {
-        throw new IdioError(
+        throw new Error(
             `${metadata._Constructor.name} with name: '${instance.name}' could not parse typeDefs \n${error}.`
         );
     }
@@ -18,7 +17,7 @@ function validateTypeDefs(instance, metadata) {
         .find((def) => def.name.value === instance.name);
 
     if (!foundDefinition) {
-        throw new IdioError(
+        throw new Error(
             `${metadata._Constructor.name} with name: '${instance.name}' should contain a ${metadata.kind} called '${instance.name}'.`
         );
     }

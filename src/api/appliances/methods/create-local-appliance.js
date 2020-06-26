@@ -6,7 +6,6 @@ const IdioInterface = require("../idio-interface.js");
 const IdioScalar = require("../idio-scalar.js");
 const IdioDirective = require("../idio-directive.js");
 const GraphQLType = require("../graphql-type.js");
-const IdioError = require("../../idio-error.js");
 
 const APPLIANCE_METADATA = [
     {
@@ -66,7 +65,7 @@ function createLocalAppliance({ type, broker, serviceManagers }) {
         type !== "interfaces" &&
         type !== "types"
     ) {
-        throw new IdioError("invalid type");
+        throw new Error("invalid type");
     }
 
     const metadata = APPLIANCE_METADATA.find((x) => x.name === type);
@@ -87,7 +86,7 @@ function createLocalAppliance({ type, broker, serviceManagers }) {
                     const serviceToCall = await instanceServiceManager.getNextService();
 
                     if (!serviceToCall) {
-                        throw new IdioError(
+                        throw new Error(
                             `No service with name: '${introspection.name}' online`
                         );
                     }
@@ -96,7 +95,7 @@ function createLocalAppliance({ type, broker, serviceManagers }) {
                         graphQLArgs: safeJsonStringify(graphQLArgs)
                     });
                 } catch ({ message }) {
-                    throw new IdioError(
+                    throw new Error(
                         `${introspection.name}.${method} failed, ${message}`
                     );
                 }
@@ -118,7 +117,7 @@ function createLocalAppliance({ type, broker, serviceManagers }) {
                 const serviceToCall = await instanceServiceManager.getNextService();
 
                 if (!serviceToCall) {
-                    throw new IdioError(
+                    throw new Error(
                         `No service with name: '${introspection.name}' online.`
                     );
                 }
@@ -127,7 +126,7 @@ function createLocalAppliance({ type, broker, serviceManagers }) {
                     graphQLArgs: safeJsonStringify(graphQLArgs)
                 });
             } catch ({ message }) {
-                throw new IdioError(
+                throw new Error(
                     `${introspection.name}.__resolveType failed, ${message}`
                 );
             }

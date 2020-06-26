@@ -49,12 +49,6 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: Delete Readme
-          command: unlink  ~/repo/README.md
-      - run:
-          name: Copy Smaller Readme
-          command: cp  ~/repo/README.npm.md ~/repo/README.md
-      - run:
           name: Authenticate with NPM
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run:

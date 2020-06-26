@@ -1,8 +1,6 @@
-const IdioError = require("../api/idio-error.js");
-
 function checkInstance({ instance, of, name }) {
     if (!(instance instanceof of)) {
-        throw new IdioError(
+        throw new Error(
             `received a ${name} not a instance of ${of.name} \n${JSON.stringify(
                 instance,
                 null,

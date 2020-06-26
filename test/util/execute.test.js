@@ -3,7 +3,6 @@ const { makeExecutableSchema } = require("@graphql-tools/schema");
 const gql = require("graphql-tag");
 const proxyquire = require("proxyquire");
 const execute = require("../../src/util/execute.js");
-const IdioError = require("../../src/api/idio-error.js");
 
 describe("execute", () => {
     it("should return 2 methods", () => {
@@ -177,7 +176,7 @@ describe("execute", () => {
 
             const [error] = result.errors;
 
-            expect(error).to.be.a.instanceOf(IdioError);
+            expect(error).to.be.a.instanceOf(Error);
         });
     });
 

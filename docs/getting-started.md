@@ -3,7 +3,7 @@ id: getting-started
 title: Getting Started
 ---
 
-Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels. 
+Node.js library for splitting SDL first GraphQL schemas into composable chunks.
 
 ```shell
 $ npm install idio-graphql
@@ -23,9 +23,9 @@ $ npm install idio-graphql
 ## Examples 
 ---
 
-1. [**RealWorld**](https://github.com/danstarns/idio-graphql-realworld-example-app) - Node.js GraphQL example server built with modules, authentication, pagination, and more.
-2. [**RealWorld Microservice**](https://github.com/danstarns/graphql-microservices-realworld-example-system) - Node.js powered distributed GraphQL schema built with modules, authentication, pagination, and more.
-3. [**Mini Examples**](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of idio-graphql.
+1. [**Monolith**](https://github.com/danstarns/idio-graphql-realworld-example-app)
+2. [**Microservice**](https://github.com/danstarns/graphql-microservices-realworld-example-system)
+3. [**Mini examples**](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of this package.
 
 ## Contributing
 

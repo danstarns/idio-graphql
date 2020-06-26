@@ -4,7 +4,7 @@
 
 
 # About
-Node.js framework that enables engineers to effortlessly distribute a GraphQL schema across many files or communication channels.
+Node.js library for splitting SDL first GraphQL schemas into composable chunks.
 
 ```
 $ npm install idio-graphql

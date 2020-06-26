@@ -1,6 +1,5 @@
 const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
-const IdioError = require("../idio-error.js");
 const {
     validateDefinitions,
     wrapResolvers,
@@ -95,15 +94,15 @@ function GraphQLNode(config = {}) {
     this.serve;
 
     if (!name) {
-        throw new IdioError(`${prefix}: name required.`);
+        throw new Error(`${prefix}: name required.`);
     }
 
     if (typeof name !== `string`) {
-        throw new IdioError(`${prefix}: name must be of type 'string'.`);
+        throw new Error(`${prefix}: name must be of type 'string'.`);
     }
 
     if (RESTRICTED_NAMES[name.toLowerCase()]) {
-        throw new IdioError(
+        throw new Error(
             `${prefix}: creating node '${name}' with invalid name.`
         );
     }
@@ -111,13 +110,13 @@ function GraphQLNode(config = {}) {
     this.name = name;
 
     if (!typeDefs) {
-        throw new IdioError(`${prefix}: '${name}' typeDefs required.`);
+        throw new Error(`${prefix}: '${name}' typeDefs required.`);
     }
 
     try {
         this.typeDefs = parseTypeDefs(typeDefs);
     } catch (error) {
-        throw new IdioError(`${prefix}: '${name}' Error: '${error}'.`);
+        throw new Error(`${prefix}: '${name}' Error: '${error}'.`);
     }
 
     this.typeDefs = validateTypeDefs(this, {
@@ -132,7 +131,7 @@ function GraphQLNode(config = {}) {
     }
 
     if (!resolvers) {
-        throw new IdioError(`${prefix}: '${name}' resolvers required.`);
+        throw new Error(`${prefix}: '${name}' resolvers required.`);
     }
 
     this.resolvers = resolvers;
@@ -158,7 +157,7 @@ function GraphQLNode(config = {}) {
     }).forEach(([key, appliances]) => {
         if (appliances) {
             if (!Array.isArray(appliances)) {
-                throw new IdioError(
+                throw new Error(
                     `${prefix}: '${name}' ${key} must be of type 'array'.`
                 );
             }
@@ -175,7 +174,7 @@ function GraphQLNode(config = {}) {
 
             function checkInstanceOfAppliance(appliance) {
                 if (!(appliance instanceof _Constructor)) {
-                    throw new IdioError(
+                    throw new Error(
                         `${prefix}: '${name}' expected ${singular} to be instance of '${_Constructor.name}'.`
                     );
                 }
