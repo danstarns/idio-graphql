@@ -1,6 +1,5 @@
 const safeJsonStringify = require("safe-json-stringify");
 const forEmitOf = require("for-emit-of");
-const IdioError = require("../../idio-error.js");
 
 /**
  * @typedef {import('../graphql-node.js').Runtime} Runtime
@@ -26,7 +25,7 @@ module.exports = (RUNTIME) => {
                             const serviceToCall = await instanceServiceManager.getNextService();
 
                             if (!serviceToCall) {
-                                throw new IdioError(
+                                throw new Error(
                                     `No service with name: '${introspection.name}' online.`
                                 );
                             }
@@ -43,7 +42,7 @@ module.exports = (RUNTIME) => {
 
                                 return executionResult;
                             } catch ({ message }) {
-                                throw new IdioError(
+                                throw new Error(
                                     `Execution on service: '${introspection.name}' failed. Error: ${message}`
                                 );
                             }

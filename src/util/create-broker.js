@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
 const { v4: uuid } = require("uuid");
-const IdioError = require("../api/idio-error.js");
 
 /**
  * @typedef {import('moleculer').BrokerOptions & {gateway: string}} BrokerOptions
@@ -19,19 +18,19 @@ function createBroker(instance, RUNTIME) {
     const { brokerOptions } = RUNTIME;
 
     if (!instance.name) {
-        throw new IdioError("instance.name required");
+        throw new Error("instance.name required");
     }
 
     if (!brokerOptions) {
-        throw new IdioError("brokerOptions required.");
+        throw new Error("brokerOptions required.");
     }
 
     if (!brokerOptions.transporter) {
-        throw new IdioError("brokerOptions.transporter required.");
+        throw new Error("brokerOptions.transporter required.");
     }
 
     if (!brokerOptions.gateway) {
-        throw new IdioError("brokerOptions.gateway required.");
+        throw new Error("brokerOptions.gateway required.");
     }
 
     let moleculer;
@@ -40,7 +39,7 @@ function createBroker(instance, RUNTIME) {
         moleculer = require("moleculer");
     } catch (error) {
         /* istanbul ignore next */
-        throw new IdioError(
+        throw new Error(
             `Cant find module: 'moleculer' install using npm install --save moleculer`
         );
     }

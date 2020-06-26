@@ -1,5 +1,4 @@
 const { checkInstance } = require("../../../util/index.js");
-const IdioError = require("../../idio-error.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 
 /**
@@ -13,17 +12,17 @@ const GraphQLNode = require("../../graphql_node/graphql-node.js");
  */
 function validateNodes(nodes, RUNTIME) {
     if (!nodes) {
-        throw new IdioError("nodes required");
+        throw new Error("nodes required");
     }
 
     if (!Array.isArray(nodes)) {
-        throw new IdioError(
+        throw new Error(
             `expected nodes to be of type array received '${typeof nodes}'`
         );
     }
 
     if (!nodes.length) {
-        throw new IdioError("at least 1 node is required");
+        throw new Error("at least 1 node is required");
     }
 
     nodes.forEach((node) => {
@@ -34,7 +33,7 @@ function validateNodes(nodes, RUNTIME) {
         });
 
         if (RUNTIME.REGISTERED_NAMES[node.name]) {
-            throw new IdioError(
+            throw new Error(
                 `GraphQLNode with name: '${node.name}' already registered.`
             );
         }

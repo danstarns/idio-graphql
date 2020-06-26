@@ -1,7 +1,6 @@
 const { parse } = require("graphql/language/parser");
 const { print } = require("graphql/language/printer");
 const { graphql } = require("graphql");
-const IdioError = require("../api/idio-error.js");
 const ServicesManager = require("./services-manager.js");
 
 /**
@@ -33,13 +32,13 @@ const ServicesManager = require("./services-manager.js");
  */
 function parseDocument(document) {
     if (!document) {
-        throw new IdioError("document required.");
+        throw new Error("document required.");
     }
 
     const queryType = typeof document;
 
     if (queryType !== "object" && queryType !== "string") {
-        throw new IdioError(`document must be a string or AST.`);
+        throw new Error(`document must be a string or AST.`);
     }
 
     if (queryType === "string") {
@@ -56,10 +55,10 @@ function parseDocument(document) {
         );
 
         if (subscriptions.length) {
-            throw new IdioError("subscriptions not supported.");
+            throw new Error("subscriptions not supported.");
         }
     } else {
-        throw new IdioError(`invalid document provided.`);
+        throw new Error(`invalid document provided.`);
     }
 
     return document;
@@ -91,7 +90,7 @@ function withBroker(RUNTIME) {
                 .filter((directive) => directive.name.value === "gateway");
 
             if (directives.length > 1) {
-                throw new IdioError(
+                throw new Error(
                     `interservice communication @gateway directive only supported once per document.`
                 );
             }
@@ -102,7 +101,7 @@ function withBroker(RUNTIME) {
                 const directiveError = `@gateway directive requires 1 argument, called name, of type string.`;
 
                 if (!directive.arguments.length) {
-                    throw new IdioError(directiveError);
+                    throw new Error(directiveError);
                 }
 
                 const nameArgument = directive.arguments.find(
@@ -110,11 +109,11 @@ function withBroker(RUNTIME) {
                 );
 
                 if (!nameArgument) {
-                    throw new IdioError(directiveError);
+                    throw new Error(directiveError);
                 }
 
                 if (nameArgument.value.kind !== "StringValue") {
-                    throw new IdioError(directiveError);
+                    throw new Error(directiveError);
                 }
 
                 const directiveGateway = nameArgument.value.value;
@@ -156,7 +155,7 @@ function withBroker(RUNTIME) {
                 }
 
                 if (!gatewayManagers[directiveGateway]) {
-                    throw new IdioError(
+                    throw new Error(
                         `cannot reach gateway: '${directiveGateway}'`
                     );
                 }
@@ -166,7 +165,7 @@ function withBroker(RUNTIME) {
                 ].getNextService();
 
                 if (!selectedGateway) {
-                    throw new IdioError(
+                    throw new Error(
                         `cannot reach gateway: '${directiveGateway}'`
                     );
                 }
@@ -192,7 +191,7 @@ function withBroker(RUNTIME) {
                 ].getNextService();
 
                 if (!selectedGateway) {
-                    throw new IdioError(
+                    throw new Error(
                         `cannot reach gateway: '${broker.options.gateway}'`
                     );
                 }
@@ -247,7 +246,7 @@ function withSchema(schema) {
 
             return { data, errors };
         } catch ({ message }) {
-            return { errors: [new IdioError(message)], data: null };
+            return { errors: [new Error(message)], data: null };
         }
     };
 }

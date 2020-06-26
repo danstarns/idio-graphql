@@ -1,5 +1,4 @@
 const { checkInstance } = require("../../../util/index.js");
-const IdioError = require("../../idio-error.js");
 const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
 
 /**
@@ -13,7 +12,7 @@ const APPLIANCE_METADATA = require("../../../constants/appliance-metadata.js");
  */
 function validateAppliances(appliances, RUNTIME) {
     if (!(typeof appliances === "object")) {
-        throw new IdioError("expected appliances to be of type object");
+        throw new Error("expected appliances to be of type object");
     }
 
     Object.entries(appliances)
@@ -28,7 +27,7 @@ function validateAppliances(appliances, RUNTIME) {
             );
 
             if (!Array.isArray(values)) {
-                throw new IdioError(`expected '${key}' to be an array`);
+                throw new Error(`expected '${key}' to be an array`);
             }
 
             values.forEach((value) => {
@@ -39,7 +38,7 @@ function validateAppliances(appliances, RUNTIME) {
                 });
 
                 if (RUNTIME.REGISTERED_NAMES[value.name]) {
-                    throw new IdioError(
+                    throw new Error(
                         `${metadata._Constructor.name} with a name: '${value.name}' already registered.`
                     );
                 }

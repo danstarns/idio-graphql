@@ -7,7 +7,6 @@ const {
 const { parse } = require("graphql/language");
 
 const serveAppliance = require("./methods/serve-appliance.js");
-const IdioError = require("../idio-error.js");
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
 
 /**
@@ -53,27 +52,27 @@ function GraphQLType({ name, typeDefs, resolvers, injections } = {}) {
     this.injections = injections;
 
     if (!name) {
-        throw new IdioError(`${prefix} name required.`);
+        throw new Error(`${prefix} name required.`);
     }
 
     if (typeof name !== `string`) {
-        throw new IdioError(`${prefix} name must be of type 'string'.`);
+        throw new Error(`${prefix} name must be of type 'string'.`);
     }
 
     if (RESTRICTED_NAMES[name.toLowerCase()]) {
-        throw new IdioError(`${prefix}: '${name}' with invalid name.`);
+        throw new Error(`${prefix}: '${name}' with invalid name.`);
     }
 
     this.name = name;
 
     if (!typeDefs) {
-        throw new IdioError(`${prefix}: '${name}' typeDefs required.`);
+        throw new Error(`${prefix}: '${name}' typeDefs required.`);
     }
 
     try {
         this.typeDefs = parseTypeDefs(typeDefs);
     } catch (error) {
-        throw new IdioError(`${prefix}: '${name}' \n${error}.`);
+        throw new Error(`${prefix}: '${name}' \n${error}.`);
     }
 
     this.typeDefs = validateTypeDefs(this, {
@@ -84,13 +83,11 @@ function GraphQLType({ name, typeDefs, resolvers, injections } = {}) {
     });
 
     if (!resolvers) {
-        throw new IdioError(`${prefix}: '${name}' resolvers required.`);
+        throw new Error(`${prefix}: '${name}' resolvers required.`);
     }
 
     if (!Object.keys(resolvers).length) {
-        throw new IdioError(
-            `${prefix}: ${name} at least one resolver required`
-        );
+        throw new Error(`${prefix}: ${name} at least one resolver required`);
     }
 
     this.resolvers = Object.entries(resolvers).reduce(
@@ -112,7 +109,7 @@ function GraphQLType({ name, typeDefs, resolvers, injections } = {}) {
                     name: `${this.name}.resolvers.${key}`
                 });
             } else {
-                throw new IdioError(
+                throw new Error(
                     `${prefix}: ${name}.resolver.${key} requires a 'resolve' method`
                 );
             }
@@ -135,7 +132,7 @@ function GraphQLType({ name, typeDefs, resolvers, injections } = {}) {
 
     Object.keys(this.resolvers).forEach((key) => {
         if (!nodeFields.includes(key)) {
-            throw new IdioError(
+            throw new Error(
                 `${prefix}: ${name}.${key} not defined in typeDefs`
             );
         }

@@ -1,6 +1,5 @@
 const fs = require("fs");
 const { parse, print } = require("graphql/language");
-const IdioError = require("../api/idio-error.js");
 
 /**
  *
@@ -16,7 +15,7 @@ function parseTypeDefs(typeDefs) {
 
                 return typeDefs;
             } catch (error) {
-                throw new IdioError(`cannot resolve typeDefs: '${error}'.`);
+                throw new Error(`cannot resolve typeDefs: '${error}'.`);
             }
         } else {
             return fs.readFileSync(typeDefs, "utf8");
@@ -26,11 +25,11 @@ function parseTypeDefs(typeDefs) {
             return print(typeDefs);
         }
 
-        throw new IdioError(
+        throw new Error(
             `cannot resolve typeDefs: ${JSON.stringify(typeDefs, null, 2)}.`
         );
     } else {
-        throw new IdioError(`cannot parse typeDefs: ${typeDefs}.`);
+        throw new Error(`cannot parse typeDefs: ${typeDefs}.`);
     }
 }
 

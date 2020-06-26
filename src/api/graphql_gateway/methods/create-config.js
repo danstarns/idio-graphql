@@ -1,4 +1,3 @@
-const IdioError = require("../../idio-error.js");
 const GraphQLNode = require("../../graphql_node/graphql-node.js");
 const { checkInstance } = require("../../../util/index.js");
 const {
@@ -21,7 +20,7 @@ const {
  */
 function validateServices(services = {}) {
     if (!(typeof services === "object")) {
-        throw new IdioError("services must be of type object.");
+        throw new Error("services must be of type object.");
     }
 
     const {
@@ -35,22 +34,22 @@ function validateServices(services = {}) {
     } = services;
 
     if (directives) {
-        throw new IdioError(`services.directives not supported`);
+        throw new Error(`services.directives not supported`);
     }
 
     if (scalars) {
-        throw new IdioError(`services.scalars not supported`);
+        throw new Error(`services.scalars not supported`);
     }
 
     return Object.entries({ nodes, enums, interfaces, unions, types }).reduce(
         (result, [key, values = []]) => {
             if (!Array.isArray(values)) {
-                throw new IdioError(`services.${key} must be of type array`);
+                throw new Error(`services.${key} must be of type array`);
             }
 
             values.forEach((value, index) => {
                 if (!(typeof value === "string")) {
-                    throw new IdioError(
+                    throw new Error(
                         `services.${key}[${index}] must be of type string.`
                     );
                 }
@@ -69,7 +68,7 @@ function validateServices(services = {}) {
  */
 function validateLocals(locals = {}) {
     if (!(typeof locals === "object")) {
-        throw new IdioError("locals must be of type object.");
+        throw new Error("locals must be of type object.");
     }
 
     let {
@@ -99,7 +98,7 @@ function validateLocals(locals = {}) {
             types: { instances: types, of: GraphQLType }
         }).reduce((result, [key, { instances = [], of }]) => {
             if (!Array.isArray(instances)) {
-                throw new IdioError(`locals.${key} must be of type array.`);
+                throw new Error(`locals.${key} must be of type array.`);
             }
 
             instances.forEach((instance, index) =>
@@ -123,11 +122,11 @@ function validateLocals(locals = {}) {
  */
 function createConfig(config) {
     if (!config) {
-        throw new IdioError("config required.");
+        throw new Error("config required.");
     }
 
     if (!(typeof config === "object")) {
-        throw new IdioError("config must be of type object.");
+        throw new Error("config must be of type object.");
     }
 
     const services = validateServices(config.services);
@@ -135,7 +134,7 @@ function createConfig(config) {
     const locals = validateLocals(config.locals);
 
     if (!services.nodes.length && !locals.nodes.length) {
-        throw new IdioError(
+        throw new Error(
             `no declared nodes, provide a list of local or remote nodes.`
         );
     }

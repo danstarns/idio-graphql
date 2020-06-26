@@ -1,8 +1,6 @@
 const execute = require("./execute.js");
-
 const introspectionCall = require("./introspection-call.js");
 const { abort } = require("../../../util/index.js");
-const IdioError = require("../../idio-error.js");
 
 /**
  * @param {import('./start.js').Runtime} RUNTIME
@@ -43,7 +41,7 @@ function createGatewayService(RUNTIME) {
                                             .map((x) => x.name)
                                             .includes(value)
                                     ) {
-                                        throw new IdioError(
+                                        throw new Error(
                                             `gateway contains a invalid local: '${key}.${value}'`
                                         );
                                     }
@@ -53,7 +51,7 @@ function createGatewayService(RUNTIME) {
                                     .map((x) => x.name)
                                     .forEach((value) => {
                                         if (!values.includes(value)) {
-                                            throw new IdioError(
+                                            throw new Error(
                                                 `gateway is missing a local: '${key}.${value}'`
                                             );
                                         }
@@ -68,7 +66,7 @@ function createGatewayService(RUNTIME) {
                                     if (
                                         !RUNTIME.services[key].includes(value)
                                     ) {
-                                        throw new IdioError(
+                                        throw new Error(
                                             `gateway contains a invalid service: '${key}.${value}'`
                                         );
                                     }
@@ -76,7 +74,7 @@ function createGatewayService(RUNTIME) {
 
                                 RUNTIME.services[key].forEach((value) => {
                                     if (!values.includes(value)) {
-                                        throw new IdioError(
+                                        throw new Error(
                                             `gateway is missing service: '${key}.${value}'`
                                         );
                                     }

@@ -1,5 +1,4 @@
 const RESTRICTED_NAMES = require("../../constants/restricted-names.js");
-const IdioError = require("../idio-error.js");
 const { parseTypeDefs, validateTypeDefs } = require("../../util/index.js");
 const serveAppliance = require("./methods/serve-appliance.js");
 
@@ -36,15 +35,15 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
     this.typeDefs;
 
     if (!name) {
-        throw new IdioError(`${prefix} name required.`);
+        throw new Error(`${prefix} name required.`);
     }
 
     if (typeof name !== "string") {
-        throw new IdioError(`${prefix} name must be of type 'string'.`);
+        throw new Error(`${prefix} name must be of type 'string'.`);
     }
 
     if (RESTRICTED_NAMES[name.toLowerCase()]) {
-        throw new IdioError(`${prefix}: '${name}' with invalid name.`);
+        throw new Error(`${prefix}: '${name}' with invalid name.`);
     }
 
     this.name = name;
@@ -52,7 +51,7 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
     try {
         this.typeDefs = parseTypeDefs(typeDefs);
     } catch (error) {
-        throw new IdioError(`${prefix}: '${name}' \n${error}.`);
+        throw new Error(`${prefix}: '${name}' \n${error}.`);
     }
 
     this.typeDefs = validateTypeDefs(this, {
@@ -63,11 +62,11 @@ function IdioUnion({ name, resolver, typeDefs } = {}) {
     });
 
     if (!resolver) {
-        throw new IdioError(`${prefix}: '${name}' without resolver.`);
+        throw new Error(`${prefix}: '${name}' without resolver.`);
     }
 
     if (!resolver.__resolveType) {
-        throw new IdioError(
+        throw new Error(
             `${prefix}: '${name}'.resolver must have a __resolveType property.`
         );
     }
