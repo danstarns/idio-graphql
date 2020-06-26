@@ -1,14 +1,15 @@
-// plugins that we are going to use
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
+import sourcemaps from "rollup-plugin-sourcemaps";
 
 function CJSPipeline() {
     return [
+        sourcemaps(),
         commonjs(),
         babel({
             exclude: "node_modules/**",
             babelrc: false,
-            runtimeHelpers: true,
+            babelHelpers: "runtime",
             presets: [
                 "minify",
                 [
@@ -39,6 +40,7 @@ function CJSPipeline() {
 export default {
     input: "src/index.js",
     output: {
+        sourcemap: true,
         file: "dist/index.js",
         format: "cjs"
     },
