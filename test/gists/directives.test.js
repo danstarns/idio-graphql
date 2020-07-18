@@ -1,12 +1,9 @@
 const { expect } = require("chai");
-
-const { AuthDirective } = require("graphql-directive-auth");
+const isAuthenticated = require("../dummy-data/directive.js");
 const { GraphQLNode, combineNodes, IdioDirective } = require("../../src");
 
 describe("gists/idio-directive", () => {
     it("should verify idio-directive", () => {
-        const { isAuthenticated } = AuthDirective();
-
         const hasScopeDirective = new IdioDirective({
             name: "hasScope",
             typeDefs: `

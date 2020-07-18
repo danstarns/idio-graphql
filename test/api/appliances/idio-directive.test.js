@@ -1,10 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { expect } = require("chai");
-
-const { AuthDirective } = require("graphql-directive-auth");
 const { IdioDirective } = require("../../../src");
-
-const { isAuthenticated } = AuthDirective();
+const isAuthenticated = require("../../dummy-data/directive.js");
 
 describe("IdioDirective", () => {
     it("should throw name required", () => {
