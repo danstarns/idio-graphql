@@ -2,9 +2,9 @@ const { expect } = require("chai");
 const path = require("path");
 const { GraphQLScalarType } = require("graphql");
 const { GraphQLJSON } = require("graphql-type-json");
-const { AuthDirective } = require("graphql-directive-auth");
 const gql = require("graphql-tag");
 const { GraphQLSchema } = require("graphql");
+const isAuthenticated = require("../../dummy-data/directive.js");
 const {
     combineNodes,
     GraphQLNode,
@@ -751,8 +751,6 @@ describe("combineNodes", () => {
     });
 
     it("should combine 1 node & a global directive and return typeDefs and resolvers & schemaDirectives", () => {
-        const { isAuthenticated } = AuthDirective();
-
         const hasPermissionDirective = new IdioDirective({
             name: "hasPermission",
             resolver: isAuthenticated,
@@ -1191,8 +1189,6 @@ describe("combineNodes", () => {
 
     it("should throw when loading IdioDirective with invalid typeDefs from a file", () => {
         try {
-            const { isAuthenticated } = AuthDirective();
-
             const hasScopeDirective = new IdioDirective({
                 name: "hasScope",
                 typeDefs: path.join(__dirname, "../../dummy-data/error.gql"),
@@ -1230,8 +1226,6 @@ describe("combineNodes", () => {
 
     it("should throw directive should contain DirectiveDefinition", () => {
         try {
-            const { isAuthenticated } = AuthDirective();
-
             const hasScopeDirective = new IdioDirective({
                 name: "hasScope",
                 typeDefs: gql`
