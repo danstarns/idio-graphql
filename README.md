@@ -2,9 +2,10 @@
 [![CircleCI](https://circleci.com/gh/danstarns/idio-graphql/tree/master.svg?style=svg)](https://app.circleci.com/pipelines/github/danstarns/idio-graphql?branch=master)
 [![CircleCI](https://img.shields.io/github/license/danstarns/idio-graphql)](https://github.com/danstarns/idio-graphql/blob/master/LICENSE) [![npm version](https://badge.fury.io/js/idio-graphql.svg)](https://www.npmjs.com/package/idio-graphql) [![Help Wanted!](https://img.shields.io/badge/help-wanted-brightgreen.svg?style=flat "Please Help Us")](https://github.com/danstarns/idio-graphql/issues) [![TypeScript Compatible](https://img.shields.io/npm/types/scrub-js.svg)](https://github.com/danstarns/idio-graphql/blob/master/index.d.ts) [![Gitter](https://badges.gitter.im/idio-graphql/community.svg)](https://gitter.im/idio-graphql/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![GitHub stars](https://img.shields.io/github/stars/danstarns/idio-graphql.svg?style=social&label=Star&maxAge=2592000)](https://github.com/danstarns/idio-graphql)
 
+> This package is inspired by; Apollo Federation, GraphQL Modules & Moleculer.
 
 # About
-Node.js library for splitting SDL first GraphQL schemas into composable chunks.
+Node.js library for splitting SDL first GraphQL schemas into composable & idiomatic chunks.
 
 ```
 $ npm install idio-graphql
@@ -34,8 +35,6 @@ const server = new ApolloServer({ typeDefs, resolvers });
 
 # Index
 1. [About](#about)
-    * [Integrations](#integrates-with)
-    * [Aim](#aim)
     * [Examples](#examples)
     * [Links](#links)
     * [FAQ](#faq)
@@ -46,45 +45,29 @@ const server = new ApolloServer({ typeDefs, resolvers });
 3. [Guides](https://danstarns.github.io/idio-graphql/docs/getting-started#guides)
 4. [API](https://danstarns.github.io/idio-graphql/docs/)
 
-## Integrates with 
-1. [apollo-server](https://github.com/apollographql/apollo-server) ✔
-2. [molecular](https://moleculer.services/) ✔
-3. [graphql-tools](https://github.com/Urigo/graphql-tools) ✔
-4. [graphql-upload](https://github.com/jaydenseric/graphql-upload) 🏗
-5. [graphql-tag](https://github.com/apollographql/graphql-tag) ✔
-
-> This package is inspired by and or build's upon; Apollo Federation, GraphQL Modules & Moleculer.
-
-## Aim
-Provide a clean & structured API where engineers can prototype, build and integrate GraphQL Schemas with new or existing applications. Abstractions have been, will continue, to be built that handle parts such as; schema splitting, modular patters & microservices.
-
-## Examples
-> Got an application you want to showcase? Make a PR and edit the README [here](https://github.com/danstarns/idio-graphql)
-
+# Examples
 1. [Monolith](https://github.com/danstarns/idio-graphql-realworld-example-app)
 2. [Microservice](https://github.com/danstarns/graphql-microservices-realworld-example-system)
 3. [Mini examples](https://github.com/danstarns/idio-graphql/blob/master/examples/EXAMPLES.md) - Some smaller examples to help demonstrate the capability's of this package.
 
-## Links
+# Links
 1. [Documentation](https://danstarns.github.io/idio-graphql/)
 2. [Gitter](https://gitter.im/idio-graphql/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 3. [GitHub](https://github.com/danstarns/idio-graphql)
 4. [NPM](https://www.npmjs.com/package/idio-graphql)
 
-## FAQ
+# FAQ
 
 1. [What is a node ?](#what-is-a-node-)
-2. [How do I integrate with my Apollo server ?](#how-do-i-integrate-with-my-apollo-server-)
+2. [How do I integrate with my Apollo Server ?](#how-do-i-integrate-with-my-apollo-server-)
 3. [How do I get started with microservices ?](#how-do-i-get-started-with-microservices-)
-4. [Can I use schema directives ?](#can-i-use-schema-directives-)
+4. [Can I use Schema Directives ?](#can-i-use-schema-directives-)
 5. [How can my nodes talk with each other ?](#how-can-my-nodes-talk-with-each-other-)
 6. [Does it support graphql files or graphql tag ?](#does-it-support-graphql-files-or-graphql-tag-)
 7. [What is the role of the gateway ?](#what-is-the-role-of-the-gateway-)
 8. [Does it support subscriptions ?](#does-it-support-subscriptions-)
 
-### What is a node ?
-
----
+## What is a node ?
 
 A [Node](https://danstarns.github.io/idio-graphql/docs/graphql-node) is designed to modularize a [ObjectTypeDefinition](http://spec.graphql.org/June2018/#ObjectTypeDefinition) together with its related resolvers & properties. You can think of a node as a module.
 
@@ -127,14 +110,12 @@ const User = new GraphQLNode({
 });
 ```
 
-#### Is it all about nodes ?
-No! There are plenty of classes to help you construct your GraphQL schema start reading about schemaAppliances [here](https://danstarns.github.io/idio-graphql/docs/schema-appliances).
+> **Is it all about nodes ?** No! There are plenty of classes to help you construct your GraphQL schema start reading about schemaAppliances [here](https://danstarns.github.io/idio-graphql/docs/schema-appliances).
 
-### How do I integrate with my Apollo server ?
 
----
+## How do I integrate with my Apollo Server ?
 
-This package generates its schema with the help from [makeExecutableSchema](https://www.apollographql.com/docs/graphql-tools/generate-schema/). The result of `makeExecutableSchema` is returned from `combineNodes` & `GraphQLSchema`.
+The result of `makeExecutableSchema` is returned from `combineNodes` & `GraphQLSchema`.
 
 Using [combineNodes](https://danstarns.github.io/idio-graphql/docs/combine-nodes)
 
@@ -163,17 +144,14 @@ const { typeDefs, resolvers } = await gateway.start();
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 ```
 
-### How do I get started with microservices ?
 
----
+## How do I get started with microservices ?
 
 > Watch tutorial [here](https://youtu.be/LqMpIfib0JU)
 
 This package builds its microservices features on top of a package [Molecular](https://moleculer.services/), this means you can integrate with Moleculer's features. Learn more about using microservices [here](https://danstarns.github.io/idio-graphql/docs/microservices).
 
 > Molecular is a optional dependency 
-
-You don't need to change much code & you can 'spin up' a service with as little as;
 
 ```javascript
 const User = new GraphQLNode({
@@ -187,14 +165,13 @@ await User.serve({
 
 > Do not forget to create your [gateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway)
 
+
 #### Gradual Adoption
 You don't need have to have all your nodes as a service. You can have some nodes hosted on the same instance as the gateway. Use `locals` & `services` in [GraphQLGateway](https://danstarns.github.io/idio-graphql/docs/graphql-gateway) to merge all nodes together. Read more about gradual adoption [here](https://danstarns.github.io/idio-graphql/docs/microservices#gradual-adoption).
 
-### Can I use schema directives ?
+## Can I use Schema Directives ?
 
----
-
-Yes! You should use a [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive) and apply it at `combineNodes` or `GraphQLGateway`.
+You can use a [IdioDirective](https://danstarns.github.io/idio-graphql/docs/idio-directive) and apply it at `combineNodes` or `GraphQLGateway`.
 
 ```javascript
 const MyDirective = new IdioDirective({
@@ -206,11 +183,9 @@ const MyDirective = new IdioDirective({
 const { typeDefs, resolvers, schemaDirectives } = combineNodes(nodes, { directives: [MyDirective] });
 ```
 
-### How can my nodes talk with each other ?
+## How can my nodes talk with each other ?
 
----
-
-This package introduces a powerful feature [Inter-Schema Execution](https://danstarns.github.io/idio-graphql/docs/inter-schema-execution). You can use this to make GraphQL powered Queries & Mutations against your own or specified schema. We use dependency injection to provide useful functions, at runtime, for your disposal. 
+[Inter-Schema Execution](https://danstarns.github.io/idio-graphql/docs/inter-schema-execution) can be used to make GraphQL powered Queries & Mutations against your own or specified schema.
 
 > Inter-Schema Execution works with your served nodes, this will allow you to accomplish GraphQL powered service-service communication.
 
@@ -256,17 +231,10 @@ const User = new GraphQLNode({
 });
 ```
 
+## Does it support graphql files or graphql tag ?
+When specifying `typedefs` You can use; strings, [graphql-tag](https://github.com/apollographql/graphql-tag) or file paths
 
-### Does it support graphql files or graphql tag ?
-
----
-
-Of Course! Wherever you need to provide `typeDefs` you can use strings, [graphql-tag](https://github.com/apollographql/graphql-tag) or file paths.
-
-### What is the role of the gateway ?
-
----
-
+## What is the role of the gateway ?
 Remember the initial schema & keep track of services with the corresponding names. Produce a Graphql schema after introspecting each supplied service.
 
 > `GraphQLGateway` acts as a reverse proxy when using Inter-Schema execution.
@@ -280,11 +248,8 @@ Your gateway will;
 
 > You can spawn multiple instances of the same gateway 
 
-### Does it support subscriptions ?
-
----
-
-Yes! You can setup subscriptions in a [node](https://danstarns.github.io/idio-graphql/docs/graphql-node). Subscriptions will work with microservices.
+## Does it support subscriptions ?
+You can setup subscriptions in a [node](https://danstarns.github.io/idio-graphql/docs/graphql-node). Subscriptions will work with microservices.
 
 ```javascript
 const User = new GraphQLNode({
@@ -308,9 +273,7 @@ const User = new GraphQLNode({
 
 > Subscriptions will not work service-service communication.
 
-
 # Quick Start
-
 ```
 $ npm install idio-graphql apollo-server graphql-tag
 ```
@@ -356,7 +319,6 @@ async function main() {
 
 main();
 ```
-
 # Microservices Quick Start
 
 > Requires [nats-server](https://github.com/nats-io/nats-server) @ nats://localhost:4222
