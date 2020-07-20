@@ -41,7 +41,7 @@
     "@babel/preset-env": "^7.10.4",
     "@graphql-tools/utils": "^6.0.14",
     "@rollup/plugin-babel": "^5.1.0",
-    "@rollup/plugin-commonjs": "^13.0.2",
+    "@rollup/plugin-commonjs": "^14.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "apollo-server": "^2.16.0",
