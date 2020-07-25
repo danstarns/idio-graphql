@@ -25,27 +25,17 @@ module.exports = (RUNTIME) => {
                             const serviceToCall = await instanceServiceManager.getNextService();
 
                             if (!serviceToCall) {
-                                throw new Error(
-                                    `No service with name: '${introspection.name}' online.`
-                                );
+                                throw new Error("Request timed out");
                             }
 
-                            try {
-                                const executionResult = await RUNTIME.broker.call(
-                                    `${serviceToCall}:${type}.${resolver}`,
-                                    {
-                                        graphQLArgs: safeJsonStringify(
-                                            graphQLArgs
-                                        )
-                                    }
-                                );
+                            const executionResult = await RUNTIME.broker.call(
+                                `${serviceToCall}:${type}.${resolver}`,
+                                {
+                                    graphQLArgs: safeJsonStringify(graphQLArgs)
+                                }
+                            );
 
-                                return executionResult;
-                            } catch ({ message }) {
-                                throw new Error(
-                                    `Execution on service: '${introspection.name}' failed. Error: ${message}`
-                                );
-                            }
+                            return executionResult;
                         }
 
                         if (type === "Subscription") {

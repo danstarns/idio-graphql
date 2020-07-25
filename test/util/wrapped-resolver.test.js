@@ -107,9 +107,7 @@ describe("wrappedResolver", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain(
-                "'test.pre' failed: \n Error: fail"
-            );
+            expect(error.message).to.contain("fail");
         }
     });
 
@@ -126,9 +124,7 @@ describe("wrappedResolver", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain(
-                "'test.post' failed: \n Error: fail"
-            );
+            expect(error.message).to.contain("fail");
         }
     });
 
@@ -147,9 +143,7 @@ describe("wrappedResolver", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain(
-                "'test.pre[0]' failed: \n Error: fail"
-            );
+            expect(error.message).to.contain("fail");
         }
     });
 
@@ -168,9 +162,7 @@ describe("wrappedResolver", () => {
 
             throw new Error();
         } catch (error) {
-            expect(error.message).to.contain(
-                "'test.post[0]' failed: \n Error: fail"
-            );
+            expect(error.message).to.contain("fail");
         }
     });
 

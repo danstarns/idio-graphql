@@ -3,117 +3,27 @@ const isFunction = require("./is-function.js");
 const INDEX = require("../constants/context-index.js");
 const injectGraphQLArgs = require("./inject-graphql-args.js");
 
-/**
- * @typedef {import('graphql').ExecutionResult} ExecutionResult
- * @typedef {import('graphql').ExecutionArgs} ExecutionArgs
- * @typedef {import('graphql').DocumentNode} DocumentNode
- * @typedef {import('moleculer').ServiceBroker} ServiceBroker
- * @typedef {import('../util/execute.js').execute} execute
- */
-
-/**
- * @typedef {{injections: {execute: execute, broker?: ServiceBroker}}} context
- */
-
-/**
- * @typedef {(
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} PreHook
- */
-
-/**
- * @typedef {(PreHook|PreHook[])} PreUnion
- */
-
-/**
- * @typedef {(
- *      resolve: any,
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} PostHook
- */
-
-/**
- * @typedef {(PostHook|PostHook[])} PostUnion
- */
-
-/**
- * @typedef {(
- *      root: any,
- *      args: object,
- *      context: context,
- *      info: DocumentNode
- *   ) => any} resolve
- */
-
-/**
- * @typedef ResolverObjectInput
- * @property {resolve} resolve
- * @property {PreUnion} pre - Function(s) to call pre the resolve method.
- * @property {PostUnion} post - Function(s) to call post the resolve method.
- */
-
-/**
- * @typedef {(ResolverObjectInput|resolve)} ResolverUnion
- */
-
-/**
- * @todo make this use recursion
- * @param {ResolverUnion} input
- * @param {object} options
- * @param {string} options.name
- * @param {string} options.direction
- * @param {array} options.args
- *
- * @returns {Promise<any>}
- */
-async function resultFunction(input, { direction, name, args }) {
+async function resultFunction(input, { args }) {
     if (Array.isArray(input)) {
         let counter = 0;
 
         await (async function recursion() {
             if (counter < input.length) {
-                try {
-                    await input[counter](...args);
+                await input[counter](...args);
 
-                    counter += 1;
+                counter += 1;
 
-                    return recursion();
-                } catch (error) {
-                    throw new Error(
-                        `'${name}.${direction}[${counter}]' failed: \n ${error}`
-                    );
-                }
-            } else {
-                return Promise.resolve();
+                return recursion();
             }
+            return Promise.resolve();
         })();
     }
 
     if (isFunction(input)) {
-        try {
-            await input(...args);
-        } catch (error) {
-            throw new Error(`'${name}.${direction}' failed: \n ${error}`);
-        }
+        await input(...args);
     }
 }
 
-/**
- * @param {function} resolver
- * @param {object} options
- * @param {PreUnion} options.pre
- * @param {PostUnion} options.post
- * @param {string} options.name
- * @param {object} options.injections
- *
- * @returns {Promise<any>}
- */
 function wrappedResolver(resolver, { pre, post, name, injections } = {}) {
     if (!resolver) {
         throw new Error("resolver required.");

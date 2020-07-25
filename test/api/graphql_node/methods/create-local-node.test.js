@@ -125,7 +125,7 @@ describe("createLocalNode", () => {
             .to.equal(true);
     });
 
-    it("should throw no service found", async () => {
+    it("should Request timed out", async () => {
         const RUNTIME = {
             serviceManagers: {
                 node: {
@@ -167,13 +167,11 @@ describe("createLocalNode", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain("No service with name: 'User' online");
+            expect(message).to.be.a("string").to.contain("Request timed out");
         }
     });
 
-    it("should throw Execution on service failed", async () => {
+    it("should throw error from another service", async () => {
         const RUNTIME = {
             serviceManagers: {
                 node: {
@@ -225,11 +223,7 @@ describe("createLocalNode", () => {
 
             throw new Error();
         } catch ({ message }) {
-            expect(message)
-                .to.be.a("string")
-                .to.contain(
-                    "Execution on service: 'User' failed. Error: testing"
-                );
+            expect(message).to.be.a("string").to.contain("testing");
         }
     });
 });
