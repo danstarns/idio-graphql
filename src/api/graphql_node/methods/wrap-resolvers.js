@@ -40,27 +40,21 @@ function wrapResolvers(node) {
                         resolvers[type][name] = {
                             ...method,
                             async *subscribe(...graphQLArgs) {
-                                try {
-                                    if (!graphQLArgs[INDEX]) {
-                                        graphQLArgs[INDEX] = {};
-                                    }
+                                if (!graphQLArgs[INDEX]) {
+                                    graphQLArgs[INDEX] = {};
+                                }
 
-                                    graphQLArgs = injectGraphQLArgs({
-                                        graphQLArgs,
-                                        injections: node.injections
-                                    });
+                                graphQLArgs = injectGraphQLArgs({
+                                    graphQLArgs,
+                                    injections: node.injections
+                                });
 
-                                    const iterator = await method.subscribe(
-                                        ...graphQLArgs
-                                    );
+                                const iterator = await method.subscribe(
+                                    ...graphQLArgs
+                                );
 
-                                    for await (const next of iterator) {
-                                        yield next;
-                                    }
-                                } catch (error) {
-                                    throw new Error(
-                                        `${prefix} resolvers.${type}.${name} failed:\n${error}`
-                                    );
+                                for await (const next of iterator) {
+                                    yield next;
                                 }
                             }
                         };
