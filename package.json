@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.2.18",
+  "version": "3.2.19",
   "description": "Node.js library for splitting SDL first GraphQL schemas into composable & idiomatic chunks.",
   "main": "./dist/index.js",
   "types": "./index.d.ts",
@@ -17,15 +17,11 @@
   },
   "keywords": [
     "graphql",
+    "modularize",
     "modules",
     "schema",
     "microservices",
-    "apollo-server",
-    "backend",
-    "moleculer",
-    "modularize",
-    "modular",
-    "merge"
+    "modular"
   ],
   "engines": {
     "node": ">=10.0.0"
@@ -36,9 +32,9 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-transform-runtime": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
+    "@babel/core": "^7.11.0",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
     "@graphql-tools/utils": "^6.0.15",
     "@rollup/plugin-babel": "^5.1.0",
     "@rollup/plugin-commonjs": "^14.0.0",
@@ -49,15 +45,15 @@
     "babel-plugin-add-module-exports": "^1.0.2",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
-    "docusaurus": "^1.14.3",
+    "docusaurus": "^1.14.5",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "graphql-tag": "^2.10.4",
+    "graphql-tag": "^2.11.0",
     "graphql-type-json": "^0.3.2",
-    "mocha": "^8.0.1",
+    "mocha": "^8.1.0",
     "nats": "^1.4.9",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
@@ -73,7 +69,7 @@
     "graphql": "^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.5",
+    "@babel/runtime": "^7.11.0",
     "@graphql-toolkit/schema-merging": "^0.10.7",
     "@graphql-tools/schema": "^6.0.15",
     "core-js": "^3.6.5",
