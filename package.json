@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "3.2.20",
+  "version": "3.2.21",
   "description": "Node.js library for splitting SDL first GraphQL schemas into composable & idiomatic chunks.",
   "main": "./dist/index.js",
   "types": "./index.d.ts",
@@ -45,7 +45,7 @@
     "babel-plugin-add-module-exports": "^1.0.2",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
-    "docusaurus": "^1.14.5",
+    "docusaurus": "^1.14.6",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
@@ -69,11 +69,11 @@
     "graphql": "^0.13.0 || ^14.0.0 || ^15.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.11.1",
+    "@babel/runtime": "^7.11.2",
     "@graphql-toolkit/schema-merging": "^0.10.7",
     "@graphql-tools/schema": "^6.0.16",
     "core-js": "^3.6.5",
-    "for-emit-of": "^1.1.0",
+    "for-emit-of": "^1.2.0",
     "graphql": "^15.3.0",
     "regenerator-runtime": "^0.13.7",
     "safe-json-stringify": "^1.2.0",
