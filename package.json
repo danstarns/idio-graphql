@@ -45,6 +45,7 @@
     "graphql-tag": "^2.11.0",
     "graphql-type-json": "^0.3.2",
     "mocha": "^8.1.1",
+    "moleculer": "^0.14.9",
     "nats": "^1.4.12",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
@@ -52,13 +53,12 @@
     "proxyquire": "^2.1.3"
   },
   "peerDependencies": {
-    "graphql": "^0.13.0 || ^14.0.0 || ^15.0.0"
+    "graphql": "^14.0.0 || ^15.0.0"
   },
   "dependencies": {
     "@graphql-toolkit/schema-merging": "^0.10.7",
     "@graphql-tools/schema": "^6.0.18",
     "for-emit-of": "^1.3.3",
-    "graphql": "^15.3.0",
     "safe-json-stringify": "^1.2.0",
     "uuid": "^8.3.0"
   }
