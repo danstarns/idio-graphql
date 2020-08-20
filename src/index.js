@@ -1,6 +1,3 @@
-/* eslint-disable global-require */
-require("regenerator-runtime/runtime");
-
 const {
     GraphQLNode,
     combineNodes,
