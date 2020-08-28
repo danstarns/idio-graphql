@@ -7,10 +7,18 @@
 # About
 Node.js library for splitting SDL first GraphQL schemas into composable & idiomatic chunks.
 
+## Installation
 ```
 $ npm install idio-graphql
 ```
 
+⚠ `graphql` is a **peerDependency** you may need to install this too.
+
+```
+$ npm install graphql
+```
+
+## Usage
 ```javascript
 const User = new GraphQLNode({
     name: "User",
@@ -39,10 +47,8 @@ const server = new ApolloServer({ typeDefs, resolvers });
 
 # Index
 1. [About](#about)
-    * [Examples](#examples)
-    * [Links](#links)
-    * [FAQ](#faq)
-    * [Contributing](https://github.com/danstarns/idio-graphql/blob/master/contributing.md)
+2. [Examples](#examples)
+3. [FAQ](#faq)
 2. [Quick Start](#quick-start)
     * [Modules](#quick-start)
     * [Microservices](#microservices-quick-start)

@@ -1,5 +1,5 @@
 const { parse } = require("graphql/language");
-const { printWithComments } = require("@graphql-toolkit/schema-merging");
+const { printWithComments } = require("@graphql-tools/merge");
 
 function validateTypeDefs(instance, metadata) {
     let ast;

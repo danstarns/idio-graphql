@@ -1,7 +1,4 @@
-const {
-    mergeTypeDefs,
-    printWithComments
-} = require("@graphql-toolkit/schema-merging");
+const { mergeTypeDefs, printWithComments } = require("@graphql-tools/merge");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const {
     validateAppliances,
