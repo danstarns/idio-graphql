@@ -1,6 +1,6 @@
 {
   "name": "idio-graphql",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Node.js library for splitting SDL first GraphQL schemas into composable & idiomatic chunks.",
   "main": "./src/index.js",
   "types": "./index.d.ts",
