@@ -1,0 +1,53 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  target-branch: master
+  versioning-strategy: increase-if-necessary
+  ignore:
+  - dependency-name: "@graphql-tools/utils"
+    versions:
+    - 7.2.4
+    - 7.2.5
+    - 7.2.6
+    - 7.3.0
+    - 7.4.0
+    - 7.5.0
+    - 7.5.1
+    - 7.5.2
+    - 7.6.0
+    - 7.7.0
+    - 7.7.1
+    - 7.7.2
+    - 7.7.3
+  - dependency-name: "@graphql-tools/merge"
+    versions:
+    - 6.2.10
+    - 6.2.11
+    - 6.2.12
+    - 6.2.7
+    - 6.2.9
+  - dependency-name: y18n
+    versions:
+    - 4.0.1
+    - 4.0.2
+  - dependency-name: apollo-server
+    versions:
+    - 2.19.2
+    - 2.20.0
+    - 2.21.0
+    - 2.21.1
+    - 2.21.2
+    - 2.22.0
+    - 2.22.1
+    - 2.22.2
+  - dependency-name: "@graphql-tools/schema"
+    versions:
+    - 7.1.2
+    - 7.1.3
+  - dependency-name: moleculer
+    versions:
+    - 0.14.12
